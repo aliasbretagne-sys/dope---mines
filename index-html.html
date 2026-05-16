@@ -1,0 +1,1657 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dope à Mines — Voyage intercellulaire</title>
+<style>
+:root {
+  --da: #00897B; --co: #1976D2; --indigo: #3D1A78;
+  --da-light: #E0F2F1; --co-light: #E3F2FD; --ind-light: #EDE7F6;
+  --bg: #F8F9FA; --bg2: #FFFFFF; --bg3: #F1F3F5;
+  --border: #DEE2E6; --border2: #CED4DA;
+  --text: #212529; --text2: #495057; --text3: #868E96;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); }
+.app { max-width: 600px; margin: 0 auto; }
+.main-nav { display: flex; align-items: center; border-bottom: 1.5px solid var(--border); background: var(--bg2); position: sticky; top: 0; z-index: 10; overflow-x: auto; }
+.nav-home { padding: 10px 12px; cursor: pointer; font-size: 16px; border-bottom: 2px solid transparent; margin-bottom: -1.5px; flex-shrink: 0; border-right: 0.5px solid var(--border); }
+.nav-home:hover { background: var(--ind-light); }
+.nav-home.active { border-bottom-color: var(--indigo); background: var(--ind-light); }
+.tab { padding: 10px 11px; font-size: 11px; font-weight: 500; color: var(--text3); cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1.5px; white-space: nowrap; flex-shrink: 0; }
+.tab:hover { color: var(--text2); }
+.tab.active { color: var(--indigo); border-bottom-color: var(--indigo); }
+.page { padding: 16px; }
+.sl { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; color: var(--text3); margin-bottom: 10px; padding-bottom: 6px; border-bottom: 0.5px solid var(--border); margin-top: 18px; }
+.sl:first-of-type { margin-top: 0; }
+
+/* GARDE */
+.hero { text-align: center; padding: 20px 0 18px; border-bottom: 0.5px solid var(--border); margin-bottom: 18px; }
+.hero-eyebrow { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; color: var(--text3); margin-bottom: 8px; }
+.hero-title { font-size: 28px; font-weight: 500; color: var(--indigo); margin-bottom: 4px; }
+.hero-voyage { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text3); margin-bottom: 12px; }
+.hero-sub { font-size: 13px; color: var(--text2); margin-bottom: 14px; line-height: 1.6; max-width: 440px; margin-left: auto; margin-right: auto; }
+.hero-citation { display: inline-block; padding: 10px 16px; border-radius: 10px; background: var(--ind-light); border-left: 3px solid var(--indigo); font-size: 12px; font-style: italic; color: var(--indigo); line-height: 1.6; text-align: left; max-width: 400px; }
+.inpi-badge { display: inline-flex; align-items: center; gap: 6px; margin-top: 10px; padding: 4px 10px; border-radius: 20px; border: 0.5px solid var(--border2); background: var(--bg3); font-size: 10px; color: var(--text3); }
+.inpi-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--da); }
+.circuits-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.cc { border-radius: 12px; padding: 13px; border: 0.5px solid var(--border); }
+.cc.da { background: var(--da-light); border-color: var(--da); }
+.cc.co { background: var(--co-light); border-color: var(--co); }
+.cc-hdr { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+.cc-ico { width: 28px; height: 28px; border-radius: 7px; display: flex; align-items: center; justify-content: center; font-size: 14px; }
+.cc.da .cc-ico { background: var(--da); }
+.cc.co .cc-ico { background: var(--co); }
+.cc-name { font-size: 12px; font-weight: 500; }
+.cc.da .cc-name { color: var(--da); } .cc.co .cc-name { color: var(--co); }
+.cc-tag { font-size: 9px; font-weight: 700; text-transform: uppercase; }
+.cc.da .cc-tag { color: var(--da); } .cc.co .cc-tag { color: var(--co); }
+.cc-txt { font-size: 11px; color: var(--text2); line-height: 1.6; }
+.cc-state { margin-top: 7px; padding: 5px 8px; border-radius: 7px; font-size: 10px; line-height: 1.6; }
+.cc.da .cc-state { background: rgba(0,137,123,0.1); color: var(--da); }
+.cc.co .cc-state { background: rgba(25,118,210,0.1); color: var(--co); }
+.csl { font-weight: 600; }
+.vg { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.vc { border-radius: 10px; padding: 12px; border: 0.5px solid var(--border); }
+.vc.dan { background: var(--da-light); border-color: var(--da); }
+.vc.dap { background: #E8F5E9; border-color: #43A047; }
+.vc.con { background: var(--co-light); border-color: var(--co); }
+.vc.cop { background: #FFEBEE; border-color: #E53935; }
+.vb { display: inline-block; padding: 3px 8px; border-radius: 8px; font-size: 10px; font-weight: 700; margin-bottom: 6px; }
+.dan .vb { background: var(--da); color: #fff; } .dap .vb { background: #43A047; color: #fff; }
+.con .vb { background: var(--co); color: #fff; } .cop .vb { background: #E53935; color: #fff; }
+.vv { font-size: 11px; font-weight: 500; margin-bottom: 4px; }
+.dan .vv { color: var(--da); } .dap .vv { color: #2E7D32; }
+.con .vv { color: var(--co); } .cop .vv { color: #C62828; }
+.vt { font-size: 10px; color: var(--text2); line-height: 1.5; }
+.pont-garde { padding: 13px; border-radius: 12px; background: var(--ind-light); border: 0.5px solid var(--indigo); }
+.pg-title { font-size: 13px; font-weight: 500; color: var(--indigo); margin-bottom: 7px; }
+.pg-txt { font-size: 12px; color: var(--text2); line-height: 1.7; margin-bottom: 10px; }
+.citations { display: flex; flex-direction: column; gap: 6px; }
+.cit { padding: 8px 12px; border-radius: 8px; background: var(--bg2); border-left: 2px solid var(--indigo); font-size: 12px; font-style: italic; color: var(--indigo); line-height: 1.5; }
+
+/* ONGLETS */
+.oh { padding: 18px 16px; border-radius: 12px; margin-bottom: 18px; background: var(--indigo); text-align: center; }
+.oh-ey { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: rgba(255,255,255,0.45); margin-bottom: 6px; }
+.oh-ti { font-size: 17px; font-weight: 500; color: #fff; line-height: 1.4; margin-bottom: 10px; }
+.oh-si { padding: 10px 14px; border-radius: 9px; background: rgba(255,255,255,0.1); border: 0.5px solid rgba(255,255,255,0.2); font-size: 12px; font-style: italic; color: rgba(255,255,255,0.9); line-height: 1.7; }
+.bloc { padding: 14px 16px; border-radius: 12px; margin-bottom: 12px; background: var(--bg3); border: 0.5px solid var(--border); }
+.bl { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text3); margin-bottom: 8px; }
+.bt { font-size: 13px; color: var(--text2); line-height: 1.8; }
+.bt strong { color: var(--text); font-weight: 500; }
+.bloc.bleu { border-left: 3px solid var(--co); background: var(--co-light); } .bloc.bleu .bl { color: var(--co); }
+.bloc.vert { border-left: 3px solid var(--da); background: var(--da-light); } .bloc.vert .bl { color: var(--da); }
+.bloc.ind { border-left: 3px solid var(--indigo); background: var(--ind-light); } .bloc.ind .bl { color: var(--indigo); }
+.cle { margin-top: 10px; padding: 10px 14px; border-radius: 9px; background: var(--bg2); border-left: 2px solid var(--indigo); font-size: 13px; font-style: italic; color: var(--indigo); line-height: 1.7; }
+.pg { display: grid; grid-template-columns: 1fr; gap: 8px; margin-bottom: 12px; }
+.pi { border-radius: 10px; padding: 13px 14px; border: 0.5px solid var(--border); background: var(--bg2); display: flex; gap: 12px; }
+.pi-icon { font-size: 20px; flex-shrink: 0; }
+.pi-name { font-size: 13px; font-weight: 500; margin-bottom: 5px; }
+.pi-txt { font-size: 12px; color: var(--text2); line-height: 1.6; }
+.pi.neuro { border-color: var(--da); } .pi.neuro .pi-name { color: var(--da); }
+.pi.peda { border-color: var(--co); } .pi.peda .pi-name { color: var(--co); }
+.pi.human { border-color: #F9A825; } .pi.human .pi-name { color: #F57F17; }
+.mg { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; margin-bottom: 12px; }
+.mi { padding: 10px 11px; border-radius: 9px; background: var(--bg3); border: 0.5px solid var(--border); }
+.mi-name { font-size: 12px; font-weight: 600; color: var(--indigo); margin-bottom: 3px; }
+.mi-txt { font-size: 11px; color: var(--text2); line-height: 1.5; }
+.jg { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.jc { border-radius: 12px; padding: 14px; border: 0.5px solid var(--border); background: var(--bg2); }
+.jb { display: inline-block; padding: 3px 9px; border-radius: 10px; font-size: 10px; font-weight: 700; text-transform: uppercase; margin-bottom: 8px; }
+.b-add { background: var(--da-light); color: var(--da); }
+.b-pro { background: var(--co-light); color: var(--co); }
+.b-scol { background: #FFF8E1; color: #F57F17; }
+.b-hpro { background: var(--ind-light); color: var(--indigo); }
+.jf { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text3); margin-bottom: 4px; }
+.jn { font-size: 13px; font-weight: 500; color: var(--text); margin-bottom: 6px; }
+.jt { font-size: 11px; color: var(--text2); line-height: 1.6; }
+.jtag { display: inline-block; margin-top: 8px; padding: 2px 7px; border-radius: 6px; font-size: 10px; font-weight: 500; background: var(--bg3); color: var(--text3); }
+.vl { display: flex; flex-direction: column; gap: 10px; }
+.vi { border-radius: 12px; padding: 14px 16px; border: 0.5px solid var(--border); background: var(--bg2); display: flex; gap: 14px; }
+.vn { font-size: 11px; font-weight: 700; min-width: 22px; padding-top: 2px; }
+.vbd { flex: 1; }
+.vtit { font-size: 13px; font-weight: 500; margin-bottom: 6px; }
+.vtxt { font-size: 12px; color: var(--text2); line-height: 1.7; }
+.vi.v1 { border-color: var(--da); background: var(--da-light); } .vi.v1 .vtit,.vi.v1 .vn { color: var(--da); }
+.vi.v2 { border-color: var(--co); background: var(--co-light); } .vi.v2 .vtit,.vi.v2 .vn { color: var(--co); }
+.vi.v3 { border-color: #F9A825; background: #FFF8E1; } .vi.v3 .vtit,.vi.v3 .vn { color: #F57F17; }
+.vi.v4 { border-color: var(--indigo); background: var(--ind-light); } .vi.v4 .vtit,.vi.v4 .vn { color: var(--indigo); }
+.sig { margin-top: 18px; padding: 14px 16px; border-radius: 12px; background: var(--ind-light); border: 0.5px solid var(--indigo); text-align: center; }
+.sig-txt { font-size: 12px; color: var(--text2); line-height: 1.7; margin-bottom: 10px; }
+.sig-items { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; }
+.si { padding: 4px 10px; border-radius: 20px; font-size: 10px; font-weight: 500; background: var(--bg2); border: 0.5px solid var(--indigo); color: var(--indigo); }
+
+/* PARCOURS */
+.pb { display: flex; margin-bottom: 18px; background: var(--bg2); border: 0.5px solid var(--border); border-radius: 10px; padding: 8px 12px; align-items: center; overflow-x: auto; }
+.sd { font-size: 11px; color: var(--text3); padding: 3px 8px; border-radius: 6px; white-space: nowrap; }
+.sd.done { color: var(--da); cursor: pointer; }
+.sd.active { background: var(--indigo); color: #fff; font-weight: 500; }
+.ss { color: var(--border2); font-size: 10px; margin: 0 2px; }
+.intro-box { padding: 13px 15px; border-radius: 10px; margin-bottom: 18px; background: var(--ind-light); border-left: 3px solid var(--indigo); border-top: 0.5px solid var(--border); border-right: 0.5px solid var(--border); border-bottom: 0.5px solid var(--border); }
+.intro-txt { font-size: 13px; color: var(--indigo); line-height: 1.7; font-style: italic; }
+.g2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.rc { border: 0.5px solid var(--border); border-radius: 10px; padding: 11px 10px; cursor: pointer; background: var(--bg2); position: relative; min-height: 60px; }
+.rc:hover { background: var(--bg3); }
+.rc.sel-da { border: 1.5px solid var(--da); background: var(--da-light); }
+.rc.sel-co { border: 1.5px solid var(--co); background: var(--co-light); }
+.rc.sel-n { border: 1.5px solid #78909C; background: #ECEFF1; }
+.rc-name { font-size: 12px; font-weight: 500; margin-bottom: 2px; }
+.rc-txt { font-size: 11px; color: var(--text2); line-height: 1.4; }
+.rc-badge { position: absolute; top: 6px; right: 6px; font-size: 9px; font-weight: 700; padding: 2px 5px; border-radius: 8px; color: #fff; }
+.seuil-row { display: flex; align-items: center; gap: 7px; margin: 8px 0 14px; }
+.seuil-dots { display: flex; gap: 4px; }
+.seuil-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--border); }
+.seuil-dot.filled { background: var(--indigo); }
+.seuil-txt { font-size: 11px; color: var(--text3); }
+.seuil-txt.ok { color: var(--da); }
+.eq { margin-bottom: 12px; }
+.eq-label { font-size: 12px; font-weight: 500; margin-bottom: 6px; }
+.eq-opts { display: flex; gap: 5px; }
+.eo { flex: 1; padding: 7px 4px; border-radius: 8px; border: 0.5px solid var(--border); font-size: 11px; text-align: center; cursor: pointer; background: var(--bg3); }
+.eo:hover { border-color: var(--co); }
+.eo.sel { background: var(--co-light); border-color: var(--co); color: var(--co); font-weight: 500; }
+.iico { display: inline-block; width: 14px; height: 14px; border-radius: 50%; background: var(--bg3); border: 1px solid var(--border2); font-size: 9px; font-weight: 700; color: var(--text3); line-height: 14px; text-align: center; cursor: pointer; margin-top: 3px; }
+.iico:hover { background: var(--ind-light); border-color: var(--indigo); color: var(--indigo); }
+.ttip { display: none; margin-top: 5px; padding: 7px 10px; border-radius: 8px; background: var(--ind-light); border: 0.5px solid var(--indigo); font-size: 11px; color: var(--indigo); line-height: 1.5; }
+.ttip.open { display: block; }
+.pont-box { padding: 11px 13px; border-radius: 10px; margin-top: 12px; border: 0.5px solid var(--border); background: var(--bg3); }
+.pont-box.ouvert { background: var(--da-light); border-color: var(--da); }
+.pont-box.entrou { background: #FFF8E1; border-color: #F9A825; }
+.pont-box.force { background: #FFEBEE; border-color: #E53935; }
+.pl { font-size: 11px; font-weight: 700; text-transform: uppercase; margin-bottom: 2px; }
+.pl.ouvert { color: var(--da); } .pl.entrou { color: #F57F17; } .pl.force { color: #C62828; }
+.pt { font-size: 12px; color: var(--text2); line-height: 1.5; }
+.sm { display: flex; gap: 8px; margin-top: 12px; }
+.sp { flex: 1; padding: 9px 8px; border-radius: 8px; text-align: center; }
+.sp.da { background: var(--da-light); } .sp.co { background: var(--co-light); }
+.spl { font-size: 10px; font-weight: 700; text-transform: uppercase; margin-bottom: 2px; }
+.sp.da .spl { color: var(--da); } .sp.co .spl { color: var(--co); }
+.spv { font-size: 22px; font-weight: 500; line-height: 1; }
+.sp.da .spv { color: var(--da); } .sp.co .spv { color: var(--co); }
+
+/* UNIVERS MULTI-SELECTION */
+.domaines-section { margin-bottom: 16px; }
+.domaine-groupe { margin-bottom: 14px; }
+.groupe-titre { font-size: 12px; font-weight: 600; color: var(--text2); margin-bottom: 8px; padding: 6px 10px; background: var(--bg3); border-radius: 7px; border: 0.5px solid var(--border); }
+.domaine-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.domaine-btn { display: flex; align-items: center; gap: 8px; padding: 9px 10px; border-radius: 8px; border: 0.5px solid var(--border); background: var(--bg2); cursor: pointer; font-size: 12px; transition: all 0.12s; }
+.domaine-btn:hover { border-color: var(--border2); }
+.domaine-btn.sel { border-width: 1.5px; font-weight: 500; }
+.domaine-btn.sel-pro { background: #E3F2FD; border-color: #1565C0; color: #1565C0; }
+.domaine-btn.sel-vie { background: #E8F5E9; border-color: #2E7D32; color: #2E7D32; }
+.domaine-btn.sel-age { background: #F3E5F5; border-color: #6A1B9A; color: #6A1B9A; }
+.db-check { width: 16px; height: 16px; border-radius: 4px; border: 1.5px solid var(--border2); flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 10px; }
+.domaine-btn.sel .db-check { background: currentColor; border-color: currentColor; color: #fff !important; }
+.db-icon { font-size: 16px; }
+.db-name { font-size: 11px; }
+
+/* ACTIVITES */
+.activites-section { margin-bottom: 16px; }
+.activ-domaine { margin-bottom: 14px; }
+.activ-domaine-titre { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; padding: 6px 10px; border-radius: 7px; margin-bottom: 8px; }
+.activ-domaine-titre.pro { background: #E3F2FD; color: #1565C0; }
+.activ-domaine-titre.vie { background: #E8F5E9; color: #2E7D32; }
+.activ-domaine-titre.age { background: #F3E5F5; color: #6A1B9A; }
+.activ-grid { display: flex; flex-direction: column; gap: 5px; }
+.activ-item { display: flex; align-items: center; gap: 8px; padding: 8px 10px; border-radius: 8px; border: 0.5px solid var(--border); background: var(--bg2); cursor: pointer; font-size: 12px; }
+.activ-item:hover { border-color: var(--border2); background: var(--bg3); }
+.activ-item.sel { background: var(--da-light); border-color: var(--da); color: var(--da); font-weight: 500; }
+.ac-check { width: 15px; height: 15px; border-radius: 3px; border: 1.5px solid var(--border2); flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 9px; }
+.activ-item.sel .ac-check { background: var(--da); border-color: var(--da); color: #fff; }
+.nb-sits { font-size: 10px; color: var(--text3); margin-left: auto; }
+.activ-item.sel .nb-sits { color: var(--da); }
+
+/* FICHES */
+.sb { display: flex; gap: 8px; margin-bottom: 14px; padding: 9px 12px; border-radius: 10px; background: var(--bg3); border: 0.5px solid var(--border); align-items: center; }
+.gl { font-size: 11px; font-weight: 600; min-width: 22px; }
+.gt { flex: 1; height: 5px; border-radius: 3px; background: var(--bg2); overflow: hidden; }
+.gf { height: 100%; border-radius: 3px; transition: width 0.5s; }
+.gv { font-size: 11px; font-weight: 500; min-width: 24px; text-align: right; }
+.gsep { width: 0.5px; background: var(--border); height: 20px; margin: 0 4px; }
+.dots-row { display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 12px; align-items: center; }
+.dot { width: 9px; height: 9px; border-radius: 50%; background: var(--border); cursor: pointer; flex-shrink: 0; }
+.dot.da-dot { background: var(--da); } .dot.co-dot { background: var(--co); } .dot.n-dot { background: #90A4AE; }
+.dot.active { outline: 2px solid var(--indigo); outline-offset: 2px; }
+.dlbl { font-size: 11px; color: var(--text3); margin-left: 4px; }
+.fc { border: 0.5px solid var(--border); border-radius: 12px; padding: 13px; background: var(--bg2); margin-bottom: 10px; }
+.fn-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+.nb { width: 28px; height: 28px; border-radius: 7px; border: 0.5px solid var(--border2); background: var(--bg3); cursor: pointer; font-size: 14px; display: flex; align-items: center; justify-content: center; }
+.nb:hover { background: var(--ind-light); border-color: var(--indigo); }
+.nb:disabled { opacity: 0.3; cursor: not-allowed; }
+.fn { font-size: 15px; font-weight: 500; margin-bottom: 3px; }
+.fc-ctx { font-size: 11px; color: var(--text3); margin-bottom: 9px; }
+.tr { display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 10px; }
+.tg { padding: 3px 8px; border-radius: 12px; font-size: 10px; font-weight: 600; text-transform: uppercase; }
+.tg-daco { background: var(--ind-light); color: var(--indigo); }
+.tg-da { background: var(--da-light); color: var(--da); }
+.tg-co { background: var(--co-light); color: var(--co); }
+.tg-ouvert { background: var(--da-light); color: var(--da); }
+.tg-entrou { background: #FFF8E1; color: #F57F17; }
+.tg-force { background: #FFEBEE; color: #C62828; }
+.tg-emo { background: var(--bg3); color: var(--text2); border: 0.5px solid var(--border); }
+.pm { padding: 7px 11px; border-radius: 8px; margin-bottom: 10px; font-size: 11px; line-height: 1.5; }
+.pm.ouvert { background: var(--da-light); color: var(--da); }
+.pm.entrou { background: #FFF8E1; color: #F57F17; }
+.pm.force { background: #FFEBEE; color: #C62828; }
+.vq { font-size: 12px; color: var(--text2); margin-bottom: 7px; }
+.vr { display: flex; gap: 6px; margin-bottom: 10px; }
+.vb-btn { flex: 1; padding: 9px 4px; border-radius: 9px; border: 0.5px solid var(--border); background: var(--bg3); cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 3px; font-size: 11px; font-weight: 500; color: var(--text2); }
+.vb-btn.ad { background: var(--co-light); border-color: var(--co); color: var(--co); }
+.vb-btn.an { background: #ECEFF1; border-color: #90A4AE; color: #546E7A; }
+.vb-btn.au { background: var(--da-light); border-color: var(--da); color: var(--da); }
+.va { font-size: 16px; }
+.rb { border-radius: 10px; overflow: hidden; border: 0.5px solid var(--border); }
+.rt { font-size: 10px; font-weight: 700; text-transform: uppercase; padding: 6px 12px; background: var(--bg3); border-bottom: 0.5px solid var(--border); color: var(--text3); }
+.rr { display: flex; gap: 10px; padding: 8px 12px; align-items: flex-start; border-top: 0.5px solid var(--border); }
+.rl { font-size: 9px; font-weight: 700; text-transform: uppercase; min-width: 50px; padding-top: 2px; }
+.rl.corps { color: var(--da); } .rl.lien { color: var(--co); } .rl.pensee { color: var(--indigo); }
+.rtxt { font-size: 12px; color: var(--text2); line-height: 1.5; }
+
+/* BILAN */
+.bs { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
+.sc { padding: 14px 12px; border-radius: 12px; text-align: center; }
+.sc.da { background: var(--da-light); } .sc.co { background: var(--co-light); }
+.scl { font-size: 10px; font-weight: 700; text-transform: uppercase; margin-bottom: 5px; }
+.sc.da .scl { color: var(--da); } .sc.co .scl { color: var(--co); }
+.scv { font-size: 34px; font-weight: 500; line-height: 1; margin-bottom: 3px; }
+.sc.da .scv { color: var(--da); } .sc.co .scv { color: var(--co); }
+.scs { font-size: 11px; color: var(--text3); }
+.gr { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+.ig { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 4px; }
+.ii { padding: 8px 10px; border-radius: 8px; background: var(--da-light); border: 0.5px solid var(--da); font-size: 12px; color: var(--da); font-weight: 500; display: flex; align-items: center; gap: 5px; }
+.ci { border-radius: 10px; overflow: hidden; border: 0.5px solid var(--border); margin-bottom: 6px; }
+.ch { padding: 8px 12px; background: var(--co-light); font-size: 12px; font-weight: 500; color: var(--co); display: flex; align-items: center; gap: 6px; }
+.pe { margin-top: 18px; padding: 13px 15px; border-radius: 10px; border: 0.5px solid var(--border); background: var(--bg3); text-align: center; }
+.pe-txt { font-size: 13px; color: var(--text2); line-height: 1.6; font-style: italic; }
+.pe-sig { font-size: 10px; color: var(--text3); margin-top: 7px; }
+.btns-row { display: flex; gap: 8px; margin-top: 14px; }
+
+/* BOUTONS */
+.btn-next { width: 100%; padding: 12px; border-radius: 9px; background: var(--indigo); color: #fff; border: none; font-size: 14px; font-weight: 500; cursor: pointer; margin-top: 14px; }
+.btn-next:hover { opacity: 0.88; }
+.btn-next:disabled { opacity: 0.3; cursor: not-allowed; }
+.btn-start { width: 100%; padding: 13px; border-radius: 10px; background: var(--indigo); color: #fff; border: none; font-size: 14px; font-weight: 500; cursor: pointer; margin-top: 18px; margin-bottom: 10px; }
+.btn-start:hover { opacity: 0.88; }
+.btn-sec { flex: 1; padding: 11px; border-radius: 9px; border: 0.5px solid var(--border2); background: transparent; color: var(--text2); font-size: 13px; cursor: pointer; }
+.btn-sec:hover { background: var(--bg3); }
+.btn-pri { flex: 1; padding: 11px; border-radius: 9px; background: var(--indigo); color: #fff; border: none; font-size: 13px; font-weight: 500; cursor: pointer; }
+.hint { font-size: 11px; color: var(--text3); text-align: center; margin-top: 7px; }
+.footer-note { text-align: center; font-size: 10px; color: var(--text3); line-height: 1.7; }
+.mw { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.28); z-index: 100; align-items: center; justify-content: center; }
+.mw.open { display: flex; }
+.md { background: var(--bg2); border: 0.5px solid var(--border2); border-radius: 12px; padding: 18px; width: 310px; max-width: 92%; max-height: 90vh; overflow-y: auto; }
+.mt { font-size: 14px; font-weight: 500; margin-bottom: 12px; }
+.ow { margin-bottom: 6px; }
+.op { width: 100%; padding: 10px 12px; border-radius: 8px; border: 0.5px solid var(--border); background: var(--bg3); font-size: 13px; cursor: pointer; text-align: left; display: flex; align-items: center; gap: 10px; }
+.op:hover { border-color: var(--indigo); background: var(--ind-light); }
+.od { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+.ot { margin-left: auto; font-size: 10px; font-weight: 700; flex-shrink: 0; }
+.oi { width: 20px; height: 20px; border-radius: 50%; border: 1px solid var(--border2); background: var(--bg3); font-size: 10px; font-weight: 700; color: var(--text3); display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; }
+.oi:hover { background: var(--ind-light); border-color: var(--indigo); color: var(--indigo); }
+.bc { width: 100%; padding: 8px; margin-top: 6px; border-radius: 8px; border: 0.5px solid var(--border); background: transparent; font-size: 13px; color: var(--text2); cursor: pointer; }
+.resume-box { padding: 12px 14px; border-radius: 10px; background: var(--ind-light); border: 0.5px solid var(--indigo); margin-bottom: 14px; font-size: 12px; color: var(--indigo); line-height: 1.7; }
+.resume-box strong { font-weight: 600; display: block; margin-bottom: 4px; }
+@media (max-width: 480px) {
+  .g2, .circuits-grid, .vg, .bs, .jg { grid-template-columns: 1fr; }
+  .domaine-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="main-nav" id="mainNav"></div>
+  <div class="page" id="mainContent"></div>
+</div>
+<div class="mw" id="mw"><div class="md"><div class="mt" id="mt"></div><div id="mo"></div><button class="bc" onclick="closeModal()">Annuler</button></div></div>
+<script>
+const ACTIVITES_DB = {
+  "SANTÉ": ["1. Prép. Perfusion", "2. Pose du soin", "3. Urgence vitale", "4. Tournée méd.", "5. Transmissions", "1. Consultation", "2. Actes Tech.", "3. Psychologie", "4. Gestion Adm.", "5. Clôture", "1. Suivi Gross.", "2. Accouch.", "3. Post-Partum", "4. Gynéco.", "1. Préparation", "2. Prise Ch.", "3. Transport", "4. Admission", "1. Hygiène", "2. Confort", "3. Paramètres", "4. Logistique", "1. Délivrance", "2. Gestion Stock", "3. Conseil", "4. Administrat.", "1. Prise Ch.", "2. Transport", "3. Livraison"],
+  "BTP": ["1. Fondat.", "2. Élévat.", "3. Coffrage", "4. Finitions", "5. Logistique", "1. Préparation", "2. Incorporat.", "3. Câblage", "4. Mise Serv.", "5. Clôture", "1. Diagnostic", "2. Installat.", "3. Étanchéité", "4. Thermique"],
+  "SOCIAL": ["1. Arrivée", "2. Aide Corps", "3. Nutrition", "4. Entretien", "5. Clôture", "1. Accueil", "2. Médiation", "3. Projet Ind.", "4. Quotidien", "2. Instruction", "3. Protection", "4. Réseau"],
+  "INDUSTRIE": ["1. Prise d'engin", "2. Stockage", "3. Chargement", "4. Co-activité", "5. Clôture", "1. Diagnostic", "2. Réparation", "3. Préventif", "4. Support"],
+  "COMMERCE": ["1. Ouvert.", "2. Vente", "3. Encais.", "4. SAV", "5. Fermet.", "1. Prise P.", "2. Scan", "3. Paiement", "4. Alerte", "1. Prép.", "2. Approche", "3. Négoc.", "4. Suivi", "5. Clôture", "1. Pilotage", "2. Équipe", "3. Marchand.", "4. Client", "1. Chargem.", "2. Route", "3. Remise", "4. Aléas"],
+  "ADMINISTRATIF": ["1. Saisie", "2. Trésor.", "3. Fiscal", "4. Social", "5. Clôture", "1. Recrut.", "2. Jurid.", "3. Dévelop.", "4. Pilotage", "1. Veille", "2. Contrats", "3. Litiges", "4. Conseil", "1. Flux", "2. Agenda", "3. Écrits", "4. Accueil", "1. Collecte", "2. Calcul", "3. Déclar.", "1. Start", "2. Standard", "3. Visite", "4. Aléas", "1. Pilotage", "2. Voyage", "3. Réunion", "4. Interface"],
+  "VIE_QUOTIDIENNE": ["1. Approvision.", "2. Entretien", "3. Aliment.", "4. Admin.", "5. Clôture", "1. Matin", "2. Scolaire", "3. Éduc.", "4. Soir", "1. Énergie", "2. Mouvement", "3. Nutrit.", "4. Mental", "1. Amitié", "2. Hobbies", "3. Culture", "4. Rencontre", "1. Départ", "2. Déplac.", "3. Urbain", "4. Nature"],
+  "AFFECTIVE": ["1. Connex.", "2. Comm.", "3. Intime", "4. Logist.", "5. Strat.", "1. Échange", "2. Présence", "3. Projets", "4. Crises", "5. Clôture", "1. Héritage", "2. Fratrie", "3. Soutien", "4. Racines", "1. Présence", "2. Intros.", "3. Sanctua.", "4. Créat.", "1. Donner", "2. Recevoir", "3. Altru.", "4. Limites"],
+  "JEUNESSE": ["1. Logistique", "2. Académique", "3. Social", "4. Régén.", "5. Clôture", "1. Préparation", "1. Preparation", "2. Cours", "4. Étude", "5. Hors-Cadre", "1. Rituels", "2. Apprentis.", "3. Vie Sociale", "4. Découverte", "5. Sortie", "2. Cognitif", "3. Identitaire", "4. Autonomie", "5. Régénération", "1. Alpha-Écoute", "2. Régulation", "3. Soc-Protect", "4. Cog-Estime", "5. Résilience"],
+  "EQUILIBRE": ["1. Préparation", "2. Effort", "3. Récup.", "4. Entretien", "5. Mental", "1. Lecture", "2. Sorties", "3. Langues", "4. Histoire", "5. Médias", "1. Arts Plast.", "2. Musique", "3. Nature", "4. Cuisine", "5. Jeux", "1. Éveil", "2. Éthique", "4. Détente", "5. Sens", "1. Identité", "2. Émo.", "3. Mental", "4. Liens", "5. Unité"],
+  "GRAND_AGE": ["1. Rituels", "2. Mobilité", "3. Santé", "4. Nutrition", "5. Environ.", "1. Famille", "2. Pairs", "3. Pro.", "4. Extérieur", "5. Solitude", "1. Orientation", "2. Rappel", "3. Exercices", "4. Apprent.", "5. Décision", "1. Douleur", "2. Fatigue", "3. Sécurité", "4. Rééduc.", "5. Sommeil", "1. Bilan", "2. Legs", "3. Deuils", "4. Sagesse", "5. Passage"],
+};
+
+const SITUATIONS_DB = {
+  "SANTÉ": {
+    "1. Prép. Perfusion": [
+      {nom:"Vérifier la prescription",ctx:"SANTÉ · 1. Prép. Perfusion",daco:"CO-N2",da:15,co:10,pont:"entrou",emotion:"Vigilance",corps:"ANCRER",lien:"IDENTIFIER",pensee:"DISCERNER"},
+      {nom:"Désinfecter le plan",ctx:"SANTÉ · 1. Prép. Perfusion",daco:"CO-P1",da:10,co:10,pont:"entrou",emotion:"Rigueur",corps:"RESSENTIR",lien:"SE RAPPELER",pensee:"CHERCHER"},
+    ],
+    "2. Pose du soin": [
+      {nom:"Identifier le patient",ctx:"SANTÉ · 2. Pose du soin",daco:"CO-N1",da:10,co:10,pont:"entrou",emotion:"Sécurité",corps:"ANCRER",lien:"IDENTIFIER",pensee:"REPÉRER"},
+      {nom:"Expliquer le geste",ctx:"SANTÉ · 2. Pose du soin",daco:"DA-N2",da:20,co:10,pont:"ouvert",emotion:"Lien",corps:"RESSENTIR",lien:"COMMUNIQUER",pensee:"AJUSTER"},
+    ],
+    "3. Urgence vitale": [
+      {nom:"Alerte (bouton appel)",ctx:"SANTÉ · 3. Urgence vitale",daco:"CO-N2",da:10,co:10,pont:"force",emotion:"Stress",corps:"ANCRER",lien:"COMMUNIQUER",pensee:"PROTÉGER"},
+      {nom:"Massage cardiaque",ctx:"SANTÉ · 3. Urgence vitale",daco:"CO-N2",da:30,co:10,pont:"force",emotion:"Force",corps:"ANCRER",lien:"IDENTIFIER",pensee:"PROTÉGER"},
+    ],
+    "4. Tournée méd.": [
+      {nom:"Lecture pilulier",ctx:"SANTÉ · 4. Tournée méd.",daco:"CO-N2",da:15,co:10,pont:"entrou",emotion:"Rigueur",corps:"ANCRER",lien:"IDENTIFIER",pensee:"DISCERNER"},
+      {nom:"Éducation patient",ctx:"SANTÉ · 4. Tournée méd.",daco:"DA-N2",da:20,co:10,pont:"ouvert",emotion:"Partage",corps:"RESSENTIR",lien:"COMMUNIQUER",pensee:"AJUSTER"},
+    ],
+    "5. Transmissions": [
+      {nom:"Relire ses notes",ctx:"SANTÉ · 5. Transmissions",daco:"DA-N1",da:15,co:10,pont:"ouvert",emotion:"Synthèse",corps:"RESSENTIR",lien:"SE RAPPELER",pensee:"VALIDER"},
+      {nom:"Passage de relais oral",ctx:"SANTÉ · 5. Transmissions",daco:"DA-N2",da:20,co:10,pont:"ouvert",emotion:"Clarté",corps:"LIBÉRER",lien:"COMMUNIQUER",pensee:"AJUSTER"},
+    ],
+    "1. Consultation": [
+      {nom:"Appel du patient",ctx:"SANTÉ · 1. Consultation",daco:"DA-N1",da:15,co:10,pont:"ouvert",emotion:"Accueil",corps:"RESSENTIR",lien:"COM",pensee:"AJUSTER"},
+      {nom:"Anamnèse (interrogatoire)",ctx:"SANTÉ · 1. Consultation",daco:"CO-N1",da:10,co:10,pont:"entrou",emotion:"Curiosité",corps:"RESSENTIR",lien:"ID",pensee:"DISCERNER"},
+    ],
+    "2. Actes Tech.": [
+      {nom:"Sutures (petite chir.)",ctx:"SANTÉ · 2. Actes Tech.",daco:"DA-N2",da:20,co:10,pont:"force",emotion:"Maîtrise",corps:"ANCRER",lien:"ID",pensee:"CONSTRUIRE"},
+      {nom:"Frottis / Prélèvements",ctx:"SANTÉ · 2. Actes Tech.",daco:"CO-N1",da:10,co:10,pont:"entrou",emotion:"Rigueur",corps:"RESSENTIR",lien:"ID",pensee:"VALIDER"},
+    ],
+    "3. Psychologie": [
+      {nom:"Annonce diagnostic diff.",ctx:"SANTÉ · 3. Psychologie",daco:"CO-N2",da:10,co:10,pont:"force",emotion:"Empathie",corps:"RESSENTIR",lien:"COM",pensee:"AJUSTER"},
+      {nom:"Écoute active détresse",ctx:"SANTÉ · 3. Psychologie",daco:"CO-N1",da:10,co:10,pont:"ouvert",emotion:"Patience",corps:"RESSENTIR",lien:"COM",pensee:"AJUSTER"},
+    ],
+    "4. Gestion Adm.": [
+      {nom:"Saisie dossier patient",ctx:"SANTÉ · 4. Gestion Adm.",daco:"CO-P1",da:10,co:10,pont:"entrou",emotion:"Rigueur",corps:"RESSENTIR",lien:"RAP",pensee:"VALIDER"},
+      {nom:"Lecture courriers confr.",ctx:"SANTÉ · 4. Gestion Adm.",daco:"CO-N1",da:10,co:10,pont:"entrou",emotion:"Attention",corps:"RESSENTIR",lien:"ID",pensee:"DISCERNER"},
+    ],
+    "5. Clôture": [
+      {nom:"Tri des e-mails",ctx:"SANTÉ · 5. Clôture",daco:"CO-P1",da:10,co:10,pont:"entrou",emotion:"Ordre",corps:"RESSENTIR",lien:"ID",pensee:"DISCERNER"},
+      {nom:"Formation continue (DPC)",ctx:"SANTÉ · 5. Clôture",daco:"DA-N2",da:25,co:10,pont:"ouvert",emotion:"Plaisir",corps:"RESSENTIR",lien:"ID",pensee:"CONSTRUIRE"},
+    ],
+    "1. Suivi Gross.": [
+      {nom:"Entretien prénatal",ctx:"SANTÉ · 1. Suivi Gross.",daco:"DA-N1",da:15,co:10,pont:"ouvert",emotion:"Empathie",corps:"RESSENTIR",lien:"COM",pensee:"AJUSTER"},
+      {nom:"Palpation abdominale",ctx:"SANTÉ · 1. Suivi Gross.",daco:"DA-N1",da:15,co:10,pont:"force",emotion:"Précision",corps:"ANCRER",lien:"ID",pensee:"REPÉRER"},
+    ],
+    "2. Accouch.": [
+      {nom:"Pose du monitoring",ctx:"SANTÉ · 2. Accouch.",daco:"CO-N1",da:10,co:10,pont:"entrou",emotion:"Vigilance",corps:"ANCRER",lien:"ID",pensee:"VALIDER"},
+      {nom:"Accompagnement poussée",ctx:"SANTÉ · 2. Accouch.",daco:"CO-N2",da:20,co:10,pont:"force",emotion:"Force",corps:"ANCRER",lien:"COM",pensee:"AJUSTER"},
+    ],
+    "3. Post-Partum": [
+      {nom:"Examen du nouveau-né",ctx:"SANTÉ · 3. Post-Partum",daco:"DA-N1",da:20,co:10,pont:"entrou",emotion:"Douceur",corps:"RESSENTIR",lien:"ID",pensee:"REPÉRER"},
+      {nom:"Aide à l'allaitement",ctx:"SANTÉ · 3. Post-Partum",daco:"DA-N2",da:20,co:10,pont:"ouvert",emotion:"Patience",corps:"RESSENTIR",lien:"COM",pensee:"AJUSTER"},
+    ],
+    "4. Gynéco.": [
+      {nom:"Pose de contraception",ctx:"SANTÉ · 4. Gynéco.",daco:"DA-N1",da:15,co:10,pont:"entrou",emotion:"Maîtrise",corps:"ANCRER",lien:"ID",pensee:"CONSTRUIRE"},
+      {nom:"Rééducation périnéale",ctx:"SANTÉ · 4. Gynéco.",daco:"DA-N1",da:15,co:10,pont:"ouvert",emotion:"Pédagogie",corps:"RESSENTIR",lien:"COM",pensee:"CONSTRUIRE"},
+    ],
+    "1. Préparation": [
+      {nom:"Inventaire du matériel",ctx:"SANTÉ · 1. Préparation",daco:"CO-N1",da:5,co:10,pont:"entrou",emotion:"Rigueur",corps:"RESSENTIR",lien:"ID",pensee:"DISCERNER"},
+      {nom:"Désinfection cellule",ctx:"SANTÉ · 1. Préparation",daco:"CO-P1",da:10,co:10,pont:"entrou",emotion:"Ordre",corps:"RESSENTIR",lien:"RAP",pensee:"CHERCHER"},
+    ],
+    "2. Prise Ch.": [
+      {nom:"Transfert sur brancard",ctx:"SANTÉ · 2. Prise Ch.",daco:"CO-N2",da:15,co:10,pont:"force",emotion:"Maîtrise",corps:"ANCRER",lien:"ID",pensee:"PROTÉGER"},
+      {nom:"Recueil constantes",ctx:"SANTÉ · 2. Prise Ch.",daco:"DA-N1",da:15,co:10,pont:"entrou",emotion:"Précision",corps:"RESSENTIR",lien:"ID",pensee:"REPÉRER"},
+    ],
+    "3. Transport": [
+      {nom:"Conduite sécurisée",ctx:"SANTÉ · 3. Transport",daco:"CO-N2",da:15,co:10,pont:"force",emotion:"Vigilance",corps:"ANCRER",lien:"RAP",pensee:"PROTÉGER"},
+      {nom:"Utilisation gyro/2-tons",ctx:"SANTÉ · 3. Transport",daco:"CO-N2",da:10,co:10,pont:"force",emotion:"Alerte",corps:"ANCRER",lien:"COM",pensee:"AJUSTER"},
+    ],
+    "4. Admission": [
+      {nom:"Passage de relais IDE",ctx:"SANTÉ · 4. Admission",daco:"DA-N2",da:20,co:10,pont:"ouvert",emotion:"Précision",corps:"RESSENTIR",lien:"COM",pensee:"VALIDER"},
+      {nom:"Aide au transfert lit",ctx:"SANTÉ · 4. Admission",daco:"CO-N2",da:10,co:10,pont:"force",emotion:"Force",corps:"ANCRER",lien:"ID",pensee:"PROTÉGER"},
+    ],
+    "1. Hygiène": [
+      {nom:"Aide à la toilette",ctx:"SANTÉ · 1. Hygiène",daco:"CO-N2",da:15,co:10,pont:"force",emotion:"Empathie",corps:"ANCRER",lien:"ID",pensee:"PROTÉGER"},
+      {nom:"Change de protection",ctx:"SANTÉ · 1. Hygiène",daco:"CO-N2",da:10,co:10,pont:"force",emotion:"Rigueur",corps:"ANCRER",lien:"ID",pensee:"VALIDER"},
+    ],
+    "2. Confort": [
+      {nom:"Installation au fauteuil",ctx:"SANTÉ · 2. Confort",daco:"CO-N2",da:10,co:10,pont:"force",emotion:"Force",corps:"ANCRER",lien:"ID",pensee:"PROTÉGER"},
+      {nom:"Prévention d'escarres",ctx:"SANTÉ · 2. Confort",daco:"CO-N1",da:10,co:10,pont:"entrou",emotion:"Vigilance",corps:"ANCRER",lien:"ID",pensee:"REPÉRER"},
+    ],
+    "3. Paramètres": [
+      {nom:"Prise de température",ctx:"SANTÉ · 3. Paramètres",daco:"DA-N1",da:10,co:10,pont:"entrou",emotion:"Routine",corps:"RESSENTIR",lien:"ID",pensee:"VALIDER"},
+      {nom:"Pesée du patient",ctx:"SANTÉ · 3. Paramètres",daco:"CO-N1",da:5,co:10,pont:"entrou",emotion:"Précision",corps:"ANCRER",lien:"ID",pensee:"VALIDER"},
+    ],
+    "4. Logistique": [
+      {nom:"Entretien chariot",ctx:"SANTÉ · 4. Logistique",daco:"CO-P1",da:5,co:10,pont:"entrou",emotion:"Ordre",corps:"RESSENTIR",lien:"RAP",pensee:"CHERCHER"},
+      {nom:"Gestion du linge sale",ctx:"SANTÉ · 4. Logistique",daco:"DA-P1",da:10,co:10,pont:"entrou",emotion:"Clarté",corps:"LIBÉRER",lien:"DÉPOSER",pensee:"VALIDER"},
+    ],
+    "1. Délivrance": [
+      {nom:"Analyse de l'ordonnance",ctx:"SANTÉ · 1. Délivrance",daco:"CO-N1",da:10,co:10,pont:"entrou",emotion:"Rigueur",corps:"RESSENTIR",lien:"ID",pensee:"DISCERNER"},
+      {nom:"Recherche du produit",ctx:"SANTÉ · 1. Délivrance",daco:"DA-N1",da:10,co:10,pont:"entrou",emotion:"Rapidité",corps:"ANCRER",lien:"RAP",pensee:"CHERCHER"},
+    ],
+    "2. Gestion Stock": [
+      {nom:"Réception de commande",ctx:"SANTÉ · 2. Gestion Stock",daco:"DA-N1",da:15,co:10,pont:"entrou",emotion:"Dynamisme",corps:"ANCRER",lien:"ID",pensee:"VALIDER"},
+      {nom:"Rangement des bacs",ctx:"SANTÉ · 2. Gestion Stock",daco:"DA-P1",da:15,co:10,pont:"entrou",emotion:"Ordre",corps:"LIBÉRER",lien:"RAP",pensee:"CHERCHER"},
+    ],
+    "3. Conseil": [
+      {nom:"Prise de tension",ctx:"SANTÉ · 3. Conseil",daco:"DA-N1",da:15,co:10,pont:"entrou",emotion:"Douceur",corps:"RESSENTIR",lien:"ID",pensee:"VALIDER"},
+      {nom:"Vaccination (Grippe/Covid)",ctx:"SANTÉ · 3. Conseil",daco:"DA-N2",da:20,co:10,pont:"ouvert",emotion:"Maîtrise",corps:"ANCRER",lien:"COM",pensee:"VALIDER"},
+    ],
+    "4. Administrat.": [
+      {nom:"Facturation (Tiers P.)",ctx:"SANTÉ · 4. Administrat.",daco:"CO-P1",da:10,co:10,pont:"entrou",emotion:"Rigueur",corps:"ANCRER",lien:"RAP",pensee:"VALIDER"},
+      {nom:"Télétransmission",ctx:"SANTÉ · 4. Administrat.",daco:"DA-N1",da:15,co:10,pont:"entrou",emotion:"Routine",corps:"LIBÉRER",lien:"COM",pensee:"VALIDER"},
+    ],
+    "1. Prise Ch.": [
+      {nom:"Réception mission (Bip)",ctx:"SANTÉ · 1. Prise Ch.",daco:"CO-N1",da:5,co:10,pont:"entrou",emotion:"Rigueur",corps:"RESSENTIR",lien:"ID",pensee:"DISCERNER"},
+      {nom:"Vérification identité",ctx:"SANTÉ · 1. Prise Ch.",daco:"CO-N2",da:10,co:10,pont:"force",emotion:"Vigilance",corps:"ANCRER",lien:"ID",pensee:"VALIDER"},
+    ],
+    "2. Transport": [
+      {nom:"Pilotage brancard/lit",ctx:"SANTÉ · 2. Transport",daco:"CO-N2",da:15,co:10,pont:"force",emotion:"Maîtrise",corps:"ANCRER",lien:"ID",pensee:"PROTÉGER"},
+      {nom:"Gestion des ascenseurs",ctx:"SANTÉ · 2. Transport",daco:"DA-N1",da:10,co:10,pont:"entrou",emotion:"Patience",corps:"RESSENTIR",lien:"RAP",pensee:"AJUSTER"},
+    ],
+    "3. Livraison": [
+      {nom:"Arrivée au service",ctx:"SANTÉ · 3. Livraison",daco:"DA-P1",da:15,co:10,pont:"ouvert",emotion:"Soulagem.",corps:"LIBÉRER",lien:"DÉPOSER",pensee:"VALIDER"},
+      {nom:"Transmission équipe",ctx:"SANTÉ · 3. Livraison",daco:"DA-N1",da:15,co:10,pont:"ouvert",emotion:"Clarté",corps:"LIBÉRER",lien:"COM",pensee:"AJUSTER"},
+    ],
+  },
+  "BTP": {
+    "1. Fondat.": [
+      {nom:"Lecture du plan",ctx:"BTP · 1. Fondat.",daco:"CO-N1",da:5,co:10,pont:"entrou",emotion:"Rigueur",corps:"RESSENTIR",lien:"ID",pensee:"DISCERNER"},
+      {nom:"Implantation / Traçage",ctx:"BTP · 1. Fondat.",daco:"CO-N2",da:10,co:10,pont:"force",emotion:"Précision",corps:"ANCRER",lien:"ID",pensee:"REPÉRER"},
+    ],
+    "2. Élévat.": [
+      {nom:"Préparation du mortier",ctx:"BTP · 2. Élévat.",daco:"DA-N1",da:10,co:10,pont:"entrou",emotion:"Routine",corps:"RESSENTIR",lien:"RAP",pensee:"CHERCHER"},
+      {nom:"Pose de parpaings",ctx:"BTP · 2. Élévat.",daco:"CO-N2",da:20,co:10,pont:"force",emotion:"Endurance",corps:"ANCRER",lien:"RAP",pensee:"CONSTRUIRE"},
+    ],
+    "3. Coffrage": [
+      {nom:"Installation des banches",ctx:"BTP · 3. Coffrage",daco:"CO-N2",da:10,co:10,pont:"force",emotion:"Force",corps:"ANCRER",lien:"ID",pensee:"PROTÉGER"},
+      {nom:"Huilage des coffrages",ctx:"BTP · 3. Coffrage",daco:"DA-N1",da:10,co:10,pont:"entrou",emotion:"Routine",corps:"RESSENTIR",lien:"RAP",pensee:"CHERCHER"},
+    ],
+    "4. Finitions": [
+      {nom:"Pose de linteaux",ctx:"BTP · 4. Finitions",daco:"CO-N2",da:20,co:10,pont:"force",emotion:"Maîtrise",corps:"ANCRER",lien:"ID",pensee:"PROTÉGER"},
+      {nom:"Réalisation d'enduits",ctx:"BTP · 4. Finitions",daco:"DA-N2",da:20,co:10,pont:"ouvert",emotion:"Esthétique",corps:"RESSENTIR",lien:"RAP",pensee:"CONSTRUIRE"},
+    ],
+    "5. Logistique": [
+      {nom:"Déchargement camion",ctx:"BTP · 5. Logistique",daco:"CO-N2",da:10,co:10,pont:"force",emotion:"Endurance",corps:"ANCRER",lien:"RAP",pensee:"PROTÉGER"},
+      {nom:"Briefing chef chantier",ctx:"BTP · 5. Logistique",daco:"DA-N1",da:15,co:10,pont:"ouvert",emotion:"Clarté",corps:"RESSENTIR",lien:"COM",pensee:"AJUSTER"},
+    ],
+    "1. Préparation": [
+      {nom:"Lecture de schéma élec.",ctx:"BTP · 1. Préparation",daco:"CO-N1",da:5,co:10,pont:"entrou",emotion:"Concentration",corps:"RESSENTIR",lien:"ID",pensee:"DISCERNER"},
+      {nom:"Repérage des circuits",ctx:"BTP · 1. Préparation",daco:"CO-N2",da:10,co:10,pont:"force",emotion:"Précision",corps:"ANCRER",lien:"ID",pensee:"REPÉRER"},
+    ],
+    "2. Incorporat.": [
+      {nom:"Pose de gaines / fourreaux",ctx:"BTP · 2. Incorporat.",daco:"CO-N1",da:10,co:10,pont:"entrou",emotion:"Endurance",corps:"ANCRER",lien:"RAP",pensee:"CONSTRUIRE"},
+      {nom:"Perçage / Rainurage",ctx:"BTP · 2. Incorporat.",daco:"CO-N2",da:5,co:10,pont:"force",emotion:"Force",corps:"ANCRER",lien:"ID",pensee:"PROTÉGER"},
+    ],
+    "3. Câblage": [
+      {nom:"Dénudage des fils",ctx:"BTP · 3. Câblage",daco:"DA-N1",da:10,co:10,pont:"entrou",emotion:"Agilité",corps:"RESSENTIR",lien:"RAP",pensee:"CONSTRUIRE"},
+      {nom:"Raccordement tableau",ctx:"BTP · 3. Câblage",daco:"CO-N2",da:20,co:10,pont:"force",emotion:"Vigilance",corps:"ANCRER",lien:"ID",pensee:"CONSTRUIRE"},
+    ],
+    "4. Mise Serv.": [
+      {nom:"Déconsignation",ctx:"BTP · 4. Mise Serv.",daco:"DA-N2",da:20,co:10,pont:"ouvert",emotion:"Alerte",corps:"LIBÉRER",lien:"ID",pensee:"VALIDER"},
+      {nom:"Test de continuité",ctx:"BTP · 4. Mise Serv.",daco:"CO-N1",da:15,co:10,pont:"entrou",emotion:"Rigueur",corps:"RESSENTIR",lien:"ID",pensee:"VALIDER"},
+    ],
+    "5. Clôture": [
+      {nom:"Inventaire stock camion",ctx:"BTP · 5. Clôture",daco:"DA-N1",da:10,co:10,pont:"entrou",emotion:"Ordre",corps:"RESSENTIR",lien:"RAP",pensee:"CHERCHER"},
+      {nom:"Rédaction rapport d'inter.",ctx:"BTP · 5. Clôture",daco:"CO-P1",da:10,co:10,pont:"entrou",emotion:"Rigueur",corps:"RESSENTIR",lien:"RAP",pensee:"VALIDER"},
+    ],
+    "1. Diagnostic": [
+      {nom:"Lecture de plan réseau",ctx:"BTP · 1. Diagnostic",daco:"CO-N1",da:5,co:10,pont:"entrou",emotion:"Rigueur",corps:"RESSENTIR",lien:"ID",pensee:"DISCERNER"},
+      {nom:"Repérage des vannes",ctx:"BTP · 1. Diagnostic",daco:"CO-N2",da:10,co:10,pont:"force",emotion:"Précision",corps:"ANCRER",lien:"ID",pensee:"REPÉRER"},
+    ],
+    "2. Installat.": [
+      {nom:"Pose de tuyauterie (cuivre)",ctx:"BTP · 2. Installat.",daco:"CO-N2",da:10,co:10,pont:"force",emotion:"Endurance",corps:"ANCRER",lien:"RAP",pensee:"CONSTRUIRE"},
+      {nom:"Façonnage (Cintrage)",ctx:"BTP · 2. Installat.",daco:"DA-N1",da:15,co:10,pont:"entrou",emotion:"Agilité",corps:"RESSENTIR",lien:"ID",pensee:"VALIDER"},
+    ],
+    "3. Étanchéité": [
+      {nom:"Pose de joints (filasse)",ctx:"BTP · 3. Étanchéité",daco:"DA-N1",da:15,co:10,pont:"entrou",emotion:"Précision",corps:"RESSENTIR",lien:"RAP",pensee:"CONSTRUIRE"},
+      {nom:"Serrage des raccords",ctx:"BTP · 3. Étanchéité",daco:"CO-N2",da:10,co:10,pont:"force",emotion:"Dosage",corps:"ANCRER",lien:"ID",pensee:"VALIDER"},
+    ],
+    "4. Thermique": [
+      {nom:"Raccordement chaudière",ctx:"BTP · 4. Thermique",daco:"CO-N2",da:20,co:10,pont:"force",emotion:"Rigueur",corps:"ANCRER",lien:"ID",pensee:"CONSTRUIRE"},
+      {nom:"Purge des radiateurs",ctx:"BTP · 4. Thermique",daco:"DA-P1",da:10,co:10,pont:"entrou",emotion:"Patience",corps:"RESSENTIR",lien:"RAP",pensee:"CHERCHER"},
+    ],
+  },
+  "SOCIAL": {
+    "1. Arrivée": [
+      {nom:"Trajet domicile (conduite)",ctx:"SOCIAL · 1. Arrivée",daco:"CO-N1",da:5,co:10,pont:"entrou",emotion:"Patience",corps:"ANCRER",lien:"ID",pensee:"DISCERNER"},
+      {nom:"Accueil et météo émo.",ctx:"SOCIAL · 1. Arrivée",daco:"DA-N1",da:15,co:10,pont:"ouvert",emotion:"Empathie",corps:"RESSENTIR",lien:"COM",pensee:"AJUSTER"},
+    ],
+    "2. Aide Corps": [
+      {nom:"Aide à la toilette",ctx:"SOCIAL · 2. Aide Corps",daco:"CO-N2",da:15,co:10,pont:"force",emotion:"Douceur",corps:"ANCRER",lien:"ID",pensee:"PROTÉGER"},
+      {nom:"Aide à l'habillage",ctx:"SOCIAL · 2. Aide Corps",daco:"CO-N2",da:10,co:10,pont:"force",emotion:"Patience",corps:"ANCRER",lien:"COM",pensee:"AJUSTER"},
+    ],
+    "3. Nutrition": [
+      {nom:"Préparation repas",ctx:"SOCIAL · 3. Nutrition",daco:"DA-N1",da:15,co:10,pont:"ouvert",emotion:"Plaisir",corps:"ANCRER",lien:"ID",pensee:"CONSTRUIRE"},
+      {nom:"Aide à la prise de repas",ctx:"SOCIAL · 3. Nutrition",daco:"DA-N2",da:20,co:10,pont:"ouvert",emotion:"Convivial.",corps:"RESSENTIR",lien:"COM",pensee:"AJUSTER"},
+    ],
+    "4. Entretien": [
+      {nom:"Entretien du linge",ctx:"SOCIAL · 4. Entretien",daco:"DA-P1",da:10,co:10,pont:"entrou",emotion:"Routine",corps:"LIBÉRER",lien:"RAP",pensee:"CHERCHER"},
+      {nom:"Ménage courant",ctx:"SOCIAL · 4. Entretien",daco:"CO-N1",da:10,co:10,pont:"force",emotion:"Effort",corps:"ANCRER",lien:"RAP",pensee:"CONSTRUIRE"},
+    ],
+    "5. Clôture": [
+      {nom:"Saisie télégestion (Bip)",ctx:"SOCIAL · 5. Clôture",daco:"CO-P1",da:5,co:10,pont:"entrou",emotion:"Rigueur",corps:"ANCRER",lien:"RAP",pensee:"VALIDER"},
+      {nom:"Transmission famille/inf.",ctx:"SOCIAL · 5. Clôture",daco:"DA-N1",da:15,co:10,pont:"ouvert",emotion:"Clarté",corps:"LIBÉRER",lien:"COM",pensee:"AJUSTER"},
+    ],
+    "1. Accueil": [
+      {nom:"Prise de connaissance dossier",ctx:"SOCIAL · 1. Accueil",daco:"CO-N1",da:5,co:10,pont:"entrou",emotion:"Rigueur",corps:"RESSENTIR",lien:"ID",pensee:"DISCERNER"},
+      {nom:"Entretien individuel",ctx:"SOCIAL · 1. Accueil",daco:"DA-N1",da:15,co:10,pont:"ouvert",emotion:"Écoute",corps:"RESSENTIR",lien:"COM",pensee:"AJUSTER"},
+    ],
+    "2. Médiation": [
+      {nom:"Gestion d'un conflit",ctx:"SOCIAL · 2. Médiation",daco:"CO-N2",da:15,co:10,pont:"force",emotion:"Calme",corps:"ANCRER",lien:"COM",pensee:"AJUSTER"},
+      {nom:"Entretien de recadrage",ctx:"SOCIAL · 2. Médiation",daco:"CO-N2",da:10,co:10,pont:"force",emotion:"Autorité",corps:"ANCRER",lien:"COM",pensee:"PROTÉGER"},
+    ],
+    "3. Projet Ind.": [
+      {nom:"Rédaction projet éducatif",ctx:"SOCIAL · 3. Projet Ind.",daco:"DA-N2",da:20,co:10,pont:"entrou",emotion:"Fierté",corps:"RESSENTIR",lien:"RAP",pensee:"CONSTRUIRE"},
+      {nom:"Synthèse pluridisciplinaire",ctx:"SOCIAL · 3. Projet Ind.",daco:"CO-N1",da:15,co:10,pont:"ouvert",emotion:"Rigueur",corps:"RESSENTIR",lien:"ID",pensee:"DISCERNER"},
+    ],
+    "4. Quotidien": [
+      {nom:"Animation d'un atelier",ctx:"SOCIAL · 4. Quotidien",daco:"DA-N2",da:25,co:10,pont:"ouvert",emotion:"Créativité",corps:"RESSENTIR",lien:"COM",pensee:"CONSTRUIRE"},
+      {nom:"Gestion budget activités",ctx:"SOCIAL · 4. Quotidien",daco:"CO-P1",da:10,co:10,pont:"entrou",emotion:"Rigueur",corps:"RESSENTIR",lien:"RAP",pensee:"VALIDER"},
+    ],
+    "2. Instruction": [
+      {nom:"Montage dossier APA/MDPH",ctx:"SOCIAL · 2. Instruction",daco:"CO-N1",da:10,co:10,pont:"entrou",emotion:"Précision",corps:"RESSENTIR",lien:"RAP",pensee:"CONSTRUIRE"},
+      {nom:"Enquête sociale domicile",ctx:"SOCIAL · 2. Instruction",daco:"CO-N2",da:15,co:10,pont:"force",emotion:"Vigilance",corps:"ANCRER",lien:"ID",pensee:"REPÉRER"},
+    ],
+    "3. Protection": [
+      {nom:"Signalement enfant/adulte",ctx:"SOCIAL · 3. Protection",daco:"CO-N2",da:20,co:10,pont:"force",emotion:"Courage",corps:"ANCRER",lien:"COM",pensee:"PROTÉGER"},
+      {nom:"Entretien médiation fam.",ctx:"SOCIAL · 3. Protection",daco:"CO-N2",da:10,co:10,pont:"force",emotion:"Calme",corps:"RESSENTIR",lien:"COM",pensee:"AJUSTER"},
+    ],
+    "4. Réseau": [
+      {nom:"Réunion de synthèse",ctx:"SOCIAL · 4. Réseau",daco:"DA-N1",da:15,co:10,pont:"ouvert",emotion:"Lien",corps:"RESSENTIR",lien:"COM",pensee:"AJUSTER"},
+      {nom:"Appels partenaires (CAF)",ctx:"SOCIAL · 4. Réseau",daco:"DA-P1",da:10,co:10,pont:"entrou",emotion:"Routine",corps:"RESSENTIR",lien:"COM",pensee:"VALIDER"},
+    ],
+  },
+  "INDUSTRIE": {
+    "1. Prise d'engin": [
+      {nom:"Vérification niveaux/batterie",ctx:"INDUSTRIE · 1. Prise d'engin",daco:"CO-N1",da:5,co:10,pont:"entrou",emotion:"Rigueur",corps:"ANCRER",lien:"ID",pensee:"DISCERNER"},
+      {nom:"Test des freins/levage",ctx:"INDUSTRIE · 1. Prise d'engin",daco:"CO-N2",da:10,co:10,pont:"force",emotion:"Alerte",corps:"ANCRER",lien:"ID",pensee:"PROTÉGER"},
+    ],
+    "2. Stockage": [
+      {nom:"Prise de palette en rack",ctx:"INDUSTRIE · 2. Stockage",daco:"CO-N2",da:15,co:10,pont:"force",emotion:"Vigilance",corps:"ANCRER",lien:"ID",pensee:"PROTÉGER"},
+      {nom:"Lecture codes barres",ctx:"INDUSTRIE · 2. Stockage",daco:"DA-N1",da:15,co:10,pont:"entrou",emotion:"Rigueur",corps:"RESSENTIR",lien:"ID",pensee:"DISCERNER"},
+    ],
+    "3. Chargement": [
+      {nom:"Vérification bon livr.",ctx:"INDUSTRIE · 3. Chargement",daco:"CO-N1",da:10,co:10,pont:"entrou",emotion:"Vigilance",corps:"ANCRER",lien:"ID",pensee:"VALIDER"},
+      {nom:"Chargement remorque",ctx:"INDUSTRIE · 3. Chargement",daco:"CO-N2",da:15,co:10,pont:"force",emotion:"Maîtrise",corps:"ANCRER",lien:"ID",pensee:"PROTÉGER"},
+    ],
+    "4. Co-activité": [
+      {nom:"Circulation entre piétons",ctx:"INDUSTRIE · 4. Co-activité",daco:"CO-N2",da:15,co:10,pont:"force",emotion:"Alerte",corps:"ANCRER",lien:"ID",pensee:"PROTÉGER"},
+      {nom:"Signalement sonore/lum.",ctx:"INDUSTRIE · 4. Co-activité",daco:"CO-N1",da:10,co:10,pont:"entrou",emotion:"Présence",corps:"ANCRER",lien:"COM",pensee:"PROTÉGER"},
+    ],
+    "5. Clôture": [
+      {nom:"Mise en charge engin",ctx:"INDUSTRIE · 5. Clôture",daco:"CO-P1",da:10,co:10,pont:"entrou",emotion:"Rigueur",corps:"RESSENTIR",lien:"ID",pensee:"VALIDER"},
+      {nom:"Transmission anomalies",ctx:"INDUSTRIE · 5. Clôture",daco:"DA-N1",da:20,co:10,pont:"ouvert",emotion:"Clarté",corps:"LIBÉRER",lien:"COM",pensee:"AJUSTER"},
+    ],
+    "1. Diagnostic": [
+      {nom:"Lecture historique pannes",ctx:"INDUSTRIE · 1. Diagnostic",daco:"CO-N1",da:5,co:10,pont:"entrou",emotion:"Curiosité",corps:"RESSENTIR",lien:"ID",pensee:"DISCERNER"},
+      {nom:"Mesures multimètre",ctx:"INDUSTRIE · 1. Diagnostic",daco:"DA-N1",da:15,co:10,pont:"entrou",emotion:"Précision",corps:"ANCRER",lien:"ID",pensee:"REPÉRER"},
+    ],
+    "2. Réparation": [
+      {nom:"Consignation machine",ctx:"INDUSTRIE · 2. Réparation",daco:"CO-N2",da:10,co:10,pont:"force",emotion:"Alerte",corps:"ANCRER",lien:"ID",pensee:"PROTÉGER"},
+      {nom:"Remplacement composant",ctx:"INDUSTRIE · 2. Réparation",daco:"DA-N1",da:15,co:10,pont:"entrou",emotion:"Maîtrise",corps:"ANCRER",lien:"ID",pensee:"CONSTRUIRE"},
+    ],
+    "3. Préventif": [
+      {nom:"Ronde d'inspection",ctx:"INDUSTRIE · 3. Préventif",daco:"CO-P1",da:10,co:10,pont:"entrou",emotion:"Vigilance",corps:"RESSENTIR",lien:"RAP",pensee:"REPÉRER"},
+      {nom:"Graissage programmé",ctx:"INDUSTRIE · 3. Préventif",daco:"DA-N1",da:10,co:10,pont:"entrou",emotion:"Rythme",corps:"RESSENTIR",lien:"RAP",pensee:"CONSTRUIRE"},
+    ],
+    "4. Support": [
+      {nom:"Aide technique opérat.",ctx:"INDUSTRIE · 4. Support",daco:"DA-N2",da:20,co:10,pont:"ouvert",emotion:"Partage",corps:"RESSENTIR",lien:"COM",pensee:"AJUSTER"},
+      {nom:"Briefing sécurité",ctx:"INDUSTRIE · 4. Support",daco:"CO-N1",da:10,co:10,pont:"entrou",emotion:"Autorité",corps:"ANCRER",lien:"COM",pensee:"PROTÉGER"},
+    ],
+  },
+  "COMMERCE": {
+    "1. Ouvert.": [
+      {nom:"Ouverture rideau/alarme",ctx:"COMMERCE · 1. Ouvert.",daco:"CO-N2",da:5,co:10,pont:"force",emotion:"Vigilance",corps:"ANCRER",lien:"ID",pensee:"PROTÉGER"},
+      {nom:"Mise en route éclairage",ctx:"COMMERCE · 1. Ouvert.",daco:"DA-P1",da:10,co:10,pont:"entrou",emotion:"Ambiance",corps:"RESSENTIR",lien:"RAP",pensee:"CHERCHER"},
+    ],
+    "2. Vente": [
+      {nom:"Accueil client (Sourire)",ctx:"COMMERCE · 2. Vente",daco:"DA-N1",da:10,co:10,pont:"ouvert",emotion:"Accueil",corps:"RESSENTIR",lien:"COM",pensee:"AJUSTER"},
+      {nom:"Découverte des besoins",ctx:"COMMERCE · 2. Vente",daco:"CO-N1",da:15,co:10,pont:"ouvert",emotion:"Écoute",corps:"RESSENTIR",lien:"ID",pensee:"DISCERNER"},
+    ],
+    "3. Encais.": [
+      {nom:"Scan des articles",ctx:"COMMERCE · 3. Encais.",daco:"DA-P1",da:10,co:10,pont:"entrou",emotion:"Cadence",corps:"RESSENTIR",lien:"RAP",pensee:"VALIDER"},
+      {nom:"Retrait antivols",ctx:"COMMERCE · 3. Encais.",daco:"CO-N1",da:10,co:10,pont:"force",emotion:"Attention",corps:"ANCRER",lien:"ID",pensee:"PROTÉGER"},
+    ],
+    "4. SAV": [
+      {nom:"Réception retour client",ctx:"COMMERCE · 4. SAV",daco:"CO-N2",da:10,co:10,pont:"force",emotion:"Maîtrise",corps:"ANCRER",lien:"COM",pensee:"PROTÉGER"},
+      {nom:"Vérification état produit",ctx:"COMMERCE · 4. SAV",daco:"CO-N1",da:10,co:10,pont:"entrou",emotion:"Vigilance",corps:"RESSENTIR",lien:"ID",pensee:"VALIDER"},
+    ],
+    "5. Fermet.": [
+      {nom:"Comptage fond de caisse",ctx:"COMMERCE · 5. Fermet.",daco:"CO-N1",da:15,co:10,pont:"entrou",emotion:"Précision",corps:"ANCRER",lien:"ID",pensee:"VALIDER"},
+      {nom:"Rangement de la surface",ctx:"COMMERCE · 5. Fermet.",daco:"DA-P1",da:15,co:10,pont:"entrou",emotion:"Calme",corps:"RESSENTIR",lien:"RAP",pensee:"CHERCHER"},
+    ],
+    "1. Prise P.": [
+      {nom:"Connexion session/code",ctx:"COMMERCE · 1. Prise P.",daco:"CO-N1",da:5,co:10,pont:"entrou",emotion:"Rigueur",corps:"RESSENTIR",lien:"ID",pensee:"VALIDER"},
+      {nom:"Comptage fond de caisse",ctx:"COMMERCE · 1. Prise P.",daco:"CO-N1",da:10,co:10,pont:"entrou",emotion:"Précision",corps:"ANCRER",lien:"ID",pensee:"VALIDER"},
+    ],
+    "2. Scan": [
+      {nom:"Manipulation articles",ctx:"COMMERCE · 2. Scan",daco:"CO-N1",da:15,co:10,pont:"force",emotion:"Agilité",corps:"ANCRER",lien:"RAP",pensee:"VALIDER"},
+      {nom:"Lecture codes-barres",ctx:"COMMERCE · 2. Scan",daco:"DA-P1",da:10,co:10,pont:"entrou",emotion:"Cadence",corps:"RESSENTIR",lien:"RAP",pensee:"VALIDER"},
+    ],
+    "3. Paiement": [
+      {nom:"Annonce du montant total",ctx:"COMMERCE · 3. Paiement",daco:"DA-N1",da:10,co:10,pont:"ouvert",emotion:"Clarté",corps:"RESSENTIR",lien:"COM",pensee:"AJUSTER"},
+      {nom:"Encaissement espèces",ctx:"COMMERCE · 3. Paiement",daco:"CO-N2",da:15,co:10,pont:"force",emotion:"Rigueur",corps:"ANCRER",lien:"ID",pensee:"VALIDER"},
+    ],
+    "4. Alerte": [
+      {nom:"Appel "prix" ou "chef"",ctx:"COMMERCE · 4. Alerte",daco:"CO-N1",da:10,co:10,pont:"entrou",emotion:"Réactivité",corps:"RESSENTIR",lien:"COM",pensee:"AJUSTER"},
+      {nom:"Vigilance "fond de caddy"",ctx:"COMMERCE · 4. Alerte",daco:"CO-N2",da:10,co:10,pont:"force",emotion:"Attention",corps:"ANCRER",lien:"ID",pensee:"PROTÉGER"},
+    ],
+    "1. Prép.": [
+      {nom:"Analyse du fichier client",ctx:"COMMERCE · 1. Prép.",daco:"CO-N1",da:5,co:10,pont:"entrou",emotion:"Rigueur",corps:"RESSENTIR",lien:"ID",pensee:"DISCERNER"},
+      {nom:"Phoning / Prise de Rdv",ctx:"COMMERCE · 1. Prép.",daco:"CO-N2",da:15,co:10,pont:"force",emotion:"Courage",corps:"ANCRER",lien:"COM",pensee:"AJUSTER"},
+    ],
+    "2. Approche": [
+      {nom:"Conduite zone (Trafic)",ctx:"COMMERCE · 2. Approche",daco:"CO-N2",da:10,co:10,pont:"force",emotion:"Calme",corps:"ANCRER",lien:"ID",pensee:"PROTÉGER"},
+      {nom:"Arrivée chez le prospect",ctx:"COMMERCE · 2. Approche",daco:"DA-N1",da:15,co:10,pont:"ouvert",emotion:"Enthousias.",corps:"RESSENTIR",lien:"COM",pensee:"AJUSTER"},
+    ],
+    "3. Négoc.": [
+      {nom:"Présentation de l'offre",ctx:"COMMERCE · 3. Négoc.",daco:"DA-N2",da:20,co:10,pont:"ouvert",emotion:"Expertise",corps:"RESSENTIR",lien:"COM",pensee:"CONSTRUIRE"},
+      {nom:"Traitement objections",ctx:"COMMERCE · 3. Négoc.",daco:"CO-N2",da:20,co:10,pont:"force",emotion:"Réactivité",corps:"ANCRER",lien:"COM",pensee:"AJUSTER"},
+    ],
+    "4. Suivi": [
+      {nom:"Saisie rapport (CRM)",ctx:"COMMERCE · 4. Suivi",daco:"CO-P1",da:5,co:10,pont:"entrou",emotion:"Rigueur",corps:"RESSENTIR",lien:"RAP",pensee:"VALIDER"},
+      {nom:"Relance clients devis",ctx:"COMMERCE · 4. Suivi",daco:"CO-N2",da:10,co:10,pont:"force",emotion:"Persévéran.",corps:"ANCRER",lien:"COM",pensee:"AJUSTER"},
+    ],
+    "5. Clôture": [
+      {nom:"Point de vente avec chef",ctx:"COMMERCE · 5. Clôture",daco:"DA-N1",da:15,co:10,pont:"ouvert",emotion:"Clarté",corps:"LIBÉRER",lien:"COM",pensee:"AJUSTER"},
+      {nom:"Rangement voiture/échant.",ctx:"COMMERCE · 5. Clôture",daco:"DA-P1",da:10,co:10,pont:"entrou",emotion:"Ordre",corps:"RESSENTIR",lien:"RAP",pensee:"CHERCHER"},
+    ],
+    "1. Pilotage": [
+      {nom:"Analyse CA / Indicateurs",ctx:"COMMERCE · 1. Pilotage",daco:"CO-N1",da:15,co:10,pont:"entrou",emotion:"Rigueur",corps:"RESSENTIR",lien:"ID",pensee:"DISCERNER"},
+      {nom:"Briefing équipe matin",ctx:"COMMERCE · 1. Pilotage",daco:"DA-N1",da:20,co:10,pont:"ouvert",emotion:"Leadership",corps:"LIBÉRER",lien:"COM",pensee:"AJUSTER"},
+    ],
+    "2. Équipe": [
+      {nom:"Entretien de recrutement",ctx:"COMMERCE · 2. Équipe",daco:"DA-N1",da:15,co:10,pont:"ouvert",emotion:"Intuition",corps:"RESSENTIR",lien:"ID",pensee:"DISCERNER"},
+      {nom:"Formation nouveau venu",ctx:"COMMERCE · 2. Équipe",daco:"DA-N2",da:20,co:10,pont:"ouvert",emotion:"Partage",corps:"LIBÉRER",lien:"COM",pensee:"CONSTRUIRE"},
+    ],
+    "3. Marchand.": [
+      {nom:"Contrôle implantation",ctx:"COMMERCE · 3. Marchand.",daco:"DA-N1",da:15,co:10,pont:"entrou",emotion:"Esthétique",corps:"RESSENTIR",lien:"ID",pensee:"VALIDER"},
+      {nom:"Passage commande stock",ctx:"COMMERCE · 3. Marchand.",daco:"CO-N1",da:10,co:10,pont:"entrou",emotion:"Prévoyance",corps:"RESSENTIR",lien:"RAP",pensee:"VALIDER"},
+    ],
+    "4. Client": [
+      {nom:"Gestion litige grave",ctx:"COMMERCE · 4. Client",daco:"CO-N2",da:10,co:10,pont:"force",emotion:"Maîtrise",corps:"ANCRER",lien:"COM",pensee:"PROTÉGER"},
+      {nom:"Vente complexe / VIP",ctx:"COMMERCE · 4. Client",daco:"DA-N2",da:25,co:10,pont:"ouvert",emotion:"Prestige",corps:"RESSENTIR",lien:"COM",pensee:"CONSTRUIRE"},
+    ],
+    "1. Chargem.": [
+      {nom:"Prise des clés/véhicule",ctx:"COMMERCE · 1. Chargem.",daco:"CO-N1",da:5,co:10,pont:"entrou",emotion:"Rigueur",corps:"RESSENTIR",lien:"ID",pensee:"VALIDER"},
+      {nom:"Tri des colis par zone",ctx:"COMMERCE · 1. Chargem.",daco:"CO-N1",da:10,co:10,pont:"entrou",emotion:"Logique",corps:"ANCRER",lien:"RAP",pensee:"CHERCHER"},
+    ],
+    "2. Route": [
+      {nom:"Conduite urbaine (Trafic)",ctx:"COMMERCE · 2. Route",daco:"CO-N2",da:10,co:10,pont:"force",emotion:"Calme",corps:"ANCRER",lien:"ID",pensee:"PROTÉGER"},
+      {nom:"Recherche d'adresse/GPS",ctx:"COMMERCE · 2. Route",daco:"CO-N1",da:15,co:10,pont:"entrou",emotion:"Orientation",corps:"RESSENTIR",lien:"ID",pensee:"REPÉRER"},
+    ],
+    "3. Remise": [
+      {nom:"Accueil client / Sourire",ctx:"COMMERCE · 3. Remise",daco:"DA-N1",da:10,co:10,pont:"ouvert",emotion:"Politesse",corps:"RESSENTIR",lien:"COM",pensee:"AJUSTER"},
+      {nom:"Vérification identité",ctx:"COMMERCE · 3. Remise",daco:"CO-N1",da:10,co:10,pont:"entrou",emotion:"Rigueur",corps:"RESSENTIR",lien:"ID",pensee:"VALIDER"},
+    ],
+    "4. Aléas": [
+      {nom:"Appel client (absence)",ctx:"COMMERCE · 4. Aléas",daco:"CO-N1",da:10,co:10,pont:"entrou",emotion:"Patience",corps:"RESSENTIR",lien:"COM",pensee:"AJUSTER"},
+      {nom:"Gestion colis refusé",ctx:"COMMERCE · 4. Aléas",daco:"CO-N2",da:10,co:10,pont:"force",emotion:"Maîtrise",corps:"ANCRER",lien:"COM",pensee:"PROTÉGER"},
+    ],
+  },
+  "ADMINISTRATIF": {
+    "1. Saisie": [
+      {nom:"Récupération des pièces",ctx:"ADMINISTRATIF · 1. Saisie",daco:"DA-P1",da:10,co:10,pont:"entrou",emotion:"Ordre",corps:"RESSENTIR",lien:"RAP",pensee:"CHERCHER"},
+      {nom:"Codification factures",ctx:"ADMINISTRATIF · 1. Saisie",daco:"CO-N1",da:10,co:10,pont:"entrou",emotion:"Rigueur",corps:"RESSENTIR",lien:"ID",pensee:"VALIDER"},
+    ],
+    "2. Trésor.": [
+      {nom:"Rapprochement bancaire",ctx:"ADMINISTRATIF · 2. Trésor.",daco:"CO-N1",da:20,co:10,pont:"entrou",emotion:"Rigueur",corps:"RESSENTIR",lien:"ID",pensee:"VALIDER"},
+      {nom:"Préparation des virements",ctx:"ADMINISTRATIF · 2. Trésor.",daco:"CO-N2",da:15,co:10,pont:"force",emotion:"Vigilance",corps:"ANCRER",lien:"ID",pensee:"PROTÉGER"},
+    ],
+    "3. Fiscal": [
+      {nom:"Déclaration de TVA",ctx:"ADMINISTRATIF · 3. Fiscal",daco:"CO-N2",da:30,co:10,pont:"force",emotion:"Alerte",corps:"ANCRER",lien:"ID",pensee:"VALIDER"},
+      {nom:"Veille réglementaire",ctx:"ADMINISTRATIF · 3. Fiscal",daco:"DA-N1",da:15,co:10,pont:"ouvert",emotion:"Curiosité",corps:"RESSENTIR",lien:"ID",pensee:"DISCERNER"},
+    ],
+    "4. Social": [
+      {nom:"Collecte variables paie",ctx:"ADMINISTRATIF · 4. Social",daco:"CO-N1",da:10,co:10,pont:"entrou",emotion:"Rigueur",corps:"RESSENTIR",lien:"ID",pensee:"REPÉRER"},
+      {nom:"Édition des bulletins",ctx:"ADMINISTRATIF · 4. Social",daco:"CO-N1",da:15,co:10,pont:"entrou",emotion:"Précision",corps:"RESSENTIR",lien:"ID",pensee:"VALIDER"},
+    ],
+    "5. Clôture": [
+      {nom:"Sauvegarde comptabilité",ctx:"ADMINISTRATIF · 5. Clôture",daco:"DA-P1",da:10,co:10,pont:"entrou",emotion:"Sécurité",corps:"ANCRER",lien:"RAP",pensee:"VALIDER"},
+      {nom:"Rangement des classeurs",ctx:"ADMINISTRATIF · 5. Clôture",daco:"DA-P1",da:15,co:10,pont:"entrou",emotion:"Calme",corps:"RESSENTIR",lien:"RAP",pensee:"CHERCHER"},
+    ],
+    "1. Recrut.": [
+      {nom:"Analyse besoins services",ctx:"ADMINISTRATIF · 1. Recrut.",daco:"CO-N1",da:10,co:10,pont:"entrou",emotion:"Écoute",corps:"RESSENTIR",lien:"ID",pensee:"DISCERNER"},
+      {nom:"Rédaction/Diffusion offre",ctx:"ADMINISTRATIF · 1. Recrut.",daco:"DA-N1",da:15,co:10,pont:"entrou",emotion:"Clarté",corps:"RESSENTIR",lien:"RAP",pensee:"CONSTRUIRE"},
+    ],
+    "2. Jurid.": [
+      {nom:"Rédaction contrats travail",ctx:"ADMINISTRATIF · 2. Jurid.",daco:"CO-N2",da:10,co:10,pont:"force",emotion:"Vigilance",corps:"ANCRER",lien:"ID",pensee:"PROTÉGER"},
+      {nom:"Veille droit du travail",ctx:"ADMINISTRATIF · 2. Jurid.",daco:"DA-N1",da:15,co:10,pont:"ouvert",emotion:"Curiosité",corps:"RESSENTIR",lien:"ID",pensee:"DISCERNER"},
+    ],
+    "3. Dévelop.": [
+      {nom:"Plan de formation",ctx:"ADMINISTRATIF · 3. Dévelop.",daco:"DA-N2",da:20,co:10,pont:"ouvert",emotion:"Vision",corps:"RESSENTIR",lien:"RAP",pensee:"CONSTRUIRE"},
+      {nom:"Entretien professionnel",ctx:"ADMINISTRATIF · 3. Dévelop.",daco:"DA-N1",da:15,co:10,pont:"ouvert",emotion:"Empathie",corps:"RESSENTIR",lien:"COM",pensee:"AJUSTER"},
+    ],
+    "4. Pilotage": [
+      {nom:"Suivi de la masse salar.",ctx:"ADMINISTRATIF · 4. Pilotage",daco:"CO-N1",da:15,co:10,pont:"entrou",emotion:"Rigueur",corps:"ANCRER",lien:"ID",pensee:"VALIDER"},
+      {nom:"Réunion CSE / Syndicats",ctx:"ADMINISTRATIF · 4. Pilotage",daco:"CO-N2",da:20,co:10,pont:"force",emotion:"Ténacité",corps:"ANCRER",lien:"COM",pensee:"AJUSTER"},
+    ],
+    "1. Veille": [
+      {nom:"Lecture JO / Revues",ctx:"ADMINISTRATIF · 1. Veille",daco:"CO-N1",da:10,co:10,pont:"entrou",emotion:"Rigueur",corps:"RESSENTIR",lien:"ID",pensee:"DISCERNER"},
+      {nom:"Analyse impacts internes",ctx:"ADMINISTRATIF · 1. Veille",daco:"CO-N1",da:10,co:10,pont:"entrou",emotion:"Logique",corps:"RESSENTIR",lien:"ID",pensee:"PROTÉGER"},
+    ],
+    "2. Contrats": [
+      {nom:"Rédaction clauses",ctx:"ADMINISTRATIF · 2. Contrats",daco:"CO-N2",da:15,co:10,pont:"force",emotion:"Vigilance",corps:"ANCRER",lien:"ID",pensee:"PROTÉGER"},
+      {nom:"Négociation juridique",ctx:"ADMINISTRATIF · 2. Contrats",daco:"CO-N2",da:20,co:10,pont:"force",emotion:"Ténacité",corps:"ANCRER",lien:"COM",pensee:"AJUSTER"},
+    ],
+    "3. Litiges": [
+      {nom:"Analyse de plainte",ctx:"ADMINISTRATIF · 3. Litiges",daco:"CO-N2",da:10,co:10,pont:"force",emotion:"Maîtrise",corps:"ANCRER",lien:"ID",pensee:"PROTÉGER"},
+      {nom:"Recherche jurisprudence",ctx:"ADMINISTRATIF · 3. Litiges",daco:"DA-N1",da:15,co:10,pont:"entrou",emotion:"Curiosité",corps:"RESSENTIR",lien:"RAP",pensee:"CHERCHER"},
+    ],
+    "4. Conseil": [
+      {nom:"Réponse aux opérationnels",ctx:"ADMINISTRATIF · 4. Conseil",daco:"DA-N1",da:15,co:10,pont:"ouvert",emotion:"Pédagogie",corps:"RESSENTIR",lien:"COM",pensee:"AJUSTER"},
+      {nom:"Validation pub/com",ctx:"ADMINISTRATIF · 4. Conseil",daco:"CO-N1",da:10,co:10,pont:"entrou",emotion:"Vigilance",corps:"RESSENTIR",lien:"ID",pensee:"VALIDER"},
+    ],
+    "1. Flux": [
+      {nom:"Ouverture messagerie",ctx:"ADMINISTRATIF · 1. Flux",daco:"CO-N1",da:5,co:10,pont:"entrou",emotion:"Vigilance",corps:"RESSENTIR",lien:"ID",pensee:"REPÉRER"},
+      {nom:"Tri du courrier papier",ctx:"ADMINISTRATIF · 1. Flux",daco:"DA-P1",da:10,co:10,pont:"entrou",emotion:"Ordre",corps:"RESSENTIR",lien:"RAP",pensee:"CHERCHER"},
+    ],
+    "2. Agenda": [
+      {nom:"Saisie de rendez-vous",ctx:"ADMINISTRATIF · 2. Agenda",daco:"DA-N1",da:10,co:10,pont:"entrou",emotion:"Précision",corps:"RESSENTIR",lien:"RAP",pensee:"CONSTRUIRE"},
+      {nom:"Réservation salle/train",ctx:"ADMINISTRATIF · 2. Agenda",daco:"CO-N1",da:15,co:10,pont:"entrou",emotion:"Rigueur",corps:"RESSENTIR",lien:"ID",pensee:"VALIDER"},
+    ],
+    "3. Écrits": [
+      {nom:"Frappe de compte-rendu",ctx:"ADMINISTRATIF · 3. Écrits",daco:"CO-N1",da:15,co:10,pont:"entrou",emotion:"Concentr.",corps:"RESSENTIR",lien:"RAP",pensee:"CONSTRUIRE"},
+      {nom:"Correction orthographe",ctx:"ADMINISTRATIF · 3. Écrits",daco:"CO-N1",da:10,co:10,pont:"entrou",emotion:"Rigueur",corps:"RESSENTIR",lien:"ID",pensee:"VALIDER"},
+    ],
+    "4. Accueil": [
+      {nom:"Orientation visiteurs",ctx:"ADMINISTRATIF · 4. Accueil",daco:"DA-N1",da:10,co:10,pont:"ouvert",emotion:"Courtoisie",corps:"RESSENTIR",lien:"COM",pensee:"AJUSTER"},
+      {nom:"Gestion attente/café",ctx:"ADMINISTRATIF · 4. Accueil",daco:"DA-P1",da:10,co:10,pont:"entrou",emotion:"Service",corps:"LIBÉRER",lien:"DÉPOSER",pensee:"CHERCHER"},
+    ],
+    "1. Collecte": [
+      {nom:"Réception feuilles heures",ctx:"ADMINISTRATIF · 1. Collecte",daco:"DA-P1",da:10,co:10,pont:"entrou",emotion:"Ordre",corps:"RESSENTIR",lien:"RAP",pensee:"CHERCHER"},
+      {nom:"Saisie des absences/CP",ctx:"ADMINISTRATIF · 1. Collecte",daco:"CO-N1",da:10,co:10,pont:"entrou",emotion:"Rigueur",corps:"RESSENTIR",lien:"ID",pensee:"VALIDER"},
+    ],
+    "2. Calcul": [
+      {nom:"Lancement calcul paie",ctx:"ADMINISTRATIF · 2. Calcul",daco:"CO-N1",da:5,co:10,pont:"entrou",emotion:"Attente",corps:"RESSENTIR",lien:"ID",pensee:"VALIDER"},
+      {nom:"Contrôle brut/net",ctx:"ADMINISTRATIF · 2. Calcul",daco:"CO-N2",da:25,co:10,pont:"force",emotion:"Vigilance",corps:"ANCRER",lien:"ID",pensee:"VALIDER"},
+    ],
+    "3. Déclar.": [
+      {nom:"Génération de la DSN",ctx:"ADMINISTRATIF · 3. Déclar.",daco:"CO-N2",da:20,co:10,pont:"force",emotion:"Alerte",corps:"ANCRER",lien:"ID",pensee:"VALIDER"},
+      {nom:"Vérif. cotis. sociales",ctx:"ADMINISTRATIF · 3. Déclar.",daco:"CO-N1",da:15,co:10,pont:"entrou",emotion:"Rigueur",corps:"RESSENTIR",lien:"ID",pensee:"VALIDER"},
+    ],
+    "1. Start": [
+      {nom:"Vérif. propreté accueil",ctx:"ADMINISTRATIF · 1. Start",daco:"DA-P1",da:10,co:10,pont:"entrou",emotion:"Esthétique",corps:"RESSENTIR",lien:"RAP",pensee:"CHERCHER"},
+      {nom:"Ouverture du standard",ctx:"ADMINISTRATIF · 1. Start",daco:"CO-N1",da:10,co:10,pont:"entrou",emotion:"Vigilance",corps:"RESSENTIR",lien:"ID",pensee:"VALIDER"},
+    ],
+    "2. Standard": [
+      {nom:"Réponse aux appels",ctx:"ADMINISTRATIF · 2. Standard",daco:"CO-N2",da:10,co:10,pont:"force",emotion:"Réactivité",corps:"ANCRER",lien:"COM",pensee:"AJUSTER"},
+      {nom:"Transfert vers services",ctx:"ADMINISTRATIF · 2. Standard",daco:"CO-N1",da:10,co:10,pont:"entrou",emotion:"Mémoire",corps:"RESSENTIR",lien:"RAP",pensee:"VALIDER"},
+    ],
+    "3. Visite": [
+      {nom:"Identification visiteur",ctx:"ADMINISTRATIF · 3. Visite",daco:"CO-N1",da:10,co:10,pont:"entrou",emotion:"Vigilance",corps:"RESSENTIR",lien:"ID",pensee:"VALIDER"},
+      {nom:"Remise badge accès",ctx:"ADMINISTRATIF · 3. Visite",daco:"CO-N1",da:10,co:10,pont:"entrou",emotion:"Rigueur",corps:"RESSENTIR",lien:"ID",pensee:"VALIDER"},
+    ],
+    "4. Aléas": [
+      {nom:"Gestion visiteur tendu",ctx:"ADMINISTRATIF · 4. Aléas",daco:"CO-N2",da:10,co:10,pont:"force",emotion:"Maîtrise",corps:"ANCRER",lien:"COM",pensee:"PROTÉGER"},
+      {nom:"Appel sécurité (alerte)",ctx:"ADMINISTRATIF · 4. Aléas",daco:"CO-N2",da:20,co:10,pont:"force",emotion:"Alerte",corps:"ANCRER",lien:"COM",pensee:"PROTÉGER"},
+    ],
+    "1. Pilotage": [
+      {nom:"Briefing stratégique matin",ctx:"ADMINISTRATIF · 1. Pilotage",daco:"DA-N1",da:20,co:10,pont:"ouvert",emotion:"Vision",corps:"RESSENTIR",lien:"COM",pensee:"AJUSTER"},
+      {nom:"Filtrage des e-mails dir.",ctx:"ADMINISTRATIF · 1. Pilotage",daco:"CO-N1",da:10,co:10,pont:"entrou",emotion:"Rigueur",corps:"RESSENTIR",lien:"ID",pensee:"DISCERNER"},
+    ],
+    "2. Voyage": [
+      {nom:"Réservation multi-étapes",ctx:"ADMINISTRATIF · 2. Voyage",daco:"CO-N1",da:20,co:10,pont:"entrou",emotion:"Précision",corps:"RESSENTIR",lien:"RAP",pensee:"CONSTRUIRE"},
+      {nom:"Vérif. visas / documents",ctx:"ADMINISTRATIF · 2. Voyage",daco:"CO-N2",da:10,co:10,pont:"force",emotion:"Vigilance",corps:"ANCRER",lien:"ID",pensee:"VALIDER"},
+    ],
+    "3. Réunion": [
+      {nom:"Organisation COMEX",ctx:"ADMINISTRATIF · 3. Réunion",daco:"CO-N1",da:15,co:10,pont:"entrou",emotion:"Prévoyance",corps:"RESSENTIR",lien:"RAP",pensee:"CONSTRUIRE"},
+      {nom:"Préparation supports PPT",ctx:"ADMINISTRATIF · 3. Réunion",daco:"DA-N2",da:20,co:10,pont:"ouvert",emotion:"Esthétique",corps:"RESSENTIR",lien:"ID",pensee:"CONSTRUIRE"},
+    ],
+    "4. Interface": [
+      {nom:"Filtrage appels VIP",ctx:"ADMINISTRATIF · 4. Interface",daco:"CO-N2",da:15,co:10,pont:"force",emotion:"Diplomatie",corps:"ANCRER",lien:"COM",pensee:"PROTÉGER"},
+      {nom:"Accueil délégations",ctx:"ADMINISTRATIF · 4. Interface",daco:"DA-P1",da:20,co:10,pont:"ouvert",emotion:"Prestige",corps:"RESSENTIR",lien:"COM",pensee:"AJUSTER"},
+    ],
+  },
+  "VIE_QUOTIDIENNE": {
+    "1. Approvision.": [
+      {nom:"Inventaire placards/frigo",ctx:"VIE_QUOTIDIENNE · 1. Approvision.",daco:"CO-N1",da:5,co:10,pont:"entrou",emotion:"Rigueur",corps:"RESSENTIR",lien:"ID",pensee:"DISCERNER"},
+      {nom:"Rédaction de la liste",ctx:"VIE_QUOTIDIENNE · 1. Approvision.",daco:"DA-P1",da:10,co:10,pont:"entrou",emotion:"Logique",corps:"RESSENTIR",lien:"RAP",pensee:"CONSTRUIRE"},
+    ],
+    "2. Entretien": [
+      {nom:"Lancement machine/Linge",ctx:"VIE_QUOTIDIENNE · 2. Entretien",daco:"DA-P1",da:10,co:10,pont:"entrou",emotion:"Routine",corps:"RESSENTIR",lien:"RAP",pensee:"VALIDER"},
+      {nom:"Nettoyage surfaces (Cuis.)",ctx:"VIE_QUOTIDIENNE · 2. Entretien",daco:"DA-P1",da:20,co:10,pont:"entrou",emotion:"Fraîcheur",corps:"LIBÉRER",lien:"DÉPOSER",pensee:"CHERCHER"},
+    ],
+    "3. Aliment.": [
+      {nom:"Élaboration des menus",ctx:"VIE_QUOTIDIENNE · 3. Aliment.",daco:"DA-N1",da:15,co:10,pont:"ouvert",emotion:"Créativité",corps:"RESSENTIR",lien:"ID",pensee:"CONSTRUIRE"},
+      {nom:"Préparation repas (Feu)",ctx:"VIE_QUOTIDIENNE · 3. Aliment.",daco:"DA-P1",da:20,co:10,pont:"entrou",emotion:"Précision",corps:"RESSENTIR",lien:"ID",pensee:"AJUSTER"},
+    ],
+    "4. Admin.": [
+      {nom:"Ouverture du courrier",ctx:"VIE_QUOTIDIENNE · 4. Admin.",daco:"CO-N1",da:5,co:10,pont:"entrou",emotion:"Vigilance",corps:"RESSENTIR",lien:"ID",pensee:"REPÉRER"},
+      {nom:"Paiement factures/loyer",ctx:"VIE_QUOTIDIENNE · 4. Admin.",daco:"CO-N2",da:20,co:10,pont:"force",emotion:"Rigueur",corps:"ANCRER",lien:"ID",pensee:"VALIDER"},
+    ],
+    "5. Clôture": [
+      {nom:"Fermeture des accès",ctx:"VIE_QUOTIDIENNE · 5. Clôture",daco:"CO-N1",da:5,co:10,pont:"entrou",emotion:"Vigilance",corps:"ANCRER",lien:"ID",pensee:"PROTÉGER"},
+      {nom:"Extinction lumières",ctx:"VIE_QUOTIDIENNE · 5. Clôture",daco:"DA-P1",da:10,co:10,pont:"entrou",emotion:"Calme",corps:"LIBÉRER",lien:"DÉPOSER",pensee:"CHERCHER"},
+    ],
+    "1. Matin": [
+      {nom:"Réveil des enfants",ctx:"VIE_QUOTIDIENNE · 1. Matin",daco:"DA-N1",da:15,co:10,pont:"ouvert",emotion:"Douceur",corps:"RESSENTIR",lien:"COM",pensee:"AJUSTER"},
+      {nom:"Aide à l'habillage",ctx:"VIE_QUOTIDIENNE · 1. Matin",daco:"CO-N1",da:10,co:10,pont:"entrou",emotion:"Patience",corps:"ANCRER",lien:"RAP",pensee:"VALIDER"},
+    ],
+    "2. Scolaire": [
+      {nom:"Suivi des devoirs",ctx:"VIE_QUOTIDIENNE · 2. Scolaire",daco:"CO-N1",da:15,co:10,pont:"entrou",emotion:"Pédagogie",corps:"RESSENTIR",lien:"COM",pensee:"CONSTRUIRE"},
+      {nom:"Signature cahier/mots",ctx:"VIE_QUOTIDIENNE · 2. Scolaire",daco:"DA-P1",da:10,co:10,pont:"entrou",emotion:"Routine",corps:"ANCRER",lien:"ID",pensee:"VALIDER"},
+    ],
+    "3. Éduc.": [
+      {nom:"Gestion d'une colère",ctx:"VIE_QUOTIDIENNE · 3. Éduc.",daco:"CO-N2",da:10,co:10,pont:"force",emotion:"Calme",corps:"ANCRER",lien:"COM",pensee:"PROTÉGER"},
+      {nom:"Rappel d'une règle/cadre",ctx:"VIE_QUOTIDIENNE · 3. Éduc.",daco:"CO-N2",da:5,co:10,pont:"force",emotion:"Fermeté",corps:"ANCRER",lien:"ID",pensee:"PROTÉGER"},
+    ],
+    "4. Soir": [
+      {nom:"Bain / Hygiène enfants",ctx:"VIE_QUOTIDIENNE · 4. Soir",daco:"CO-N1",da:15,co:10,pont:"entrou",emotion:"Vigilance",corps:"RESSENTIR",lien:"RAP",pensee:"VALIDER"},
+      {nom:"Pyjama / Rangement",ctx:"VIE_QUOTIDIENNE · 4. Soir",daco:"DA-P1",da:15,co:10,pont:"entrou",emotion:"Routine",corps:"LIBÉRER",lien:"DÉPOSER",pensee:"CHERCHER"},
+    ],
+    "1. Énergie": [
+      {nom:"Réveil à heure fixe",ctx:"VIE_QUOTIDIENNE · 1. Énergie",daco:"CO-N1",da:10,co:10,pont:"entrou",emotion:"Volonté",corps:"ANCRER",lien:"ID",pensee:"VALIDER"},
+      {nom:"Hydratation (Eau)",ctx:"VIE_QUOTIDIENNE · 1. Énergie",daco:"DA-P1",da:15,co:10,pont:"entrou",emotion:"Vitalité",corps:"RESSENTIR",lien:"RAP",pensee:"CHERCHER"},
+    ],
+    "2. Mouvement": [
+      {nom:"Séance de sport / Marche",ctx:"VIE_QUOTIDIENNE · 2. Mouvement",daco:"CO-N1",da:30,co:10,pont:"force",emotion:"Endurance",corps:"ANCRER",lien:"ID",pensee:"CONSTRUIRE"},
+      {nom:"Étirements / Mobilité",ctx:"VIE_QUOTIDIENNE · 2. Mouvement",daco:"DA-N1",da:15,co:10,pont:"entrou",emotion:"Souplesse",corps:"LIBÉRER",lien:"DÉPOSER",pensee:"CHERCHER"},
+    ],
+    "3. Nutrit.": [
+      {nom:"Choix aliments bruts",ctx:"VIE_QUOTIDIENNE · 3. Nutrit.",daco:"CO-N1",da:15,co:10,pont:"entrou",emotion:"Conscience",corps:"RESSENTIR",lien:"ID",pensee:"DISCERNER"},
+      {nom:"Cuisine vapeur / Douce",ctx:"VIE_QUOTIDIENNE · 3. Nutrit.",daco:"DA-P1",da:15,co:10,pont:"entrou",emotion:"Santé",corps:"RESSENTIR",lien:"ID",pensee:"CONSTRUIRE"},
+    ],
+    "4. Mental": [
+      {nom:"Méditation / Respiration",ctx:"VIE_QUOTIDIENNE · 4. Mental",daco:"DA-N2",da:25,co:10,pont:"ouvert",emotion:"Présence",corps:"LIBÉRER",lien:"ID",pensee:"CONSTRUIRE"},
+      {nom:"Lecture / Apprentissage",ctx:"VIE_QUOTIDIENNE · 4. Mental",daco:"DA-N1",da:15,co:10,pont:"ouvert",emotion:"Focus",corps:"RESSENTIR",lien:"RAP",pensee:"CONSTRUIRE"},
+    ],
+    "1. Amitié": [
+      {nom:"Prise de nouvelles (SMS)",ctx:"VIE_QUOTIDIENNE · 1. Amitié",daco:"DA-P1",da:15,co:10,pont:"entrou",emotion:"Attention",corps:"RESSENTIR",lien:"COM",pensee:"VALIDER"},
+      {nom:"Organisation sortie",ctx:"VIE_QUOTIDIENNE · 1. Amitié",daco:"DA-N1",da:20,co:10,pont:"ouvert",emotion:"Initiative",corps:"RESSENTIR",lien:"RAP",pensee:"CONSTRUIRE"},
+    ],
+    "2. Hobbies": [
+      {nom:"Préparation matériel",ctx:"VIE_QUOTIDIENNE · 2. Hobbies",daco:"DA-P1",da:10,co:10,pont:"entrou",emotion:"Rituel",corps:"RESSENTIR",lien:"RAP",pensee:"CHERCHER"},
+      {nom:"Pratique (Musique/Art...)",ctx:"VIE_QUOTIDIENNE · 2. Hobbies",daco:"DA-N2",da:30,co:10,pont:"entrou",emotion:"Focus",corps:"LIBÉRER",lien:"ID",pensee:"CONSTRUIRE"},
+    ],
+    "3. Culture": [
+      {nom:"Lecture / Cinéma / Expo",ctx:"VIE_QUOTIDIENNE · 3. Culture",daco:"DA-N1",da:20,co:10,pont:"ouvert",emotion:"Curiosité",corps:"RESSENTIR",lien:"ID",pensee:"DISCERNER"},
+      {nom:"Analyse / Critique",ctx:"VIE_QUOTIDIENNE · 3. Culture",daco:"DA-N1",da:15,co:10,pont:"entrou",emotion:"Réflexion",corps:"RESSENTIR",lien:"RAP",pensee:"CONSTRUIRE"},
+    ],
+    "4. Rencontre": [
+      {nom:"Sortir de sa zone",ctx:"VIE_QUOTIDIENNE · 4. Rencontre",daco:"CO-N2",da:20,co:10,pont:"force",emotion:"Courage",corps:"ANCRER",lien:"ID",pensee:"PROTÉGER"},
+      {nom:"Échange fortuit",ctx:"VIE_QUOTIDIENNE · 4. Rencontre",daco:"DA-N1",da:15,co:10,pont:"ouvert",emotion:"Spontanéité",corps:"RESSENTIR",lien:"COM",pensee:"AJUSTER"},
+    ],
+    "1. Départ": [
+      {nom:"Vérif. météo/itinéraire",ctx:"VIE_QUOTIDIENNE · 1. Départ",daco:"CO-N1",da:10,co:10,pont:"entrou",emotion:"Anticipation",corps:"RESSENTIR",lien:"ID",pensee:"DISCERNER"},
+      {nom:"Préparation clés/papiers",ctx:"VIE_QUOTIDIENNE · 1. Départ",daco:"DA-P1",da:10,co:10,pont:"entrou",emotion:"Ordre",corps:"RESSENTIR",lien:"RAP",pensee:"CHERCHER"},
+    ],
+    "2. Déplac.": [
+      {nom:"Conduite / Navigation",ctx:"VIE_QUOTIDIENNE · 2. Déplac.",daco:"CO-N1",da:15,co:10,pont:"entrou",emotion:"Concentration",corps:"RESSENTIR",lien:"ID",pensee:"VALIDER"},
+      {nom:"Vigilance piétons/danger",ctx:"VIE_QUOTIDIENNE · 2. Déplac.",daco:"CO-N2",da:10,co:10,pont:"force",emotion:"Alerte",corps:"ANCRER",lien:"ID",pensee:"PROTÉGER"},
+    ],
+    "3. Urbain": [
+      {nom:"Recherche stationnement",ctx:"VIE_QUOTIDIENNE · 3. Urbain",daco:"CO-N1",da:20,co:10,pont:"force",emotion:"Ténacité",corps:"ANCRER",lien:"ID",pensee:"CHERCHER"},
+      {nom:"Marche en ville",ctx:"VIE_QUOTIDIENNE · 3. Urbain",daco:"DA-N1",da:15,co:10,pont:"ouvert",emotion:"Vitalité",corps:"RESSENTIR",lien:"ID",pensee:"DISCERNER"},
+    ],
+    "4. Nature": [
+      {nom:"Observation paysage",ctx:"VIE_QUOTIDIENNE · 4. Nature",daco:"DA-N1",da:25,co:10,pont:"ouvert",emotion:"Contempl.",corps:"LIBÉRER",lien:"ID",pensee:"DISCERNER"},
+      {nom:"Respiration air frais",ctx:"VIE_QUOTIDIENNE · 4. Nature",daco:"DA-P2",da:30,co:10,pont:"ouvert",emotion:"Détente",corps:"RESSENTIR",lien:"ID",pensee:"VALIDER"},
+    ],
+  },
+  "AFFECTIVE": {
+    "1. Connex.": [
+      {nom:"Temps de parole dédié",ctx:"AFFECTIVE · 1. Connex.",daco:"DA-N1",da:20,co:10,pont:"ouvert",emotion:"Écoute",corps:"LIBÉRER",lien:"COM",pensee:"AJUSTER"},
+      {nom:"Contact physique/Câlin",ctx:"AFFECTIVE · 1. Connex.",daco:"DA-P2",da:40,co:10,pont:"entrou",emotion:"Tendresse",corps:"RESSENTIR",lien:"ID",pensee:"VALIDER"},
+    ],
+    "2. Comm.": [
+      {nom:"Débriefing émotionnel jour",ctx:"AFFECTIVE · 2. Comm.",daco:"DA-N1",da:20,co:10,pont:"ouvert",emotion:"Écoute",corps:"RESSENTIR",lien:"COM",pensee:"AJUSTER"},
+      {nom:"Négociation des besoins",ctx:"AFFECTIVE · 2. Comm.",daco:"CO-N2",da:15,co:10,pont:"force",emotion:"Diplomatie",corps:"ANCRER",lien:"COM",pensee:"AJUSTER"},
+    ],
+    "3. Intime": [
+      {nom:"Création ambiance (Détente)",ctx:"AFFECTIVE · 3. Intime",daco:"DA-N1",da:20,co:10,pont:"ouvert",emotion:"Esthétique",corps:"RESSENTIR",lien:"ID",pensee:"CONSTRUIRE"},
+      {nom:"Jeu / Séduction",ctx:"AFFECTIVE · 3. Intime",daco:"DA-N2",da:35,co:10,pont:"ouvert",emotion:"Humour",corps:"LIBÉRER",lien:"ID",pensee:"AJUSTER"},
+    ],
+    "4. Logist.": [
+      {nom:"Synchro des agendas",ctx:"AFFECTIVE · 4. Logist.",daco:"CO-N1",da:10,co:10,pont:"entrou",emotion:"Rigueur",corps:"RESSENTIR",lien:"RAP",pensee:"CONSTRUIRE"},
+      {nom:"Répartition des tâches",ctx:"AFFECTIVE · 4. Logist.",daco:"CO-N2",da:15,co:10,pont:"force",emotion:"Justice",corps:"ANCRER",lien:"ID",pensee:"AJUSTER"},
+    ],
+    "5. Strat.": [
+      {nom:"Planification "Date Night"",ctx:"AFFECTIVE · 5. Strat.",daco:"DA-N1",da:20,co:10,pont:"ouvert",emotion:"Créativité",corps:"RESSENTIR",lien:"RAP",pensee:"CONSTRUIRE"},
+      {nom:"Surprise / Cadeau attention",ctx:"AFFECTIVE · 5. Strat.",daco:"DA-N2",da:30,co:10,pont:"ouvert",emotion:"Générosité",corps:"LIBÉRER",lien:"COM",pensee:"VALIDER"},
+    ],
+    "1. Échange": [
+      {nom:"Partage d'un secret/aveu",ctx:"AFFECTIVE · 1. Échange",daco:"CO-N2",da:25,co:10,pont:"force",emotion:"Confiance",corps:"LIBÉRER",lien:"COM",pensee:"AJUSTER"},
+      {nom:"Écoute active/Soutien",ctx:"AFFECTIVE · 1. Échange",daco:"CO-N1",da:20,co:10,pont:"entrou",emotion:"Empathie",corps:"RESSENTIR",lien:"COM",pensee:"AJUSTER"},
+    ],
+    "2. Présence": [
+      {nom:"Visite impromptue",ctx:"AFFECTIVE · 2. Présence",daco:"DA-N1",da:25,co:10,pont:"ouvert",emotion:"Surprise",corps:"RESSENTIR",lien:"COM",pensee:"AJUSTER"},
+      {nom:"Prêt d'objet / Service",ctx:"AFFECTIVE · 2. Présence",daco:"DA-P1",da:15,co:10,pont:"entrou",emotion:"Entraide",corps:"RESSENTIR",lien:"RAP",pensee:"VALIDER"},
+    ],
+    "3. Projets": [
+      {nom:"Voyage/Sortie groupe",ctx:"AFFECTIVE · 3. Projets",daco:"CO-N1",da:30,co:10,pont:"entrou",emotion:"Organisation",corps:"RESSENTIR",lien:"RAP",pensee:"CONSTRUIRE"},
+      {nom:"Co-création (Loisir)",ctx:"AFFECTIVE · 3. Projets",daco:"DA-N2",da:25,co:10,pont:"ouvert",emotion:"Synergie",corps:"LIBÉRER",lien:"ID",pensee:"CONSTRUIRE"},
+    ],
+    "4. Crises": [
+      {nom:"Pardon après dispute",ctx:"AFFECTIVE · 4. Crises",daco:"CO-N2",da:30,co:10,pont:"force",emotion:"Humilité",corps:"LIBÉRER",lien:"COM",pensee:"AJUSTER"},
+      {nom:"Confrontation nécessaire",ctx:"AFFECTIVE · 4. Crises",daco:"CO-N2",da:15,co:10,pont:"force",emotion:"Franchise",corps:"ANCRER",lien:"ID",pensee:"PROTÉGER"},
+    ],
+    "5. Clôture": [
+      {nom:"Tri contacts/Réseaux",ctx:"AFFECTIVE · 5. Clôture",daco:"DA-P1",da:10,co:10,pont:"entrou",emotion:"Nettoyage",corps:"RESSENTIR",lien:"ID",pensee:"DISCERNER"},
+      {nom:"Rangement lieu accueil",ctx:"AFFECTIVE · 5. Clôture",daco:"DA-P1",da:15,co:10,pont:"entrou",emotion:"Ordre",corps:"LIBÉRER",lien:"DÉPOSER",pensee:"CHERCHER"},
+    ],
+    "1. Héritage": [
+      {nom:"Appel aux parents/aînés",ctx:"AFFECTIVE · 1. Héritage",daco:"DA-N1",da:15,co:10,pont:"ouvert",emotion:"Respect",corps:"RESSENTIR",lien:"COM",pensee:"AJUSTER"},
+      {nom:"Écoute récits d'enfance",ctx:"AFFECTIVE · 1. Héritage",daco:"DA-P1",da:20,co:10,pont:"ouvert",emotion:"Mémoire",corps:"RESSENTIR",lien:"RAP",pensee:"CHERCHER"},
+    ],
+    "2. Fratrie": [
+      {nom:"Nouvelles frères/sœurs",ctx:"AFFECTIVE · 2. Fratrie",daco:"DA-P1",da:15,co:10,pont:"entrou",emotion:"Soutien",corps:"RESSENTIR",lien:"COM",pensee:"VALIDER"},
+      {nom:"Médiation/Entraide",ctx:"AFFECTIVE · 2. Fratrie",daco:"CO-N1",da:15,co:10,pont:"force",emotion:"Équité",corps:"ANCRER",lien:"COM",pensee:"AJUSTER"},
+    ],
+    "3. Soutien": [
+      {nom:"Accompagnement santé",ctx:"AFFECTIVE · 3. Soutien",daco:"CO-N1",da:15,co:10,pont:"force",emotion:"Patience",corps:"ANCRER",lien:"ID",pensee:"PROTÉGER"},
+      {nom:"Admin. pour les aînés",ctx:"AFFECTIVE · 3. Soutien",daco:"CO-N1",da:10,co:10,pont:"entrou",emotion:"Rigueur",corps:"RESSENTIR",lien:"RAP",pensee:"VALIDER"},
+    ],
+    "4. Racines": [
+      {nom:"Recherche généalogique",ctx:"AFFECTIVE · 4. Racines",daco:"DA-N1",da:25,co:10,pont:"entrou",emotion:"Enquête",corps:"RESSENTIR",lien:"RAP",pensee:"CHERCHER"},
+      {nom:"Visite cimetière/Mémoire",ctx:"AFFECTIVE · 4. Racines",daco:"DA-N1",da:20,co:10,pont:"ouvert",emotion:"Recueil.",corps:"LIBÉRER",lien:"DÉPOSER",pensee:"VALIDER"},
+    ],
+    "1. Présence": [
+      {nom:"Observation des pensées",ctx:"AFFECTIVE · 1. Présence",daco:"DA-N1",da:20,co:10,pont:"ouvert",emotion:"Recul",corps:"RESSENTIR",lien:"ID",pensee:"DISCERNER"},
+      {nom:"Respiration consciente",ctx:"AFFECTIVE · 1. Présence",daco:"CO-P1",da:20,co:10,pont:"entrou",emotion:"Calme",corps:"ANCRER",lien:"ID",pensee:"VALIDER"},
+    ],
+    "2. Intros.": [
+      {nom:"Écriture (Journaling)",ctx:"AFFECTIVE · 2. Intros.",daco:"DA-N2",da:30,co:10,pont:"entrou",emotion:"Clarté",corps:"LIBÉRER",lien:"ID",pensee:"CONSTRUIRE"},
+      {nom:"Lecture inspirante",ctx:"AFFECTIVE · 2. Intros.",daco:"DA-N1",da:20,co:10,pont:"ouvert",emotion:"Éveil",corps:"RESSENTIR",lien:"RAP",pensee:"VALIDER"},
+    ],
+    "3. Sanctua.": [
+      {nom:"Aménagement espace perso",ctx:"AFFECTIVE · 3. Sanctua.",daco:"DA-P1",da:15,co:10,pont:"entrou",emotion:"Esthétique",corps:"RESSENTIR",lien:"RAP",pensee:"CONSTRUIRE"},
+      {nom:"Soin esthétique / Bain",ctx:"AFFECTIVE · 3. Sanctua.",daco:"DA-P1",da:25,co:10,pont:"entrou",emotion:"Plaisir",corps:"RESSENTIR",lien:"RAP",pensee:"VALIDER"},
+    ],
+    "4. Créat.": [
+      {nom:"Expression libre (Art...)",ctx:"AFFECTIVE · 4. Créat.",daco:"DA-N2",da:40,co:10,pont:"ouvert",emotion:"Flux",corps:"LIBÉRER",lien:"ID",pensee:"CONSTRUIRE"},
+      {nom:"Rêverie éveillée",ctx:"AFFECTIVE · 4. Créat.",daco:"DA-N1",da:20,co:10,pont:"ouvert",emotion:"Imaginaire",corps:"LIBÉRER",lien:"ID",pensee:"DISCERNER"},
+    ],
+    "1. Donner": [
+      {nom:"Écoute d'un proche en crise",ctx:"AFFECTIVE · 1. Donner",daco:"CO-N2",da:20,co:10,pont:"force",emotion:"Présence",corps:"ANCRER",lien:"COM",pensee:"AJUSTER"},
+      {nom:"Aide physique/matérielle",ctx:"AFFECTIVE · 1. Donner",daco:"DA-P1",da:20,co:10,pont:"entrou",emotion:"Entraide",corps:"RESSENTIR",lien:"ID",pensee:"VALIDER"},
+    ],
+    "2. Recevoir": [
+      {nom:"Demander de l'aide",ctx:"AFFECTIVE · 2. Recevoir",daco:"CO-N2",da:15,co:10,pont:"force",emotion:"Humilité",corps:"LIBÉRER",lien:"COM",pensee:"AJUSTER"},
+      {nom:"Accepter un compliment",ctx:"AFFECTIVE · 2. Recevoir",daco:"DA-N1",da:20,co:10,pont:"entrou",emotion:"Accueil",corps:"RESSENTIR",lien:"ID",pensee:"VALIDER"},
+    ],
+    "3. Altru.": [
+      {nom:"Engagement bénévole",ctx:"AFFECTIVE · 3. Altru.",daco:"DA-N2",da:30,co:10,pont:"entrou",emotion:"Don de soi",corps:"LIBÉRER",lien:"ID",pensee:"CONSTRUIRE"},
+      {nom:"Geste pour un inconnu",ctx:"AFFECTIVE · 3. Altru.",daco:"DA-P1",da:20,co:10,pont:"ouvert",emotion:"Civisme",corps:"RESSENTIR",lien:"COM",pensee:"AJUSTER"},
+    ],
+    "4. Limites": [
+      {nom:"Dire non à la surcharge",ctx:"AFFECTIVE · 4. Limites",daco:"CO-N2",da:25,co:10,pont:"force",emotion:"Protection",corps:"ANCRER",lien:"ID",pensee:"PROTÉGER"},
+      {nom:"Identifier la manipulation",ctx:"AFFECTIVE · 4. Limites",daco:"CO-N1",da:15,co:10,pont:"entrou",emotion:"Vigilance",corps:"RESSENTIR",lien:"ID",pensee:"DISCERNER"},
+    ],
+  },
+  "JEUNESSE": {
+    "1. Logistique": [
+      {nom:"1. Courses / Petit budget",ctx:"JEUNESSE · 1. Logistique",daco:"CO-N1",da:5,co:10,pont:"entrou",emotion:"Vigilance",corps:"RESSENTIR",lien:"ID",pensee:"DISCERNER"},
+      {nom:"2. Préparation repas sains",ctx:"JEUNESSE · 1. Logistique",daco:"DA-P1",da:10,co:10,pont:"entrou",emotion:"Ordre",corps:"RESSENTIR",lien:"RAP",pensee:"CHERCHER"},
+    ],
+    "2. Académique": [
+      {nom:"1. Prise de notes (Amphi)",ctx:"JEUNESSE · 2. Académique",daco:"DA-N1",da:15,co:10,pont:"entrou",emotion:"Concentration",corps:"ANCRER",lien:"ID",pensee:"DISCERNER"},
+      {nom:"2. Lectures approfondies",ctx:"JEUNESSE · 2. Académique",daco:"DA-N2",da:20,co:10,pont:"ouvert",emotion:"Analyse",corps:"ANCRER",lien:"ID",pensee:"REPERER"},
+    ],
+    "3. Social": [
+      {nom:"1. Soirées / Sorties",ctx:"JEUNESSE · 3. Social",daco:"DA-P2",da:35,co:10,pont:"ouvert",emotion:"Plaisir",corps:"LIBÉRER",lien:"COM",pensee:"AJUSTER"},
+      {nom:"2. Maintien lien familial",ctx:"JEUNESSE · 3. Social",daco:"DA-P1",da:20,co:10,pont:"entrou",emotion:"Sécurité",corps:"RESSENTIR",lien:"ID",pensee:"VALIDER"},
+    ],
+    "4. Régén.": [
+      {nom:"1. Pratique Sportive",ctx:"JEUNESSE · 4. Régén.",daco:"DA-N2",da:30,co:10,pont:"force",emotion:"Énergie",corps:"ANCRER",lien:"ID",pensee:"CONSTRUIRE"},
+      {nom:"2. Hobby créatif / Jeu",ctx:"JEUNESSE · 4. Régén.",daco:"DA-N2",da:25,co:10,pont:"ouvert",emotion:"Flux",corps:"LIBÉRER",lien:"ID",pensee:"CONSTRUIRE"},
+    ],
+    "5. Clôture": [
+      {nom:"1. Saisie job étudiant",ctx:"JEUNESSE · 5. Clôture",daco:"CO-N1",da:10,co:10,pont:"entrou",emotion:"Rigueur",corps:"ANCRER",lien:"ID",pensee:"REPÉRER"},
+      {nom:"2. Coordination Planning",ctx:"JEUNESSE · 5. Clôture",daco:"CO-N1",da:10,co:10,pont:"entrou",emotion:"Vigilance",corps:"RESSENTIR",lien:"ID",pensee:"AJUSTER"},
+    ],
+    "1. Préparation": [
+      {nom:"Préparer le sac / Cartable",ctx:"JEUNESSE · 1. Préparation",daco:"DA-P1",da:10,co:10,pont:"entrou",emotion:"Ordre",corps:"RESSENTIR",lien:"RAP",pensee:"CHERCHER"},
+      {nom:"Trajet (Bus/Marche)",ctx:"JEUNESSE · 1. Préparation",daco:"CO-N1",da:5,co:10,pont:"entrou",emotion:"Vigilance",corps:"ANCRER",lien:"ID",pensee:"DISCERNER"},
+    ],
+    "1. Preparation": [
+      {nom:"Check Carnet / Pronote",ctx:"JEUNESSE · 1. Preparation",daco:"CO-N1",da:5,co:10,pont:"entrou",emotion:"Prévoyance",corps:"RESSENTIR",lien:"ID",pensee:"REPÉRER"},
+    ],
+    "2. Cours": [
+      {nom:"Écoute active / Cours",ctx:"JEUNESSE · 2. Cours",daco:"DA-N1",da:15,co:10,pont:"entrou",emotion:"Concentration",corps:"ANCRER",lien:"ID",pensee:"DISCERNER"},
+      {nom:"Exercices / Travaux",ctx:"JEUNESSE · 2. Cours",daco:"DA-N2",da:20,co:10,pont:"ouvert",emotion:"Application",corps:"ANCRER",lien:"ID",pensee:"CONSTRUIRE"},
+    ],
+    "4. Étude": [
+      {nom:"Apprentissage leçons",ctx:"JEUNESSE · 4. Étude",daco:"DA-N1",da:15,co:10,pont:"entrou",emotion:"Mémorisation",corps:"ANCRER",lien:"RAP",pensee:"VALIDER"},
+      {nom:"Recherche (Doc)",ctx:"JEUNESSE · 4. Étude",daco:"DA-N2",da:20,co:10,pont:"ouvert",emotion:"Curiosité",corps:"LIBÉRER",lien:"ID",pensee:"CHERCHER"},
+    ],
+    "5. Hors-Cadre": [
+      {nom:"Club / AS / Option",ctx:"JEUNESSE · 5. Hors-Cadre",daco:"DA-N2",da:30,co:10,pont:"ouvert",emotion:"Passion",corps:"LIBÉRER",lien:"ID",pensee:"CONSTRUIRE"},
+      {nom:"Sortie scolaire",ctx:"JEUNESSE · 5. Hors-Cadre",daco:"DA-P2",da:35,co:10,pont:"ouvert",emotion:"Découverte",corps:"RESSENTIR",lien:"COM",pensee:"DISCERNER"},
+    ],
+    "1. Rituels": [
+      {nom:"Entrée en classe / Rang",ctx:"JEUNESSE · 1. Rituels",daco:"DA-P1",da:10,co:10,pont:"entrou",emotion:"Appartenance",corps:"ANCRER",lien:"ID",pensee:"VALIDER"},
+      {nom:"Sortir ses affaires",ctx:"JEUNESSE · 1. Rituels",daco:"DA-P1",da:10,co:10,pont:"entrou",emotion:"Ordre",corps:"RESSENTIR",lien:"RAP",pensee:"CHERCHER"},
+    ],
+    "2. Apprentis.": [
+      {nom:"Lecture à haute voix",ctx:"JEUNESSE · 2. Apprentis.",daco:"DA-N1",da:20,co:10,pont:"ouvert",emotion:"Audace",corps:"LIBÉRER",lien:"COM",pensee:"AJUSTER"},
+      {nom:"Écriture / Graphisme",ctx:"JEUNESSE · 2. Apprentis.",daco:"CO-N1",da:15,co:10,pont:"force",emotion:"Application",corps:"ANCRER",lien:"ID",pensee:"CONSTRUIRE"},
+    ],
+    "3. Vie Sociale": [
+      {nom:"Jeux de cour",ctx:"JEUNESSE · 3. Vie Sociale",daco:"DA-P2",da:40,co:10,pont:"ouvert",emotion:"Joie",corps:"LIBÉRER",lien:"COM",pensee:"AJUSTER"},
+      {nom:"Partage de goûter",ctx:"JEUNESSE · 3. Vie Sociale",daco:"DA-P2",da:25,co:10,pont:"ouvert",emotion:"Générosité",corps:"RESSENTIR",lien:"COM",pensee:"VALIDER"},
+    ],
+    "4. Découverte": [
+      {nom:"Sport / EPS",ctx:"JEUNESSE · 4. Découverte",daco:"DA-N2",da:30,co:10,pont:"force",emotion:"Énergie",corps:"ANCRER",lien:"ID",pensee:"CONSTRUIRE"},
+      {nom:"Arts Plastiques",ctx:"JEUNESSE · 4. Découverte",daco:"DA-N2",da:30,co:10,pont:"ouvert",emotion:"Flux",corps:"LIBÉRER",lien:"ID",pensee:"CONSTRUIRE"},
+    ],
+    "5. Sortie": [
+      {nom:"Rangement du bureau",ctx:"JEUNESSE · 5. Sortie",daco:"DA-P1",da:15,co:10,pont:"entrou",emotion:"Clôture",corps:"LIBÉRER",lien:"DÉPOSER",pensee:"CHERCHER"},
+      {nom:"Noter les devoirs",ctx:"JEUNESSE · 5. Sortie",daco:"CO-N1",da:5,co:10,pont:"entrou",emotion:"Vigilance",corps:"RESSENTIR",lien:"RAP",pensee:"REPERER"},
+    ],
+    "2. Cognitif": [
+      {nom:"Analyse de textes / Philo",ctx:"JEUNESSE · 2. Cognitif",daco:"DA-N2",da:25,co:10,pont:"ouvert",emotion:"Réflexion",corps:"LIBÉRER",lien:"ID",pensee:"DISCERNER"},
+      {nom:"Résolution Problèmes (S)",ctx:"JEUNESSE · 2. Cognitif",daco:"DA-N2",da:20,co:10,pont:"ouvert",emotion:"Logique",corps:"ANCRER",lien:"ID",pensee:"CONSTRUIRE"},
+    ],
+    "3. Identitaire": [
+      {nom:"Débats / Argumentation",ctx:"JEUNESSE · 3. Identitaire",daco:"DA-N1",da:20,co:10,pont:"ouvert",emotion:"Conviction",corps:"LIBÉRER",lien:"COM",pensee:"AJUSTER"},
+      {nom:"Engagement (CVL / Éco)",ctx:"JEUNESSE · 3. Identitaire",daco:"DA-N2",da:30,co:10,pont:"ouvert",emotion:"Utilité",corps:"LIBÉRER",lien:"COM",pensee:"CONSTRUIRE"},
+    ],
+    "4. Autonomie": [
+      {nom:"Recherche documentaire",ctx:"JEUNESSE · 4. Autonomie",daco:"DA-N2",da:20,co:10,pont:"ouvert",emotion:"Curiosité",corps:"LIBÉRER",lien:"ID",pensee:"CHERCHER"},
+      {nom:"Rédaction Dossier / Oral",ctx:"JEUNESSE · 4. Autonomie",daco:"DA-N1",da:25,co:10,pont:"ouvert",emotion:"Structure",corps:"LIBÉRER",lien:"COM",pensee:"CONSTRUIRE"},
+    ],
+    "5. Régénération": [
+      {nom:"Pratique Sportive Int.",ctx:"JEUNESSE · 5. Régénération",daco:"DA-N2",da:35,co:10,pont:"force",emotion:"Énergie",corps:"ANCRER",lien:"ID",pensee:"CONSTRUIRE"},
+      {nom:"Création (Musique/Arts)",ctx:"JEUNESSE · 5. Régénération",daco:"DA-P2",da:30,co:10,pont:"ouvert",emotion:"Flux",corps:"LIBÉRER",lien:"ID",pensee:"CONSTRUIRE"},
+    ],
+    "1. Alpha-Écoute": [
+      {nom:"Identifier une tension corps",ctx:"JEUNESSE · 1. Alpha-Écoute",daco:"DA-P1",da:15,co:10,pont:"entrou",emotion:"Présence",corps:"RESSENTIR",lien:"ID",pensee:"REPÉRER"},
+      {nom:"Nommer l'émotion (Météo)",ctx:"JEUNESSE · 1. Alpha-Écoute",daco:"CO-N1",da:10,co:10,pont:"entrou",emotion:"Clarté",corps:"RESSENTIR",lien:"ID",pensee:"DISCERNER"},
+    ],
+    "2. Régulation": [
+      {nom:"Respiration (Cohérence)",ctx:"JEUNESSE · 2. Régulation",daco:"CO-P1",da:20,co:10,pont:"force",emotion:"Calme",corps:"ANCRER",lien:"ID",pensee:"VALIDER"},
+      {nom:"Retrait sensoriel (Silence)",ctx:"JEUNESSE · 2. Régulation",daco:"CO-P1",da:25,co:10,pont:"entrou",emotion:"Paix",corps:"RESSENTIR",lien:"DÉPOSER",pensee:"PROTÉGER"},
+    ],
+    "3. Soc-Protect": [
+      {nom:"Dire "Non" à une pression",ctx:"JEUNESSE · 3. Soc-Protect",daco:"CO-N2",da:20,co:10,pont:"force",emotion:"Affirmation",corps:"ANCRER",lien:"COM",pensee:"PROTÉGER"},
+      {nom:"Identifier un ami toxique",ctx:"JEUNESSE · 3. Soc-Protect",daco:"CO-N1",da:10,co:10,pont:"entrou",emotion:"Lucidité",corps:"RESSENTIR",lien:"ID",pensee:"DISCERNER"},
+    ],
+    "4. Cog-Estime": [
+      {nom:"Lister 3 réussites du jour",ctx:"JEUNESSE · 4. Cog-Estime",daco:"DA-P1",da:20,co:10,pont:"entrou",emotion:"Fierté",corps:"RESSENTIR",lien:"RAP",pensee:"VALIDER"},
+      {nom:"Accepter un compliment",ctx:"JEUNESSE · 4. Cog-Estime",daco:"DA-P2",da:25,co:10,pont:"entrou",emotion:"Accueil",corps:"RESSENTIR",lien:"ID",pensee:"VALIDER"},
+    ],
+    "5. Résilience": [
+      {nom:"Créer sa "Boîte à calme"",ctx:"JEUNESSE · 5. Résilience",daco:"DA-N2",da:20,co:10,pont:"ouvert",emotion:"Sécurité",corps:"ANCRER",lien:"ID",pensee:"CONSTRUIRE"},
+      {nom:"Identifier ses alliés sûrs",ctx:"JEUNESSE · 5. Résilience",daco:"DA-P1",da:15,co:10,pont:"entrou",emotion:"Confiance",corps:"RESSENTIR",lien:"ID",pensee:"REPÉRER"},
+    ],
+  },
+  "EQUILIBRE": {
+    "1. Préparation": [
+      {nom:"Vérification matériel/tenue",ctx:"EQUILIBRE · 1. Préparation",daco:"DA-P1",da:10,co:10,pont:"entrou",emotion:"Ordre",corps:"RESSENTIR",lien:"RAP",pensee:"CHERCHER"},
+      {nom:"Échauffement articulaire",ctx:"EQUILIBRE · 1. Préparation",daco:"DA-N1",da:15,co:10,pont:"force",emotion:"Énergie",corps:"ANCRER",lien:"ID",pensee:"AJUSTER"},
+    ],
+    "2. Effort": [
+      {nom:"Séance haute intensité",ctx:"EQUILIBRE · 2. Effort",daco:"DA-N2",da:30,co:10,pont:"force",emotion:"Puissance",corps:"ANCRER",lien:"ID",pensee:"CONSTRUIRE"},
+      {nom:"Match / Compétition",ctx:"EQUILIBRE · 2. Effort",daco:"DA-N2",da:40,co:10,pont:"ouvert",emotion:"Combat.",corps:"LIBÉRER",lien:"COM",pensee:"CONSTRUIRE"},
+    ],
+    "3. Récup.": [
+      {nom:"Étirements / Stretching",ctx:"EQUILIBRE · 3. Récup.",daco:"CO-P1",da:25,co:10,pont:"entrou",emotion:"Soulage.",corps:"RESSENTIR",lien:"DÉPOSER",pensee:"VALIDER"},
+      {nom:"Douche / Soin corps",ctx:"EQUILIBRE · 3. Récup.",daco:"DA-P2",da:30,co:10,pont:"entrou",emotion:"Bien-être",corps:"RESSENTIR",lien:"DÉPOSER",pensee:"VALIDER"},
+    ],
+    "4. Entretien": [
+      {nom:"Entretien matériel sport",ctx:"EQUILIBRE · 4. Entretien",daco:"DA-P1",da:10,co:10,pont:"entrou",emotion:"Rigueur",corps:"RESSENTIR",lien:"RAP",pensee:"CHERCHER"},
+      {nom:"Planification séances",ctx:"EQUILIBRE · 4. Entretien",daco:"DA-P1",da:15,co:10,pont:"entrou",emotion:"Clarté",corps:"RESSENTIR",lien:"RAP",pensee:"REPERER"},
+    ],
+    "5. Mental": [
+      {nom:"Visualisation réussite",ctx:"EQUILIBRE · 5. Mental",daco:"DA-N2",da:30,co:10,pont:"ouvert",emotion:"Confiance",corps:"LIBÉRER",lien:"ID",pensee:"CONSTRUIRE"},
+      {nom:"Gestion du stress (respi)",ctx:"EQUILIBRE · 5. Mental",daco:"CO-P1",da:20,co:10,pont:"force",emotion:"Calme",corps:"ANCRER",lien:"ID",pensee:"VALIDER"},
+    ],
+    "1. Lecture": [
+      {nom:"Lecture d'un essai/roman",ctx:"EQUILIBRE · 1. Lecture",daco:"DA-N1",da:20,co:10,pont:"entrou",emotion:"Évasion",corps:"RESSENTIR",lien:"ID",pensee:"DISCERNER"},
+      {nom:"Recherche en librairie",ctx:"EQUILIBRE · 1. Lecture",daco:"DA-P1",da:15,co:10,pont:"ouvert",emotion:"Curiosité",corps:"RESSENTIR",lien:"ID",pensee:"CHERCHER"},
+    ],
+    "2. Sorties": [
+      {nom:"Visite musée / Expo",ctx:"EQUILIBRE · 2. Sorties",daco:"DA-P2",da:30,co:10,pont:"ouvert",emotion:"Admiration",corps:"RESSENTIR",lien:"ID",pensee:"DISCERNER"},
+      {nom:"Trajet vers lieu culturel",ctx:"EQUILIBRE · 2. Sorties",daco:"CO-N1",da:5,co:10,pont:"entrou",emotion:"Vigilance",corps:"ANCRER",lien:"ID",pensee:"DISCERNER"},
+    ],
+    "3. Langues": [
+      {nom:"Apprendre vocabulaire",ctx:"EQUILIBRE · 3. Langues",daco:"DA-N1",da:15,co:10,pont:"entrou",emotion:"Défi",corps:"ANCRER",lien:"RAP",pensee:"VALIDER"},
+      {nom:"Écoute podcast étranger",ctx:"EQUILIBRE · 3. Langues",daco:"DA-N1",da:20,co:10,pont:"entrou",emotion:"Immersion",corps:"RESSENTIR",lien:"ID",pensee:"DISCERNER"},
+    ],
+    "4. Histoire": [
+      {nom:"Recherche généalogique",ctx:"EQUILIBRE · 4. Histoire",daco:"DA-N1",da:20,co:10,pont:"ouvert",emotion:"Curiosité",corps:"RESSENTIR",lien:"RAP",pensee:"CHERCHER"},
+      {nom:"Lecture docu historique",ctx:"EQUILIBRE · 4. Histoire",daco:"DA-N1",da:15,co:10,pont:"entrou",emotion:"Réflexion",corps:"RESSENTIR",lien:"ID",pensee:"DISCERNER"},
+    ],
+    "5. Médias": [
+      {nom:"Veille actu (Tri info)",ctx:"EQUILIBRE · 5. Médias",daco:"CO-N1",da:10,co:10,pont:"entrou",emotion:"Lucidité",corps:"RESSENTIR",lien:"ID",pensee:"DISCERNER"},
+      {nom:"Documentaire scientifique",ctx:"EQUILIBRE · 5. Médias",daco:"DA-N2",da:25,co:10,pont:"ouvert",emotion:"Émerveil.",corps:"RESSENTIR",lien:"ID",pensee:"VALIDER"},
+    ],
+    "1. Arts Plast.": [
+      {nom:"Peinture / Dessin",ctx:"EQUILIBRE · 1. Arts Plast.",daco:"DA-N2",da:35,co:10,pont:"ouvert",emotion:"Flux",corps:"LIBÉRER",lien:"ID",pensee:"CONSTRUIRE"},
+      {nom:"Préparation pigments",ctx:"EQUILIBRE · 1. Arts Plast.",daco:"DA-P1",da:15,co:10,pont:"entrou",emotion:"Rigueur",corps:"RESSENTIR",lien:"RAP",pensee:"CHERCHER"},
+    ],
+    "2. Musique": [
+      {nom:"Pratique instrument",ctx:"EQUILIBRE · 2. Musique",daco:"DA-N2",da:30,co:10,pont:"force",emotion:"Harmonie",corps:"ANCRER",lien:"ID",pensee:"AJUSTER"},
+      {nom:"Écoute analytique",ctx:"EQUILIBRE · 2. Musique",daco:"DA-N1",da:20,co:10,pont:"entrou",emotion:"Sensibilité",corps:"RESSENTIR",lien:"ID",pensee:"DISCERNER"},
+    ],
+    "3. Nature": [
+      {nom:"Jardinage / Plantation",ctx:"EQUILIBRE · 3. Nature",daco:"DA-P1",da:20,co:10,pont:"entrou",emotion:"Patience",corps:"RESSENTIR",lien:"ID",pensee:"CONSTRUIRE"},
+      {nom:"Observation oiseaux/faune",ctx:"EQUILIBRE · 3. Nature",daco:"DA-N1",da:25,co:10,pont:"ouvert",emotion:"Étonnement",corps:"RESSENTIR",lien:"ID",pensee:"DISCERNER"},
+    ],
+    "4. Cuisine": [
+      {nom:"Test nouvelle recette",ctx:"EQUILIBRE · 4. Cuisine",daco:"DA-N1",da:25,co:10,pont:"entrou",emotion:"Curiosité",corps:"RESSENTIR",lien:"RAP",pensee:"CHERCHER"},
+      {nom:"Dressage des assiettes",ctx:"EQUILIBRE · 4. Cuisine",daco:"DA-N1",da:20,co:10,pont:"ouvert",emotion:"Esthétique",corps:"LIBÉRER",lien:"ID",pensee:"CONSTRUIRE"},
+    ],
+    "5. Jeux": [
+      {nom:"Jeux de société",ctx:"EQUILIBRE · 5. Jeux",daco:"DA-P2",da:30,co:10,pont:"ouvert",emotion:"Joie",corps:"LIBÉRER",lien:"COM",pensee:"AJUSTER"},
+      {nom:"Gaming (Solo/Ligne)",ctx:"EQUILIBRE · 5. Jeux",daco:"DA-P2",da:30,co:10,pont:"ouvert",emotion:"Évasion",corps:"LIBÉRER",lien:"ID",pensee:"CHERCHER"},
+    ],
+    "1. Éveil": [
+      {nom:"Lecture textes anciens",ctx:"EQUILIBRE · 1. Éveil",daco:"DA-N1",da:20,co:10,pont:"entrou",emotion:"Réflexion",corps:"RESSENTIR",lien:"ID",pensee:"DISCERNER"},
+      {nom:"Débat philosophique",ctx:"EQUILIBRE · 1. Éveil",daco:"DA-N1",da:25,co:10,pont:"ouvert",emotion:"Tolérance",corps:"LIBÉRER",lien:"COM",pensee:"AJUSTER"},
+    ],
+    "2. Éthique": [
+      {nom:"Bilan de valeurs",ctx:"EQUILIBRE · 2. Éthique",daco:"DA-N1",da:20,co:10,pont:"entrou",emotion:"Intégrité",corps:"RESSENTIR",lien:"RAP",pensee:"VALIDER"},
+      {nom:"Choix difficile (Dilemme)",ctx:"EQUILIBRE · 2. Éthique",daco:"CO-N2",da:20,co:10,pont:"force",emotion:"Courage",corps:"ANCRER",lien:"ID",pensee:"DISCERNER"},
+    ],
+    "4. Détente": [
+      {nom:"Méditation / Silence",ctx:"EQUILIBRE · 4. Détente",daco:"CO-P1",da:25,co:10,pont:"force",emotion:"Présence",corps:"ANCRER",lien:"ID",pensee:"VALIDER"},
+      {nom:"Respiration profonde",ctx:"EQUILIBRE · 4. Détente",daco:"CO-P1",da:20,co:10,pont:"entrou",emotion:"Calme",corps:"RESSENTIR",lien:"ID",pensee:"VALIDER"},
+    ],
+    "5. Sens": [
+      {nom:"Définir sa mission",ctx:"EQUILIBRE · 5. Sens",daco:"DA-N2",da:30,co:10,pont:"ouvert",emotion:"Espoir",corps:"LIBÉRER",lien:"ID",pensee:"CONSTRUIRE"},
+      {nom:"Transmission / Mentorat",ctx:"EQUILIBRE · 5. Sens",daco:"DA-N1",da:40,co:10,pont:"ouvert",emotion:"Utilité",corps:"LIBÉRER",lien:"COM",pensee:"AJUSTER"},
+    ],
+    "1. Identité": [
+      {nom:"Lister ses talents",ctx:"EQUILIBRE · 1. Identité",daco:"DA-P1",da:20,co:10,pont:"entrou",emotion:"Fierté",corps:"RESSENTIR",lien:"RAP",pensee:"VALIDER"},
+      {nom:"Travail sur les ombres",ctx:"EQUILIBRE · 1. Identité",daco:"CO-N2",da:20,co:10,pont:"force",emotion:"Vérité",corps:"ANCRER",lien:"ID",pensee:"DISCERNER"},
+    ],
+    "2. Émo.": [
+      {nom:"Scanner corps (tensions)",ctx:"EQUILIBRE · 2. Émo.",daco:"DA-P1",da:15,co:10,pont:"entrou",emotion:"Présence",corps:"RESSENTIR",lien:"ID",pensee:"REPÉRER"},
+      {nom:"Nommer émotion (Météo)",ctx:"EQUILIBRE · 2. Émo.",daco:"CO-N1",da:15,co:10,pont:"entrou",emotion:"Clarté",corps:"RESSENTIR",lien:"ID",pensee:"DISCERNER"},
+    ],
+    "3. Mental": [
+      {nom:"Observation pensées",ctx:"EQUILIBRE · 3. Mental",daco:"CO-N1",da:15,co:10,pont:"entrou",emotion:"Calme",corps:"ANCRER",lien:"ID",pensee:"DISCERNER"},
+      {nom:"Se pardonner une erreur",ctx:"EQUILIBRE · 3. Mental",daco:"DA-N1",da:25,co:10,pont:"force",emotion:"Clémence",corps:"LIBÉRER",lien:"ID",pensee:"VALIDER"},
+    ],
+    "4. Liens": [
+      {nom:"Identifier alliés sûrs",ctx:"EQUILIBRE · 4. Liens",daco:"DA-P1",da:20,co:10,pont:"entrou",emotion:"Confiance",corps:"RESSENTIR",lien:"ID",pensee:"REPÉRER"},
+      {nom:"Partager secret lourd",ctx:"EQUILIBRE · 4. Liens",daco:"DA-P1",da:35,co:10,pont:"ouvert",emotion:"Soulagem.",corps:"LIBÉRER",lien:"COM",pensee:"VALIDER"},
+    ],
+    "5. Unité": [
+      {nom:"Bilan de fin de cycle",ctx:"EQUILIBRE · 5. Unité",daco:"DA-P1",da:20,co:10,pont:"entrou",emotion:"Clarté",corps:"RESSENTIR",lien:"RAP",pensee:"VALIDER"},
+      {nom:"Ancrage instant présent",ctx:"EQUILIBRE · 5. Unité",daco:"DA-P2",da:40,co:10,pont:"entrou",emotion:"Unité",corps:"ANCRER",lien:"ID",pensee:"VALIDER"},
+    ],
+  },
+  "GRAND_AGE": {
+    "1. Rituels": [
+      {nom:"Lever / Sortie du lit",ctx:"GRAND_AGE · 1. Rituels",daco:"CO-N1",da:10,co:10,pont:"force",emotion:"Effort",corps:"ANCRER",lien:"ID",pensee:"VALIDER"},
+      {nom:"Habillage / Choix tenue",ctx:"GRAND_AGE · 1. Rituels",daco:"DA-N1",da:20,co:10,pont:"ouvert",emotion:"Dignité",corps:"RESSENTIR",lien:"ID",pensee:"DISCERNER"},
+    ],
+    "2. Mobilité": [
+      {nom:"Marche (Déambulateur)",ctx:"GRAND_AGE · 2. Mobilité",daco:"CO-N2",da:10,co:10,pont:"force",emotion:"Vigilance",corps:"ANCRER",lien:"ID",pensee:"DISCERNER"},
+      {nom:"Transfert Fauteuil/Lit",ctx:"GRAND_AGE · 2. Mobilité",daco:"CO-N2",da:5,co:10,pont:"force",emotion:"Effort",corps:"ANCRER",lien:"ID",pensee:"VALIDER"},
+    ],
+    "3. Santé": [
+      {nom:"Prise médicaments (Pil.)",ctx:"GRAND_AGE · 3. Santé",daco:"CO-N1",da:5,co:10,pont:"entrou",emotion:"Rigueur",corps:"RESSENTIR",lien:"RAP",pensee:"REPERER"},
+      {nom:"Pesée / Constantes",ctx:"GRAND_AGE · 3. Santé",daco:"CO-N1",da:5,co:10,pont:"entrou",emotion:"Vigilance",corps:"ANCRER",lien:"ID",pensee:"VALIDER"},
+    ],
+    "4. Nutrition": [
+      {nom:"Installation à table",ctx:"GRAND_AGE · 4. Nutrition",daco:"CO-N1",da:5,co:10,pont:"entrou",emotion:"Fatigue",corps:"ANCRER",lien:"ID",pensee:"AJUSTER"},
+      {nom:"Découpe des aliments",ctx:"GRAND_AGE · 4. Nutrition",daco:"CO-N1",da:10,co:10,pont:"force",emotion:"Précision",corps:"ANCRER",lien:"ID",pensee:"DISCERNER"},
+    ],
+    "5. Environ.": [
+      {nom:"Rangement table nuit",ctx:"GRAND_AGE · 5. Environ.",daco:"DA-P1",da:15,co:10,pont:"entrou",emotion:"Ordre",corps:"LIBÉRER",lien:"DÉPOSER",pensee:"CHERCHER"},
+      {nom:"Ouverture des volets",ctx:"GRAND_AGE · 5. Environ.",daco:"DA-P2",da:25,co:10,pont:"ouvert",emotion:"Éveil",corps:"LIBÉRER",lien:"ID",pensee:"VALIDER"},
+    ],
+    "1. Famille": [
+      {nom:"Appel téléphonique",ctx:"GRAND_AGE · 1. Famille",daco:"DA-P1",da:25,co:10,pont:"ouvert",emotion:"Affection",corps:"RESSENTIR",lien:"COM",pensee:"VALIDER"},
+      {nom:"Visite des petits-enf.",ctx:"GRAND_AGE · 1. Famille",daco:"DA-P2",da:45,co:10,pont:"ouvert",emotion:"Euphorie",corps:"LIBÉRER",lien:"COM",pensee:"VALIDER"},
+    ],
+    "2. Pairs": [
+      {nom:"Salutations couloir",ctx:"GRAND_AGE · 2. Pairs",daco:"DA-P1",da:15,co:10,pont:"ouvert",emotion:"Courtoisie",corps:"LIBÉRER",lien:"COM",pensee:"AJUSTER"},
+      {nom:"Échange d'anecdotes",ctx:"GRAND_AGE · 2. Pairs",daco:"DA-P2",da:35,co:10,pont:"ouvert",emotion:"Partage",corps:"LIBÉRER",lien:"COM",pensee:"AJUSTER"},
+    ],
+    "3. Pro.": [
+      {nom:"Accueil de l'animateur",ctx:"GRAND_AGE · 3. Pro.",daco:"DA-P1",da:25,co:10,pont:"ouvert",emotion:"Attente",corps:"RESSENTIR",lien:"COM",pensee:"VALIDER"},
+      {nom:"Dialogue avec l'AS/IDE",ctx:"GRAND_AGE · 3. Pro.",daco:"DA-N1",da:20,co:10,pont:"ouvert",emotion:"Confiance",corps:"LIBÉRER",lien:"COM",pensee:"VALIDER"},
+    ],
+    "4. Extérieur": [
+      {nom:"Sortie au marché/ville",ctx:"GRAND_AGE · 4. Extérieur",daco:"DA-P2",da:40,co:10,pont:"ouvert",emotion:"Stimul.",corps:"RESSENTIR",lien:"ID",pensee:"CHERCHER"},
+      {nom:"Regarder par la fenêtre",ctx:"GRAND_AGE · 4. Extérieur",daco:"DA-P1",da:15,co:10,pont:"entrou",emotion:"Contempl.",corps:"RESSENTIR",lien:"ID",pensee:"DISCERNER"},
+    ],
+    "5. Solitude": [
+      {nom:"Gérer le silence",ctx:"GRAND_AGE · 5. Solitude",daco:"CO-N1",da:10,co:10,pont:"entrou",emotion:"Vide",corps:"RESSENTIR",lien:"DÉPOSER",pensee:"PROTÉGER"},
+      {nom:"Parler à soi / Animal",ctx:"GRAND_AGE · 5. Solitude",daco:"DA-P1",da:20,co:10,pont:"entrou",emotion:"Compagnon",corps:"LIBÉRER",lien:"COM",pensee:"VALIDER"},
+    ],
+    "1. Orientation": [
+      {nom:"Lire le calendrier",ctx:"GRAND_AGE · 1. Orientation",daco:"DA-P1",da:15,co:10,pont:"entrou",emotion:"Clarté",corps:"ANCRER",lien:"ID",pensee:"REPERER"},
+      {nom:"Se situer dans l'EHPAD",ctx:"GRAND_AGE · 1. Orientation",daco:"CO-N1",da:10,co:10,pont:"entrou",emotion:"Vigilance",corps:"ANCRER",lien:"ID",pensee:"REPERER"},
+    ],
+    "2. Rappel": [
+      {nom:"Évoquer un souvenir d'enfance",ctx:"GRAND_AGE · 2. Rappel",daco:"DA-P2",da:40,co:10,pont:"ouvert",emotion:"Nostalgie",corps:"RESSENTIR",lien:"RAP",pensee:"VALIDER"},
+      {nom:"Citer des noms de proches",ctx:"GRAND_AGE · 2. Rappel",daco:"DA-P1",da:20,co:10,pont:"entrou",emotion:"Présence",corps:"RESSENTIR",lien:"RAP",pensee:"VALIDER"},
+    ],
+    "3. Exercices": [
+      {nom:"Mots croisés / Sudoku",ctx:"GRAND_AGE · 3. Exercices",daco:"DA-N2",da:25,co:10,pont:"ouvert",emotion:"Défi",corps:"ANCRER",lien:"ID",pensee:"CONSTRUIRE"},
+      {nom:"Jeu de Kim (Objets)",ctx:"GRAND_AGE · 3. Exercices",daco:"DA-N1",da:20,co:10,pont:"ouvert",emotion:"Curiosité",corps:"RESSENTIR",lien:"ID",pensee:"REPERER"},
+    ],
+    "4. Apprent.": [
+      {nom:"Apprendre un nouveau nom",ctx:"GRAND_AGE · 4. Apprent.",daco:"DA-N1",da:15,co:10,pont:"entrou",emotion:"Éveil",corps:"ANCRER",lien:"ID",pensee:"REPERER"},
+      {nom:"Utiliser une tablette",ctx:"GRAND_AGE · 4. Apprent.",daco:"DA-N2",da:30,co:10,pont:"force",emotion:"Audace",corps:"LIBÉRER",lien:"ID",pensee:"AJUSTER"},
+    ],
+    "5. Décision": [
+      {nom:"Choisir ses vêtements",ctx:"GRAND_AGE · 5. Décision",daco:"DA-N1",da:20,co:10,pont:"ouvert",emotion:"Liberté",corps:"LIBÉRER",lien:"ID",pensee:"DISCERNER"},
+      {nom:"Voter / Opinion",ctx:"GRAND_AGE · 5. Décision",daco:"DA-N1",da:25,co:10,pont:"ouvert",emotion:"Utilité",corps:"LIBÉRER",lien:"COM",pensee:"AJUSTER"},
+    ],
+    "1. Douleur": [
+      {nom:"Identifier zone douloureuse",ctx:"GRAND_AGE · 1. Douleur",daco:"CO-N1",da:10,co:10,pont:"entrou",emotion:"Inconfort",corps:"RESSENTIR",lien:"ID",pensee:"REPÉRER"},
+      {nom:"Endurer un soin lourd",ctx:"GRAND_AGE · 1. Douleur",daco:"CO-N2",da:15,co:10,pont:"force",emotion:"Souffrance",corps:"ANCRER",lien:"ID",pensee:"PROTÉGER"},
+    ],
+    "2. Fatigue": [
+      {nom:"Gérer une crise d'asthénie",ctx:"GRAND_AGE · 2. Fatigue",daco:"CO-N2",da:10,co:10,pont:"force",emotion:"Épuisement",corps:"RESSENTIR",lien:"DÉPOSER",pensee:"PROTÉGER"},
+      {nom:"Sieste flash (Fauteuil)",ctx:"GRAND_AGE · 2. Fatigue",daco:"CO-P1",da:20,co:10,pont:"entrou",emotion:"Calme",corps:"RESSENTIR",lien:"DÉPOSER",pensee:"VALIDER"},
+    ],
+    "3. Sécurité": [
+      {nom:"Prévenir une chute (Appui)",ctx:"GRAND_AGE · 3. Sécurité",daco:"CO-N2",da:10,co:10,pont:"entrou",emotion:"Prudence",corps:"ANCRER",lien:"ID",pensee:"PROTÉGER"},
+      {nom:"Appuyer sur l'alarme",ctx:"GRAND_AGE · 3. Sécurité",daco:"DA-N1",da:25,co:10,pont:"ouvert",emotion:"Alerte",corps:"LIBÉRER",lien:"COM",pensee:"VALIDER"},
+    ],
+    "4. Rééduc.": [
+      {nom:"Exercices de kiné",ctx:"GRAND_AGE · 4. Rééduc.",daco:"DA-N1",da:20,co:10,pont:"force",emotion:"Volonté",corps:"ANCRER",lien:"ID",pensee:"CONSTRUIRE"},
+      {nom:"Exercices de déglutition",ctx:"GRAND_AGE · 4. Rééduc.",daco:"CO-N1",da:10,co:10,pont:"force",emotion:"Effort",corps:"RESSENTIR",lien:"ID",pensee:"AJUSTER"},
+    ],
+    "5. Sommeil": [
+      {nom:"Rituel du soir",ctx:"GRAND_AGE · 5. Sommeil",daco:"DA-P1",da:20,co:10,pont:"entrou",emotion:"Calme",corps:"ANCRER",lien:"DÉPOSER",pensee:"VALIDER"},
+      {nom:"Gérer une insomnie",ctx:"GRAND_AGE · 5. Sommeil",daco:"CO-N2",da:10,co:10,pont:"force",emotion:"Solitude",corps:"RESSENTIR",lien:"DÉPOSER",pensee:"PROTÉGER"},
+    ],
+    "1. Bilan": [
+      {nom:"Revoir sa carrière",ctx:"GRAND_AGE · 1. Bilan",daco:"DA-P2",da:35,co:10,pont:"entrou",emotion:"Accomplis.",corps:"RESSENTIR",lien:"RAP",pensee:"VALIDER"},
+      {nom:"Identifier ses erreurs",ctx:"GRAND_AGE · 1. Bilan",daco:"CO-N2",da:20,co:10,pont:"force",emotion:"Regret",corps:"ANCRER",lien:"ID",pensee:"DISCERNER"},
+    ],
+    "2. Legs": [
+      {nom:"Distribuer ses objets",ctx:"GRAND_AGE · 2. Legs",daco:"DA-P2",da:40,co:10,pont:"entrou",emotion:"Générosité",corps:"LIBÉRER",lien:"DÉPOSER",pensee:"VALIDER"},
+      {nom:"Dicter ses mémoires",ctx:"GRAND_AGE · 2. Legs",daco:"DA-N2",da:35,co:10,pont:"ouvert",emotion:"Utilité",corps:"LIBÉRER",lien:"COM",pensee:"CONSTRUIRE"},
+    ],
+    "3. Deuils": [
+      {nom:"Perdre un compagnon",ctx:"GRAND_AGE · 3. Deuils",daco:"CO-N2",da:20,co:10,pont:"force",emotion:"Chagrin",corps:"RESSENTIR",lien:"DÉPOSER",pensee:"VALIDER"},
+      {nom:"Dire adieu (Amis)",ctx:"GRAND_AGE · 3. Deuils",daco:"DA-N1",da:25,co:10,pont:"ouvert",emotion:"Tristesse",corps:"LIBÉRER",lien:"COM",pensee:"VALIDER"},
+    ],
+    "4. Sagesse": [
+      {nom:"Pratique contemplative",ctx:"GRAND_AGE · 4. Sagesse",daco:"DA-P2",da:40,co:10,pont:"entrou",emotion:"Unité",corps:"ANCRER",lien:"ID",pensee:"VALIDER"},
+      {nom:"Partager sa philosophie",ctx:"GRAND_AGE · 4. Sagesse",daco:"DA-N2",da:35,co:10,pont:"ouvert",emotion:"Vérité",corps:"LIBÉRER",lien:"COM",pensee:"CONSTRUIRE"},
+    ],
+    "5. Passage": [
+      {nom:"Recevoir les derniers sacrements",ctx:"GRAND_AGE · 5. Passage",daco:"DA-P1",da:35,co:10,pont:"ouvert",emotion:"Paix",corps:"ANCRER",lien:"ID",pensee:"VALIDER"},
+      {nom:"Tenir une main",ctx:"GRAND_AGE · 5. Passage",daco:"DA-P2",da:50,co:10,pont:"ouvert",emotion:"Sécurité",corps:"RESSENTIR",lien:"COM",pensee:"VALIDER"},
+    ],
+  },
+};
+
+
+const RS=[
+  {key:"corps",label:"Corps",sub:"Sensations physiques",opts:[
+    {txt:"Léger, disponible",daco:"DA",val:10,col:"var(--da)",ref:"Respiration ample, muscles relâchés, pas de tension localisée, aisance dans les mouvements."},
+    {txt:"Contracté, lourd",daco:"Co",val:-10,col:"var(--co)",ref:"Mâchoires serrées, épaules remontées, ventre noué, sensation de poids, fatigue physique perceptible."},
+    {txt:"Ni l'un ni l'autre",daco:"N",val:0,col:"#78909C",ref:"Pas de signal fort dans un sens ou dans l'autre — état de fond stable."}]},
+  {key:"energie",label:"Énergie",sub:"Niveau de vitalité",opts:[
+    {txt:"Élan, envie d'agir",daco:"DA",val:10,col:"var(--da)",ref:"Tu as envie de commencer, de finir, d'aller vers. L'action ne coûte pas."},
+    {txt:"Épuisé, rien dans le réservoir",daco:"Co",val:-10,col:"var(--co)",ref:"Démarrer demande un effort. Tu fonctionnes par obligation, pas par élan."},
+    {txt:"Stable, ni haut ni bas",daco:"N",val:0,col:"#78909C",ref:"Ni enthousiaste ni à plat — tu es là, opérationnel, sans surplus ni déficit."}]},
+  {key:"pensee",label:"Pensée",sub:"Clarté mentale",opts:[
+    {txt:"Clair, fluide",daco:"DA",val:8,col:"var(--da)",ref:"Les idées viennent, les décisions se prennent sans effort."},
+    {txt:"Brumeux, surchargé",daco:"Co",val:-8,col:"var(--co)",ref:"Difficultés à te concentrer, à finir une pensée, à décider."},
+    {txt:"Ça tourne, sans plus",daco:"N",val:0,col:"#78909C",ref:"Le mental est actif mais sans surcharge ni clarté particulière."}]},
+  {key:"relation",label:"Relation",sub:"Lien aux autres",opts:[
+    {txt:"Ouvert, connecté",daco:"DA",val:8,col:"var(--da)",ref:"Tu as envie d'échanger, d'écouter, de collaborer."},
+    {txt:"Isolé, sur la défensive",daco:"Co",val:-8,col:"var(--co)",ref:"Tu évites les interactions, tu as besoin de distance."},
+    {txt:"Sans opinion particulière",daco:"N",val:0,col:"#78909C",ref:"Ni envie forte de contact ni besoin de retrait."}]},
+  {key:"sens",label:"Sens",sub:"Sentiment d'utilité",opts:[
+    {txt:"Ce que je fais a du sens",daco:"DA",val:8,col:"var(--da)",ref:"Tu vois pourquoi tu fais ce que tu fais. Ta contribution te semble utile."},
+    {txt:"À quoi bon ?",daco:"Co",val:-8,col:"var(--co)",ref:"Tu fais les gestes sans y croire. Le lien entre ton effort et un résultat visible s'est perdu."},
+    {txt:"Je ne sais pas trop",daco:"N",val:0,col:"#78909C",ref:"Ni conviction forte ni désengagement."}]}
+];
+
+const ERGO=[
+  {key:"effort",label:"Effort physique ce jour",opts:[
+    {txt:"Faible",val:0,ref:"Travail sédentaire ou léger — pas de port de charges, peu de déplacements."},
+    {txt:"Moyen",val:15,ref:"Déplacements fréquents, port de charges < 15 kg, station debout alternée."},
+    {txt:"Élevé",val:30,ref:"Port de charges > 15 kg, gestes répétés > 4h, station debout continue."}]},
+  {key:"posture",label:"Postures répétées / contraignantes",opts:[
+    {txt:"Rare",val:0,ref:"Postures variées, aucune contrainte maintenue."},
+    {txt:"Fréquent",val:12,ref:"Plusieurs fois par heure — penché, tordu, bras levés ou accroupi plus de 2 min."},
+    {txt:"Constant",val:25,ref:"Posture contraignante maintenue la majorité du temps."}]},
+  {key:"recup",label:"Récupération depuis la dernière pause",opts:[
+    {txt:"Bien récupéré",val:0,ref:"La pause a suffi. Tu repars sans tension résiduelle."},
+    {txt:"Moyen",val:10,ref:"Pause prise mais insuffisante — tension résiduelle, fatigue encore présente."},
+    {txt:"Non récupéré",val:20,ref:"Pas de pause réelle. Fatigue cumulative."}]}
+];
+
+const PORTES=[
+  {key:"pro",label:"Monde professionnel",cls:"pro",
+   domaines:[
+     {key:"SANTÉ",label:"Santé",icon:"🏥"},
+     {key:"BTP",label:"BTP",icon:"🧱"},
+     {key:"SOCIAL",label:"Social",icon:"🤝"},
+     {key:"INDUSTRIE",label:"Industrie",icon:"⚙️"},
+     {key:"COMMERCE",label:"Commerce",icon:"🛒"},
+     {key:"ADMINISTRATIF",label:"Administratif",icon:"📋"}
+   ]},
+  {key:"vie",label:"Vie quotidienne",cls:"vie",
+   domaines:[
+     {key:"VIE_QUOTIDIENNE",label:"Vie quotidienne",icon:"🏠"},
+     {key:"AFFECTIVE",label:"Affective et intime",icon:"💛"},
+     {key:"EQUILIBRE",label:"Équilibre et vitalité",icon:"🌿"}
+   ]},
+  {key:"age",label:"Jeunesse & Grand âge",cls:"age",
+   domaines:[
+     {key:"JEUNESSE",label:"Jeunesse",icon:"🧒"},
+     {key:"GRAND_AGE",label:"Grand âge",icon:"🧓"}
+   ]}
+];
+
+let VIEW='home';
+let S={step:1,maxVisited:1,sel:{},ergo:[null,null,null],
+       domainesSel:[],activitesSel:{},
+       fiches:[],ficheIdx:0,votes:{},da:50,co:0};
+
+const TABS=[
+  {id:'approche',label:'Notre approche'},
+  {id:'manifeste',label:'Notre manifeste'},
+  {id:'jeux',label:'Les jeux pédagogiques'},
+  {id:'qui',label:'Qui sommes-nous'}
+];
+
+function ergoCo(){return S.ergo.reduce((s,v,i)=>s+(v!==null?ERGO[i].opts[v].val:0),0);}
+function daScore(){return Math.min(100,50+Object.values(S.sel).filter(v=>v>0).reduce((a,b)=>a+b,0));}
+function coScore(){return Math.min(100,ergoCo()+Object.values(S.sel).filter(v=>v<0).reduce((a,b)=>a+Math.abs(b),0));}
+function pontInfo(co){
+  if(co<40)return{cls:"ouvert",label:"Pont ouvert",txt:"Le cortex préfrontal est disponible. Le choix conscient reste possible."};
+  if(co<=70)return{cls:"entrou",label:"Pont entrouvert",txt:"Zone d'alerte. La carte DA devient nécessaire avant de décider."};
+  return{cls:"force",label:"Pont forcé",txt:"Co > 70 — ton cerveau ne peut plus choisir seul."};
+}
+function pontLabel(p){return p==="ouvert"?"Pont ouvert":p==="entrou"?"Pont entrouvert":"Pont forcé";}
+
+function renderNav(){
+  const nav=document.getElementById('mainNav');
+  if(VIEW==='voyage'){nav.innerHTML='';return;}
+  nav.innerHTML=`<div class="nav-home ${VIEW==='home'?'active':''}" onclick="goView('home')" title="Accueil">🏠</div>`+
+    TABS.map(t=>`<div class="tab ${VIEW===t.id?'active':''}" onclick="goView('${t.id}')">${t.label}</div>`).join('');
+}
+
+function goView(v){VIEW=v;render();}
+
+function render(){
+  renderNav();
+  const c=document.getElementById('mainContent');
+  const map={home:renderHome,approche:renderApproche,manifeste:renderManifeste,jeux:renderJeux,qui:renderQui,voyage:renderVoyage};
+  c.innerHTML=(map[VIEW]||renderHome)();
+  if(VIEW==='voyage')attachVoyageEvents();
+}
+
+function renderHome(){return`
+  <div class="hero">
+    <div class="hero-eyebrow">Outil pédagogique · Connaissance du fonctionnement cérébral</div>
+    <div class="hero-title">Dope à Mines</div>
+    <div class="hero-voyage">Un voyage intercellulaire</div>
+    <div class="hero-sub">Comprendre — par l'expérience du jeu — comment la dopamine façonne nos comportements, nos dépendances, et notre rapport au travail.</div>
+    <div class="hero-citation">"Du plus grand univers interstellaire<br>au plus petit univers intracellulaire."</div>
+    <div><span class="inpi-badge"><span class="inpi-dot"></span>Marque déposée · INPI n°5238107 · AliaSkill Formation · Xavier Gautron © 2026</span></div>
+  </div>
+  <div class="sl">Deux circuits fondamentaux</div>
+  <div class="circuits-grid">
+    <div class="cc da"><div class="cc-hdr"><div class="cc-ico">⚡</div><div><div class="cc-tag">DA</div><div class="cc-name">La Dopamine — l'élan</div></div></div><div class="cc-txt">Le circuit dopaminergique donne la direction, l'envie, le mouvement.</div><div class="cc-state"><div><span class="csl">DA naturelle —</span> le cerveau construit, crée, s'engage.</div><div style="margin-top:3px"><span class="csl">DA dispersée —</span> il s'emballe, zappe, brûle sans direction.</div></div></div>
+    <div class="cc co"><div class="cc-hdr"><div class="cc-ico">🛡</div><div><div class="cc-tag">Co</div><div class="cc-name">Le Cortisol — le frein</div></div></div><div class="cc-txt">Le circuit du cortisol alerte, protège, surveille.</div><div class="cc-state"><div><span class="csl">Co adaptatif —</span> le cerveau tient, gère, reste vigilant.</div><div style="margin-top:3px"><span class="csl">Co débordant —</span> il sature, isole, pilote automatiquement.</div></div></div>
+  </div>
+  <div class="sl">Les 4 états DACO</div>
+  <div class="vg">
+    <div class="vc dan"><div class="vb">DA.N</div><div class="vv">Repérer · Construire · Maîtriser</div><div class="vt">DA active et naturelle. Le cerveau s'engage, construit, progresse.</div></div>
+    <div class="vc dap"><div class="vb">DA.P</div><div class="vv">Zapper · Surcharger · S'obstiner</div><div class="vt">DA dispersée. Le cerveau s'emballe, brûle sans direction.</div></div>
+    <div class="vc con"><div class="vb">Co.N</div><div class="vv">Noter · Trancher · Résilience</div><div class="vt">Cortisol adaptatif. Le cerveau tient, gère, reste vigilant.</div></div>
+    <div class="vc cop"><div class="vb">Co.P</div><div class="vv">S'agiter · Subir · S'isoler</div><div class="vt">Cortisol dominant. Le cerveau sature, pilote automatiquement.</div></div>
+  </div>
+  <div class="sl">La mécanique centrale — Pont Synaptique</div>
+  <div class="pont-garde"><div class="pg-title">🧠 L'équilibre DA / Co</div><div class="pg-txt">Au cœur de Dope à Mines : le voyageur ne cherche pas un score. Il cherche à comprendre où se trouve son équilibre.</div><div class="citations"><div class="cit">"Quand le Co monte tu ne choisis pas. Quand la DA monte c'est toi qui agis."</div><div class="cit">"Ce score ne te mesure pas. Il raconte ce que ton cerveau a traversé."</div></div></div>
+  <button class="btn-start" onclick="startVoyage()">Commencer le voyage →</button>
+  <div class="footer-note" style="margin-top:8px">AliaSkill Formation · SIREN 888963238 · La Guerche-de-Bretagne<br>Fédération Addiction · PRAP IBC/INRS · DU Addictologie Rennes 1 · Maîtrise SIFA Rennes 2</div>`;}
+
+function renderApproche(){return`
+  <div class="oh"><div class="oh-ey">Un espace repensé. Pour la personne. Pour le système.</div><div class="oh-ti">Accompagner la personne pour qu'elle revienne dans le système.<br>Accompagner le système pour qu'il revienne à la personne.</div><div class="oh-si">"Ce n'est pas une illustration. C'est une expérience neurobiologique."</div></div>
+  <div class="sl">Le constat</div>
+  <div class="bloc bleu"><div class="bl">L'obstacle commun</div><div class="bt">Les approches classiques de prévention buttent sur un obstacle commun : <strong>elles parlent du cerveau sans le donner à vivre.</strong></div></div>
+  <div class="sl">L'inversion AliaSkill</div>
+  <div class="bloc vert"><div class="bl">Une logique inversée</div><div class="bt">Par le jeu, les participants <strong>activent eux-mêmes les mécanismes qu'ils sont en train d'apprendre</strong> — sans cours magistral, sans distance entre la théorie et le vécu.</div></div>
+  <div class="sl">Les mécanismes activés en jeu</div>
+  <div class="mg">
+    <div class="mi"><div class="mi-name">Anticipation</div><div class="mi-txt">Le joueur anticipe la prochaine situation avant qu'elle ne se joue.</div></div>
+    <div class="mi"><div class="mi-name">Saillance</div><div class="mi-txt">Certaines cartes déclenchent une reconnaissance immédiate et viscérale.</div></div>
+    <div class="mi"><div class="mi-name">Tolérance</div><div class="mi-txt">Le joueur observe comment sa réponse change au fil des situations.</div></div>
+    <div class="mi"><div class="mi-name">Bascule</div><div class="mi-txt">Le moment où le Co dépasse le DA — et où le choix disparaît.</div></div>
+  </div>
+  <div class="bloc ind"><div class="bl">Dope à Mines n'est pas le produit — c'est la démonstration.</div><div class="bt">La preuve vivante que l'approche AliaSkill fonctionne. Un outil pédagogique, thérapeutique, au service de l'accompagnement.</div></div>
+  <button class="btn-start" onclick="startVoyage()">Commencer le voyage →</button>`;}
+
+function renderManifeste(){return`
+  <div class="oh"><div class="oh-ey">Notre manifeste fondateur · AliaSkill Formation</div><div class="oh-ti">Autrement les compétences</div><div class="oh-si">"Accompagner la personne pour qu'elle revienne dans le système.<br>Accompagner le système pour qu'il revienne à la personne."</div></div>
+  <div class="sl">Ce que nous observons</div>
+  <div class="bloc bleu"><div class="bl">Le constat</div><div class="bt">Les personnes en rupture — décrochage, addiction, épuisement, exclusion — <strong>ne manquent pas de volonté.</strong> Elles manquent d'un espace où ce qu'elles vivent est compris sans être réduit. Où leur trajectoire est lue pour ce qu'elle est : <strong>une réponse à un environnement, pas un défaut de caractère.</strong></div></div>
+  <div class="sl">Ce que nous faisons</div>
+  <div class="bloc vert"><div class="bl">Notre action</div><div class="bt">Nous construisons des outils qui donnent à comprendre de l'intérieur. <strong>Pas des discours — des expériences.</strong> Parce que le cerveau apprend par la reconnaissance, pas par l'information.</div></div>
+  <div class="sl">Trois piliers</div>
+  <div class="pg">
+    <div class="pi neuro"><div class="pi-icon">🧠</div><div><div class="pi-name">Neurobiologie</div><div class="pi-txt">Des outils fondés sur la science du cerveau — dopamine, cortisol, axe HPA, circuit mésolimbique.</div></div></div>
+    <div class="pi peda"><div class="pi-icon">🎲</div><div><div class="pi-name">Pédagogie</div><div class="pi-txt">L'expert en la matière, c'est le joueur. Le jeu révèle — la personne reconnaît.</div></div></div>
+    <div class="pi human"><div class="pi-icon">🤝</div><div><div class="pi-name">Humanité</div><div class="pi-txt">35 ans de terrain. Un regard formé par les personnes rencontrées, pas par les manuels.</div></div></div>
+  </div>
+  <div class="sl">Ce que nous croyons</div>
+  <div class="bloc ind"><div class="bl">Notre conviction</div><div class="bt"><strong>Seule la personne détient les ressources d'un changement durable.</strong></div><div class="cle">Accompagner, c'est marcher à côté, pas devant. C'est créer les conditions dans lesquelles la personne peut reconnaître ses propres ressources — et décider de ce qu'elle en fait.</div></div>
+  <button class="btn-start" onclick="startVoyage()">Commencer le voyage →</button>`;}
+
+function renderJeux(){return`
+  <div class="oh"><div class="oh-ey">Les jeux pédagogiques Dope à Mines</div><div class="oh-ti">Dope à Mines ne s'apprend pas. Il se vit.</div></div>
+  <div class="sl">Les 4 jeux</div>
+  <div class="jg">
+    <div class="jc"><div class="jb b-add">Addictologie</div><div class="jf">🎲 Plateau · Circuit Dopaminergique</div><div class="jn">Version Addictologie</div><div class="jt">Prévention des conduites addictives. 4 à 8 joueurs. Cartes DA / Cortisol / Ressources.</div><span class="jtag">360 cartes</span></div>
+    <div class="jc"><div class="jb b-pro">Usure Pro</div><div class="jf">🃏 Cartes · Circuit Cortisol</div><div class="jn">Version Usure Pro</div><div class="jt">Prévention de l'usure au travail. Basculeur passif/actif. "Vis ma vie" — opérateur ET manager.</div><span class="jtag">360 cartes</span></div>
+    <div class="jc"><div class="jb b-scol">Harcèlement Scolaire</div><div class="jf">🃏 Cartes · Collège · 11–15 ans</div><div class="jn">Harcèlement Scolaire</div><div class="jt">Prévention du harcèlement scolaire. Auteur, victime, témoin, institution.</div><span class="jtag">340 cartes</span></div>
+    <div class="jc"><div class="jb b-hpro">Harcèlement Pro</div><div class="jf">🃏 Cartes · Adultes</div><div class="jn">Harcèlement Professionnel</div><div class="jt">4 perspectives : Auteur / Victime / Témoin / Institution.</div><span class="jtag">360 cartes</span></div>
+  </div>
+  <button class="btn-start" onclick="startVoyage()">Commencer le voyage →</button>`;}
+
+function renderQui(){return`
+  <div class="oh"><div class="oh-ey">AliaSkill Formation</div><div class="oh-ti">Une structure à taille humaine.<br>Une ambition nationale.</div></div>
+  <div class="sl">Notre origine</div>
+  <div class="bloc"><div class="bl">Le point de départ</div><div class="bt">AliaSkill Formation naît d'un constat simple : <strong>les systèmes sont construits pour accueillir ceux qui leur ressemblent.</strong> Les autres en sortent. Pas parce qu'ils ont échoué — mais parce que le système n'a pas su les lire.</div><div class="cle">Nous construisons un espace pour les autres.<br>Et pour les professionnels qui les accompagnent.</div></div>
+  <div class="sl">Nos quatre valeurs</div>
+  <div class="vl">
+    <div class="vi v1"><div class="vn">01</div><div class="vbd"><div class="vtit">L'émancipation, pas l'assistance</div><div class="vtxt">Accompagner c'est rendre l'autre capable — pas le rendre dépendant.</div></div></div>
+    <div class="vi v2"><div class="vn">02</div><div class="vbd"><div class="vtit">La rigueur scientifique accessible</div><div class="vtxt">Traduire la complexité du cerveau en expérience vivante, c'est notre métier. Pas vulgariser — incarner.</div></div></div>
+    <div class="vi v3"><div class="vn">03</div><div class="vbd"><div class="vtit">L'ancrage dans le réel</div><div class="vtxt">Chaque outil part d'une situation vécue, d'un professionnel rencontré. La théorie suit le terrain — jamais l'inverse.</div></div></div>
+    <div class="vi v4"><div class="vn">04</div><div class="vbd"><div class="vtit">L'humour comme vecteur pédagogique</div><div class="vtxt">On peut parler du cortisol en souriant. Le jeu, c'est d'abord un espace où l'on se permet de ne pas être sérieux — pour mieux comprendre ce qui l'est.</div></div></div>
+  </div>
+  <div class="sig"><div class="sig-txt">AliaSkill Formation · SIREN 888963238 · La Guerche-de-Bretagne</div><div class="sig-items"><span class="si">Maîtrise SIFA — Rennes 2 · 2025</span><span class="si">DU Addictologie — Rennes 1 · 2013</span><span class="si">PRAP IBC/INRS</span><span class="si">Fédération Addiction · depuis 2022</span><span class="si">35 ans de terrain</span></div></div>
+  <button class="btn-start" onclick="startVoyage()">Commencer le voyage →</button>`;}
+
+function startVoyage(){
+  S={step:1,maxVisited:1,sel:{},ergo:[null,null,null],domainesSel:[],activitesSel:{},fiches:[],ficheIdx:0,votes:{},da:50,co:0};
+  VIEW='voyage';render();
+}
+
+function nextStep(){S.step++;if(S.step>S.maxVisited)S.maxVisited=S.step;render();}
+
+function renderVoyage(){
+  const VSTEPS=[{id:1,label:"Auto-évaluation"},{id:2,label:"Mes domaines"},{id:3,label:"Mes activités"},{id:4,label:"Fiches"},{id:5,label:"Bilan"}];
+  let pb=`<div class="pb"><span class="sd done" onclick="goView('home')" style="color:var(--indigo);margin-right:4px">🏠</span><span class="ss">›</span>
+    ${VSTEPS.map((s,i)=>{let cls=s.id===S.step?'active':s.id<S.step?'done':'';const sep=i<VSTEPS.length-1?'<span class="ss">›</span>':'';return`<span class="sd ${cls}" style="cursor:${s.id<=S.maxVisited?'pointer':'default'}" onclick="${s.id<=S.maxVisited?`goVStep(${s.id})`:''}">${s.id}. ${s.label}</span>${sep}`;}).join('')}
+  </div>`;
+  if(S.step===1)return pb+renderVS1();
+  if(S.step===2)return pb+renderVS2();
+  if(S.step===3)return pb+renderVS3();
+  if(S.step===4)return pb+renderVS4();
+  if(S.step===5)return pb+renderVS5();
+}
+
+function goVStep(n){if(n<=S.maxVisited){S.step=n;render();}}
+
+function renderVS1(){
+  const done=Object.keys(S.sel).length,ergoDone=S.ergo.every(v=>v!==null);
+  const da=daScore(),co=coScore(),allOk=done>=3&&ergoDone;
+  let h=`<div class="sl" style="margin-top:0">Étape 1 — Auto-évaluation</div>
+  <div style="font-size:19px;font-weight:500;margin-bottom:12px">Comment vas-tu là, maintenant ?</div>
+  <div class="intro-box"><div class="intro-txt">Cette étape n'est pas un test. C'est un entraînement à regarder ce qui est là — en toi — avant même de commencer. Le ressenti n'est pas anecdotique. Ce n'est pas parce qu'on ne le voit pas qu'il n'existe pas. Il est souvent le premier signal. Prends le temps de l'écouter.</div></div>
+  <div class="sl">Ressentis</div><div class="g2">`;
+  h+=RS.map(r=>{const s=S.sel[r.key];const opt=s!==undefined?r.opts.find(o=>o.val===s):null;let cls=opt?(opt.daco==='DA'?'sel-da':opt.daco==='Co'?'sel-co':'sel-n'):'';const badge=opt?`<div class="rc-badge" style="background:${opt.col}">${opt.daco}</div>`:'';return`<div class="rc ${cls}" data-key="${r.key}">${badge}<div class="rc-name">${r.label}</div><div class="rc-txt">${opt?opt.txt:r.sub}</div></div>`;}).join('');
+  h+=`</div><div class="seuil-row"><div class="seuil-dots">${[1,2,3].map(i=>`<div class="seuil-dot ${done>=i?'filled':''}"></div>`).join('')}</div><span class="seuil-txt ${done>=3?'ok':''}">${done>=3?`${done}/5 ressentis — tu peux continuer`:`Choisis au moins 3 ressentis pour poursuivre (${done}/3)`}</span></div>
+  <div class="sl">Ergothermos — charge physique</div>`;
+  h+=ERGO.map((q,i)=>`<div class="eq"><div class="eq-label">${q.label}</div><div class="eq-opts">${q.opts.map((o,j)=>`<div class="eo ${S.ergo[i]===j?'sel':''}" data-qi="${i}" data-ji="${j}"><span>${o.txt}</span><div class="iico" data-qi="${i}" data-ji="${j}" data-ref="${o.ref.replace(/"/g,'&quot;')}">ⓘ</div></div>`).join('')}</div><div class="ttip" id="tip-${i}"></div></div>`).join('');
+  if(S.ergo.every(v=>v!==null)){const p2=pontInfo(co);h+=`<div class="pont-box ${p2.cls}"><div class="pl ${p2.cls}">${p2.label} — Co physiologique : ${ergoCo()}</div><div class="pt">${p2.txt}</div></div>`;}
+  if(allOk)h+=`<div class="sm"><div class="sp da"><div class="spl">Dopamine</div><div class="spv">${da}</div></div><div class="sp co"><div class="spl">Cortisol</div><div class="spv">${co}</div></div></div>`;
+  const missing=[];if(done<3)missing.push(`${3-done} ressenti${3-done>1?'s':''} de plus`);if(!S.ergo.every(v=>v!==null))missing.push('3 questions physiques');
+  h+=`<button class="btn-next" ${!allOk?'disabled':''} onclick="nextStep()">Choisir mes domaines →</button><div class="hint">${allOk?'':'Encore : '+missing.join(' + ')}</div>`;
+  return h;
+}
+
+function renderVS2(){
+  let h=`<div class="sl" style="margin-top:0">Étape 2 — Mes domaines</div>
+  <div style="font-size:19px;font-weight:500;margin-bottom:8px">Dans quels univers es-tu aujourd'hui ?</div>
+  <div style="font-size:13px;color:var(--text2);margin-bottom:16px">Coche un ou plusieurs domaines qui correspondent à ta journée.</div>
+  <div class="domaines-section">`;
+  PORTES.forEach(porte=>{
+    h+=`<div class="domaine-groupe">
+      <div class="groupe-titre">${porte.key==='pro'?'💼':porte.key==='vie'?'🏡':'🌱'} ${porte.label}</div>
+      <div class="domaine-grid">`;
+    porte.domaines.forEach(dom=>{
+      const sel=S.domainesSel.includes(dom.key);
+      h+=`<div class="domaine-btn ${sel?'sel-'+porte.cls:''}" data-dom="${dom.key}" data-cls="${porte.cls}">
+        <div class="db-check">${sel?'✓':''}</div>
+        <span class="db-icon">${dom.icon}</span>
+        <span class="db-name">${dom.label}</span>
+      </div>`;
+    });
+    h+=`</div></div>`;
+  });
+  h+=`</div>`;
+  if(S.domainesSel.length>0){
+    h+=`<div class="resume-box"><strong>${S.domainesSel.length} domaine${S.domainesSel.length>1?'s':''} sélectionné${S.domainesSel.length>1?'s':''}</strong>${S.domainesSel.map(d=>{const dom=PORTES.flatMap(p=>p.domaines).find(x=>x.key===d);return dom?dom.label:d;}).join(' · ')}</div>`;
+  }
+  h+=`<button class="btn-next" ${S.domainesSel.length===0?'disabled':''} onclick="nextStep()">Choisir mes activités →</button>
+  <div class="hint">${S.domainesSel.length===0?'Sélectionne au moins un domaine':''}</div>`;
+  return h;
+}
+
+function renderVS3(){
+  let h=`<div class="sl" style="margin-top:0">Étape 3 — Mes activités</div>
+  <div style="font-size:19px;font-weight:500;margin-bottom:8px">Quelles activités as-tu faites aujourd'hui ?</div>
+  <div style="font-size:13px;color:var(--text2);margin-bottom:16px">Coche les activités qui correspondent à ta journée. Les fiches seront tirées de ces situations précises.</div>
+  <div class="activites-section">`;
+
+  S.domainesSel.forEach(domKey=>{
+    const porte=PORTES.find(p=>p.domaines.some(d=>d.key===domKey));
+    const dom=PORTES.flatMap(p=>p.domaines).find(d=>d.key===domKey);
+    const cls=porte?porte.cls:'pro';
+    const activites=ACTIVITES_DB[domKey]||[];
+    if(!S.activitesSel[domKey])S.activitesSel[domKey]=[];
+    h+=`<div class="activ-domaine">
+      <div class="activ-domaine-titre ${cls}">${dom?dom.icon:''} ${dom?dom.label:domKey}</div>
+      <div class="activ-grid">`;
+    activites.forEach(activ=>{
+      const sel=S.activitesSel[domKey].includes(activ);
+      const nbSits=(SITUATIONS_DB[domKey]&&SITUATIONS_DB[domKey][activ])?SITUATIONS_DB[domKey][activ].length:0;
+      h+=`<div class="activ-item ${sel?'sel':''}" data-dom="${domKey}" data-activ="${activ.replace(/"/g,'&quot;')}">
+        <div class="ac-check">${sel?'✓':''}</div>
+        <span>${activ}</span>
+        <span class="nb-sits">${nbSits} sit.</span>
+      </div>`;
+    });
+    h+=`</div></div>`;
+  });
+
+  h+=`</div>`;
+
+  const totalSel=Object.values(S.activitesSel).reduce((s,a)=>s+a.length,0);
+  if(totalSel>0){
+    const totalSits=Object.entries(S.activitesSel).reduce((s,[dom,acts])=>{
+      return s+acts.reduce((ss,a)=>ss+((SITUATIONS_DB[dom]&&SITUATIONS_DB[dom][a])?SITUATIONS_DB[dom][a].length:0),0);
+    },0);
+    h+=`<div class="resume-box"><strong>${totalSel} activité${totalSel>1?'s':''} · ${totalSits} situations disponibles</strong>Les fiches seront tirées aléatoirement parmi ces situations.</div>`;
+  }
+
+  h+=`<button class="btn-next" ${totalSel===0?'disabled':''} onclick="initFiches()">Commencer le voyage →</button>
+  <div class="hint">${totalSel===0?'Coche au moins une activité':''}</div>`;
+  return h;
+}
+
+function initFiches(){
+  // Collecter toutes les situations des activités sélectionnées
+  let pool=[];
+  Object.entries(S.activitesSel).forEach(([dom,acts])=>{
+    acts.forEach(activ=>{
+      if(SITUATIONS_DB[dom]&&SITUATIONS_DB[dom][activ]){
+        pool=pool.concat(SITUATIONS_DB[dom][activ]);
+      }
+    });
+  });
+  // Mélanger et prendre 10
+  pool.sort(()=>Math.random()-0.5);
+  S.fiches=pool.slice(0,Math.min(10,pool.length));
+  S.ficheIdx=0;S.votes={};
+  nextStep();
+}
+
+function renderVS4(){
+  const da=S.da,co=S.co,fiches=S.fiches;
+  if(!fiches||fiches.length===0)return`<div class="sl">Aucune fiche disponible</div>`;
+  const voteCount=Object.keys(S.votes).length;
+  const f=fiches[S.ficheIdx];
+  const vote=S.votes[S.ficheIdx];
+  const p=pontInfo(f.co||30);
+  return`<div class="sl" style="margin-top:0">Étape 4 — Fiches</div>
+  <div style="font-size:18px;font-weight:500;margin-bottom:12px">Reconnais tes situations</div>
+  <div class="sb"><span class="gl" style="color:var(--da)">DA</span><div class="gt"><div class="gf" style="background:var(--da);width:${da}%"></div></div><span class="gv" style="color:var(--da)">${da}</span><div class="gsep"></div><span class="gl" style="color:var(--co)">Co</span><div class="gt"><div class="gf" style="background:var(--co);width:${co}%"></div></div><span class="gv" style="color:var(--co)">${co}</span></div>
+  <div class="dots-row">${fiches.map((_,i)=>{const v=S.votes[i];const cls=v===1?'da-dot':v===-1?'co-dot':v===0?'n-dot':'';return`<div class="dot ${cls} ${i===S.ficheIdx?'active':''}" data-i="${i}"></div>`;}).join('')}<span class="dlbl">${S.ficheIdx+1} / ${fiches.length}</span></div>
+  <div class="fc">
+    <div class="fn-row"><div style="display:flex;gap:6px"><button class="nb" id="btnPrev" ${S.ficheIdx===0?'disabled':''}>‹</button><button class="nb" id="btnNxt2" ${S.ficheIdx===fiches.length-1?'disabled':''}>›</button></div><span style="font-size:12px;color:var(--text3)">${voteCount} / ${fiches.length} votées</span></div>
+    <div class="fn">${f.nom}</div><div class="fc-ctx">${f.ctx}</div>
+    <div class="tr"><span class="tg tg-daco">${f.daco||'DACO'}</span><span class="tg tg-da">DA ${f.da||'—'}</span><span class="tg tg-co">Co ${f.co||'—'}</span><span class="tg tg-${f.pont||'entrou'}">${pontLabel(f.pont||'entrou')}</span>${f.emotion?`<span class="tg tg-emo">${f.emotion}</span>`:''}</div>
+    <div class="pm ${p.cls}"><strong>${p.label}</strong> — ${p.txt}</div>
+    <div class="vq">Cette situation, comment elle résonne pour toi ?</div>
+    <div class="vr"><button class="vb-btn ${vote===-1?'ad':''}" id="vDown"><span class="va">⬇</span>Ça coûte</button><button class="vb-btn ${vote===0?'an':''}" id="vN"><span class="va">→</span>Neutre</button><button class="vb-btn ${vote===1?'au':''}" id="vUp"><span class="va">⬆</span>Ça nourrit</button></div>
+    ${vote!==undefined&&(f.corps||f.lien||f.pensee)?`<div class="rb"><div class="rt">Ressources — ${f.daco||''}</div>${f.corps?`<div class="rr"><span class="rl corps">I Corps</span><span class="rtxt">${f.corps}</span></div>`:''}${f.lien?`<div class="rr"><span class="rl lien">II Lien</span><span class="rtxt">${f.lien}</span></div>`:''}${f.pensee?`<div class="rr"><span class="rl pensee">III Pensée</span><span class="rtxt">${f.pensee}</span></div>`:''}</div>`:''}
+  </div>
+  <button class="btn-next" ${voteCount<3?'disabled':''} onclick="nextStep()">Voir mon bilan →</button>
+  <div class="hint">${voteCount<3?`Vote sur ${3-voteCount} fiche${3-voteCount>1?'s':''} de plus`:''}</div>`;}
+
+function renderVS5(){
+  const da=S.da,co=S.co,p=pontInfo(co),fiches=S.fiches;
+  const ilots=fiches.filter((_,i)=>S.votes[i]===1);
+  const charges=fiches.filter((_,i)=>S.votes[i]===-1);
+  return`<div class="sl" style="margin-top:0">Étape 5 — Bilan</div>
+  <div style="font-size:19px;font-weight:500;margin-bottom:12px">Ce que ton cerveau a traversé</div>
+  <div class="bs"><div class="sc da"><div class="scl">Dopamine</div><div class="scv">${da}</div><div class="scs">sur 100</div></div><div class="sc co"><div class="scl">Cortisol</div><div class="scv">${co}</div><div class="scs">sur 100</div></div></div>
+  <div class="gr"><span class="gl" style="color:var(--da)">DA</span><div class="gt"><div class="gf" style="background:var(--da);width:${da}%"></div></div><span class="gv" style="color:var(--da)">${da}</span></div>
+  <div class="gr"><span class="gl" style="color:var(--co)">Co</span><div class="gt"><div class="gf" style="background:var(--co);width:${co}%"></div></div><span class="gv" style="color:var(--co)">${co}</span></div>
+  <div class="pont-box ${p.cls}" style="margin:14px 0"><div class="pl ${p.cls}">${p.label} — Co ${co}</div><div class="pt">${p.txt}</div></div>
+  ${ilots.length>0?`<div class="sl">Îlots de DA — tes situations nourrissantes</div><div class="ig">${ilots.map(f=>`<div class="ii"><span>⬆</span>${f.nom}</div>`).join('')}</div>`:''}
+  <div class="sl">Situations coûteuses — tes ressources</div>
+  ${charges.length>0?charges.map(f=>`<div class="ci"><div class="ch"><span>⬇</span>${f.nom}</div>${f.corps?`<div class="rr"><span class="rl corps">I Corps</span><span class="rtxt">${f.corps}</span></div>`:''}${f.lien?`<div class="rr"><span class="rl lien">II Lien</span><span class="rtxt">${f.lien}</span></div>`:''}${f.pensee?`<div class="rr"><span class="rl pensee">III Pensée</span><span class="rtxt">${f.pensee}</span></div>`:''}</div>`).join(''):`<div style="font-size:12px;color:var(--text3);padding:6px 0">Aucune situation coûteuse identifiée — bien joué.</div>`}
+  <div class="pe"><div class="pe-txt">"Ce score ne te mesure pas.<br>Il raconte ce que ton cerveau a traversé."</div><div class="pe-sig">DOPE À MINES · INPI n°5238107 · AliaSkill Formation · Xavier Gautron © 2026</div></div>
+  <div class="btns-row"><button class="btn-sec" onclick="startVoyage()">Nouveau voyage</button><button class="btn-pri" onclick="goView('home')">🏠 Accueil</button></div>`;}
+
+function attachVoyageEvents(){
+  document.querySelectorAll('.rc[data-key]').forEach(el=>el.addEventListener('click',()=>openModal(el.dataset.key)));
+  document.querySelectorAll('.eo[data-qi]').forEach(el=>el.addEventListener('click',(e)=>{if(e.target.classList.contains('iico'))return;S.ergo[+el.dataset.qi]=+el.dataset.ji;render();}));
+  document.querySelectorAll('.iico[data-ref]').forEach(el=>el.addEventListener('click',(e)=>{e.stopPropagation();const qi=el.dataset.qi;const tip=document.getElementById('tip-'+qi);const isOpen=tip.classList.contains('open')&&tip.dataset.ji===el.dataset.ji;document.querySelectorAll('.ttip').forEach(t=>{t.classList.remove('open');t.textContent='';});if(!isOpen){tip.textContent=el.dataset.ref;tip.dataset.ji=el.dataset.ji;tip.classList.add('open');}}));
+  document.querySelectorAll('.domaine-btn[data-dom]').forEach(el=>el.addEventListener('click',()=>{const k=el.dataset.dom;if(S.domainesSel.includes(k))S.domainesSel=S.domainesSel.filter(x=>x!==k);else S.domainesSel.push(k);render();}));
+  document.querySelectorAll('.activ-item[data-activ]').forEach(el=>el.addEventListener('click',()=>{
+    const dom=el.dataset.dom,activ=el.dataset.activ;
+    if(!S.activitesSel[dom])S.activitesSel[dom]=[];
+    if(S.activitesSel[dom].includes(activ))S.activitesSel[dom]=S.activitesSel[dom].filter(x=>x!==activ);
+    else S.activitesSel[dom].push(activ);
+    render();
+  }));
+  document.querySelectorAll('.dot[data-i]').forEach(el=>el.addEventListener('click',()=>{S.ficheIdx=+el.dataset.i;render();}));
+  const bp=document.getElementById('btnPrev');if(bp)bp.addEventListener('click',()=>{if(S.ficheIdx>0){S.ficheIdx--;render();}});
+  const bn=document.getElementById('btnNxt2');if(bn)bn.addEventListener('click',()=>{if(S.ficheIdx<S.fiches.length-1){S.ficheIdx++;render();}});
+  const vd=document.getElementById('vDown');if(vd)vd.addEventListener('click',()=>doVote(-1));
+  const vn=document.getElementById('vN');if(vn)vn.addEventListener('click',()=>doVote(0));
+  const vu=document.getElementById('vUp');if(vu)vu.addEventListener('click',()=>doVote(1));
+}
+
+function doVote(v){
+  S.votes[S.ficheIdx]=v;
+  const f=S.fiches[S.ficheIdx];
+  if(v===1)S.da=Math.min(100,Math.round(S.da+(f.da||10)/10));
+  if(v===-1)S.co=Math.min(100,Math.round(S.co+(f.co||10)/10));
+  render();
+  if(S.ficheIdx<S.fiches.length-1)setTimeout(()=>{S.ficheIdx++;render();},380);
+}
+
+function openModal(key){
+  const r=RS.find(x=>x.key===key);
+  document.getElementById('mt').textContent=r.label+' — '+r.sub;
+  document.getElementById('mo').innerHTML=r.opts.map((o,i)=>`<div class="ow"><div style="display:flex;gap:6px;align-items:center"><button class="op" style="flex:1" onclick="pick('${key}',${o.val})"><div class="od" style="background:${o.col}"></div><span>${o.txt}</span><span class="ot" style="color:${o.col}">${o.daco}</span></button><div class="oi" onclick="toggleTip2('mtip-${key}-${i}')">ⓘ</div></div><div class="ttip" id="mtip-${key}-${i}">${o.ref}</div></div>`).join('');
+  document.getElementById('mw').classList.add('open');
+}
+function toggleTip2(id){const el=document.getElementById(id);const isOpen=el.classList.contains('open');document.querySelectorAll('.ttip').forEach(t=>t.classList.remove('open'));if(!isOpen)el.classList.add('open');}
+function pick(key,val){S.sel[key]=val;closeModal();render();}
+function closeModal(){document.getElementById('mw').classList.remove('open');document.querySelectorAll('.ttip').forEach(t=>t.classList.remove('open'));}
+
+render();
+</script>
+</body>
+</html>
