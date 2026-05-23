@@ -130,24 +130,6 @@ button:disabled{opacity:0.3;cursor:not-allowed}
 </head>
 <body>
 
-<!-- ÉCRAN D'ACCUEIL -->
-<div id="accueil">
-  <div id="accueil-box">
-    <h2>DOPE À MINES</h2>
-    <p>Adultes · Session Visio · AliaSkill Formation</p>
-    <p style="font-size:12px;color:#555;margin-bottom:16px;font-family:Arial,sans-serif">Combien de joueurs ?</p>
-    <div class="nb-joueurs">
-      <button class="nb-btn" onclick="selNb(2)">2</button>
-      <button class="nb-btn" onclick="selNb(3)">3</button>
-      <button class="nb-btn" onclick="selNb(4)">4</button>
-      <button class="nb-btn" onclick="selNb(5)">5</button>
-      <button class="nb-btn" onclick="selNb(6)">6</button>
-    </div>
-    <button id="btn-demarrer" onclick="demarrer()">Lancer la partie</button>
-  </div>
-</div>
-
-
 <!-- OVERLAY ANALYSE FINALE -->
 <div id="analyse-overlay">
   <div id="analyse-box">
@@ -164,6 +146,25 @@ button:disabled{opacity:0.3;cursor:not-allowed}
     <button class="fermer-overlay" onclick="fermerOverlay(null)">✕</button>
     <div id="carte-zoom-content"></div>
     <div id="zoom-hint">Cliquer en dehors pour fermer</div>
+  </div>
+</div>
+
+<!-- ACCUEIL -->
+<div id="ecran-accueil" style="position:fixed;top:0;left:0;width:100%;height:100%;background:#1a1a2e;display:flex;align-items:center;justify-content:center;z-index:9999">
+  <div style="background:#f5f0e8;border-radius:16px;padding:40px;text-align:center;width:380px;box-shadow:0 8px 32px rgba(0,0,0,0.5)">
+    <div style="font-size:32px;margin-bottom:8px">🧠</div>
+    <h2 style="font-family:Georgia,serif;font-size:22px;color:#1a1a2e;margin-bottom:4px">DOPE À MINES</h2>
+    <p style="font-family:Arial,sans-serif;font-size:12px;color:#888;margin-bottom:24px">Adultes · Visio · AliaSkill Formation</p>
+    <p style="font-family:Arial,sans-serif;font-size:13px;color:#444;margin-bottom:16px;font-weight:bold">Nombre de joueurs :</p>
+    <div style="display:flex;gap:10px;justify-content:center;margin-bottom:28px">
+      <button style="width:52px;height:52px;border-radius:50%;border:2px solid #ccc;background:#fff;font-size:20px;font-weight:bold;cursor:pointer;font-family:Georgia,serif" id="nb2" onclick="choisirNb(2)">2</button>
+      <button style="width:52px;height:52px;border-radius:50%;border:2px solid #ccc;background:#fff;font-size:20px;font-weight:bold;cursor:pointer;font-family:Georgia,serif" id="nb3" onclick="choisirNb(3)">3</button>
+      <button style="width:52px;height:52px;border-radius:50%;border:2px solid #ccc;background:#fff;font-size:20px;font-weight:bold;cursor:pointer;font-family:Georgia,serif" id="nb4" onclick="choisirNb(4)">4</button>
+      <button style="width:52px;height:52px;border-radius:50%;border:2px solid #ccc;background:#fff;font-size:20px;font-weight:bold;cursor:pointer;font-family:Georgia,serif" id="nb5" onclick="choisirNb(5)">5</button>
+      <button style="width:52px;height:52px;border-radius:50%;border:2px solid #ccc;background:#fff;font-size:20px;font-weight:bold;cursor:pointer;font-family:Georgia,serif" id="nb6" onclick="choisirNb(6)">6</button>
+    </div>
+    <div id="nb-selectionne" style="font-family:Arial,sans-serif;font-size:12px;color:#c0392b;margin-bottom:12px;min-height:18px"></div>
+    <button onclick="lancerPartie()" style="padding:14px 36px;background:#c0392b;color:#fff;border:none;border-radius:8px;font-size:16px;font-weight:bold;cursor:pointer;font-family:Georgia,serif;box-shadow:0 3px 10px rgba(192,57,43,0.3)">Lancer la partie</button>
   </div>
 </div>
 
@@ -416,36 +417,43 @@ var carteEnnuiEnCours=null;
 
 
 // ── ACCUEIL ──────────────────────────────
-var nbJoueursChoisi = 0;
+var NB_JOUEURS_CHOISI = 0;
 
-function selNb(n){
-  nbJoueursChoisi = n;
-  var btns = document.querySelectorAll('.nb-btn');
-  for(var i=0; i<btns.length; i++){
-    btns[i].classList.remove('sel');
-    if(parseInt(btns[i].textContent) === n) btns[i].classList.add('sel');
+function choisirNb(n){
+  NB_JOUEURS_CHOISI = n;
+  var ids = [2,3,4,5,6];
+  for(var i=0; i<ids.length; i++){
+    var el = document.getElementById('nb'+ids[i]);
+    if(el){
+      if(ids[i] === n){
+        el.style.background = '#1a1a2e';
+        el.style.color = '#fff';
+        el.style.borderColor = '#1a1a2e';
+      } else {
+        el.style.background = '#fff';
+        el.style.color = '#1a1a2e';
+        el.style.borderColor = '#ccc';
+      }
+    }
   }
-  var btn = document.getElementById('btn-demarrer');
-  if(btn){
-    btn.classList.add('actif');
-    btn.style.opacity = '1';
-    btn.style.cursor = 'pointer';
-  }
+  var lbl = document.getElementById('nb-selectionne');
+  if(lbl) lbl.textContent = n + ' joueurs sélectionnés';
 }
 
-function demarrer(){
-  if(!nbJoueursChoisi){
-    alert('Choisis le nombre de joueurs avant de lancer la partie.');
+function lancerPartie(){
+  if(!NB_JOUEURS_CHOISI){
+    var lbl = document.getElementById('nb-selectionne');
+    if(lbl) lbl.textContent = 'Choisis un nombre de joueurs !';
     return;
   }
-  N = nbJoueursChoisi;
+  N = NB_JOUEURS_CHOISI;
   PC = PC_ALL.slice(0, N);
   PN = PN_ALL.slice(0, N);
   init();
   PARTIE_DEMARREE = true;
   rendrePlateau();
   rendreScores();
-  document.getElementById('accueil').style.display = 'none';
+  document.getElementById('ecran-accueil').style.display = 'none';
 }
 
 function init(){
