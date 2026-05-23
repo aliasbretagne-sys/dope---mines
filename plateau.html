@@ -2,97 +2,100 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dope à Mines · Plateau Visio · Adultes</title>
+<title>Dope à Mines · Visio</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap');
-:root{--rouge:#c0392b;--bleu:#2471a3;--vert:#1e8449;--jaune:#d68910;--violet:#7d3c98;--bg:#0d0d1a;--surface:#161628;--surface2:#1e1e35;--text:#e8e8f0;--muted:#7878a0}
 *{box-sizing:border-box;margin:0;padding:0}
-html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif}
-#app{display:flex;flex-direction:column;width:100vw;height:100vh}
-#topbar{flex-shrink:0;height:52px;background:var(--surface);border-bottom:1px solid #ffffff0f;display:flex;align-items:center;padding:0 16px;gap:10px}
-#topbar h1{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:.08em;flex:1}
+html,body{height:100%;background:#0d0d1a;color:#e8e8f0;font-family:Arial,sans-serif}
+#app{display:flex;flex-direction:column;height:100vh}
+#bar{background:#161628;border-bottom:1px solid #333;padding:8px 12px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+#bar h1{font-size:16px;font-weight:bold;flex:1;color:#e8e8f0}
+.btn{padding:6px 14px;border-radius:6px;font-size:13px;cursor:pointer;border:1px solid #444;background:#1e1e35;color:#e8e8f0}
+.btn:hover{background:#2a2a4a}
+.btn:disabled{opacity:0.3;cursor:not-allowed}
+#btn-die{background:#c0392b;border-color:#c0392b;color:#fff;font-size:15px}
+#btn-die:hover:not(:disabled){background:#a93226}
+#turn{font-size:12px;color:#888}
 #main{display:flex;flex:1;overflow:hidden}
-#board-wrap{flex:1;position:relative;overflow:hidden}
-#board{position:absolute;top:0;left:0;width:100%;height:100%}
-#sidebar{width:280px;flex-shrink:0;background:var(--surface);border-left:1px solid #ffffff0f;overflow-y:auto;display:flex;flex-direction:column}
-.sec{border-bottom:1px solid #ffffff08;padding:10px 12px}
-.sec-t{font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:7px}
-.btn{padding:5px 14px;border-radius:6px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;cursor:pointer;border:1px solid #ffffff20;background:var(--surface2);color:var(--text);transition:all .15s}
-.btn:hover:not(:disabled){background:#ffffff15}
-.btn:disabled{opacity:.3;cursor:not-allowed}
-.btn-die{background:var(--rouge);border-color:var(--rouge);color:#fff;font-size:14px;padding:5px 16px}
-.btn-die:hover:not(:disabled){background:#a93226;border-color:#a93226}
-#die-face{font-size:44px;text-align:center;line-height:1;padding:4px 0}
-#case-lbl{font-size:11px;text-align:center;color:var(--muted);min-height:15px;margin-top:3px}
-.no-card{color:var(--muted);font-size:12px;text-align:center;padding:16px 0}
-.da-co{display:flex;gap:6px;margin:5px 0}
-.pill{padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600}
-.da-p{background:#1a3a5c;color:#5dade2}
-.co-p{background:#4a0f0f;color:#e74c3c}
-.player-row{display:flex;align-items:center;gap:6px;padding:3px 5px;border-radius:5px}
-.player-row.active{background:#ffffff0a}
-.pdot{width:11px;height:11px;border-radius:50%;flex-shrink:0}
-.pname{font-size:11px;flex:1}
-.ppos{font-size:10px;color:var(--muted)}
-.pscore{font-size:12px;font-weight:600}
+#board-area{flex:1;display:flex;align-items:center;justify-content:center;padding:10px}
+#board-area svg{max-width:100%;max-height:100%}
+#side{width:270px;background:#161628;border-left:1px solid #222;overflow-y:auto;padding:10px;display:flex;flex-direction:column;gap:10px}
+.box{background:#1e1e35;border-radius:8px;padding:10px}
+.box-t{font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:#888;margin-bottom:6px}
+#die-show{font-size:40px;text-align:center}
+#case-info{font-size:11px;color:#888;text-align:center;margin-top:3px}
+.no-c{color:#666;font-size:12px;text-align:center;padding:10px 0}
+.badge{display:inline-block;padding:2px 8px;border-radius:20px;font-size:10px;font-weight:bold;margin-bottom:5px}
+.ctitle{font-size:17px;font-weight:bold;margin-bottom:4px}
+.csit{font-size:11px;color:#aab;font-style:italic;margin-bottom:4px;line-height:1.4}
+.cbrain{font-size:10px;color:#666;margin-bottom:7px;line-height:1.4}
+.pills{display:flex;gap:6px;margin-bottom:5px}
+.pill{padding:3px 10px;border-radius:20px;font-size:11px;font-weight:bold}
+.da{background:#1a3a5c;color:#5dade2}
+.co{background:#4a0f0f;color:#e74c3c}
+.score-pill{font-size:11px;font-weight:bold;padding:3px 10px;border-radius:6px;display:inline-block}
+.effet{margin-top:6px;padding:5px;background:#2e2000;color:#f0b27a;border-radius:5px;font-size:10px;line-height:1.4}
+.parole{margin-top:6px;padding:5px;background:#1e0a3d;color:#af7ac5;border-radius:5px;font-size:10px;line-height:1.4;font-style:italic}
+.prow{display:flex;align-items:center;gap:6px;padding:3px 5px;border-radius:5px}
+.prow.cur{background:#ffffff10}
+.pdot{width:12px;height:12px;border-radius:50%;flex-shrink:0}
+.pn{font-size:11px;flex:1}
+.pp{font-size:10px;color:#666}
+.ps{font-size:12px;font-weight:bold}
+#pontda{padding:6px;border-radius:6px;font-size:11px;font-weight:bold;text-align:center;background:#1a1a2e;color:#666}
 .leg{display:flex;flex-wrap:wrap;gap:5px}
-.li{display:flex;align-items:center;gap:3px;font-size:10px;color:var(--muted)}
-.ld{width:8px;height:8px;border-radius:50%}
-#pontda-st{padding:5px 8px;border-radius:6px;font-size:11px;font-weight:600;text-align:center;margin-top:4px;background:#1a1a2e;color:var(--muted)}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
-.pforce{animation:pulse 1s infinite}
+.li{display:flex;align-items:center;gap:3px;font-size:10px;color:#888}
+.ld{width:9px;height:9px;border-radius:50%}
 </style>
 </head>
 <body>
 <div id="app">
-  <div id="topbar">
-    <h1>DOPE À MINES · ADULTES · VISIO</h1>
-    <span style="font-size:11px;color:var(--muted)" id="turn-info">Tour 1 · Joueur 1</span>
-    <button class="btn btn-die" onclick="lancerDe()">🎲 Lancer le dé</button>
-    <button class="btn" id="btn-draw" onclick="piocher()" disabled>Piocher</button>
-    <button class="btn" id="btn-next" onclick="tourSuivant()" disabled>Tour suivant</button>
-    <button class="btn" onclick="resetJeu()">Réinitialiser</button>
+<div id="bar">
+  <h1>DOPE À MINES · ADULTES · VISIO</h1>
+  <span id="turn">Tour 1 · Joueur 1</span>
+  <button class="btn" id="btn-die" onclick="lancerDe()">🎲 Lancer le dé</button>
+  <button class="btn" id="btn-draw" onclick="piocher()" disabled>Piocher</button>
+  <button class="btn" id="btn-next" onclick="tourSuivant()" disabled>Tour suivant</button>
+  <button class="btn" onclick="resetJeu()">↺ Reset</button>
+</div>
+<div id="main">
+  <div id="board-area">
+    <svg id="svg" viewBox="0 0 600 560" xmlns="http://www.w3.org/2000/svg"></svg>
   </div>
-  <div id="main">
-    <div id="board-wrap">
-      <canvas id="board"></canvas>
+  <div id="side">
+    <div class="box">
+      <div class="box-t">Dé</div>
+      <div id="die-show">—</div>
+      <div id="case-info">Lance le dé</div>
     </div>
-    <div id="sidebar">
-      <div class="sec">
-        <div class="sec-t">Dé</div>
-        <div id="die-face">—</div>
-        <div id="case-lbl">Lance le dé pour commencer</div>
-      </div>
-      <div class="sec">
-        <div class="sec-t">Carte</div>
-        <div id="card-content"><div class="no-card">Lance le dé puis pioche</div></div>
-      </div>
-      <div class="sec">
-        <div class="sec-t">Pont DA · Noyau Accumbens</div>
-        <div id="pontda-st">— en attente —</div>
-      </div>
-      <div class="sec">
-        <div class="sec-t">Scores joueurs</div>
-        <div id="players-list"></div>
-      </div>
-      <div class="sec">
-        <div class="sec-t">Légende</div>
-        <div class="leg">
-          <div class="li"><div class="ld" style="background:#c0392b"></div>Rouge</div>
-          <div class="li"><div class="ld" style="background:#2471a3"></div>Bleu</div>
-          <div class="li"><div class="ld" style="background:#1e8449"></div>Vert</div>
-          <div class="li"><div class="ld" style="background:#d68910"></div>Ressources</div>
-          <div class="li"><div class="ld" style="background:#7d3c98"></div>Consultation</div>
-        </div>
+    <div class="box">
+      <div class="box-t">Carte</div>
+      <div id="card"><div class="no-c">Lance le dé puis pioche</div></div>
+    </div>
+    <div class="box">
+      <div class="box-t">Pont DA · NA</div>
+      <div id="pontda">— en attente —</div>
+    </div>
+    <div class="box">
+      <div class="box-t">Scores</div>
+      <div id="scores"></div>
+    </div>
+    <div class="box">
+      <div class="box-t">Légende</div>
+      <div class="leg">
+        <div class="li"><div class="ld" style="background:#c0392b"></div>Rouge</div>
+        <div class="li"><div class="ld" style="background:#2471a3"></div>Bleu</div>
+        <div class="li"><div class="ld" style="background:#1e8449"></div>Vert</div>
+        <div class="li"><div class="ld" style="background:#d68910"></div>Ressources</div>
+        <div class="li"><div class="ld" style="background:#7d3c98"></div>Consultation</div>
       </div>
     </div>
   </div>
 </div>
+</div>
 <script>
 const N=6;
-const PCOLS=['#e74c3c','#3498db','#2ecc71','#f39c12','#9b59b6','#1abc9c'];
-const NOMS=['Joueur 1','Joueur 2','Joueur 3','Joueur 4','Joueur 5','Joueur 6'];
+const PC=['#e74c3c','#3498db','#2ecc71','#f39c12','#9b59b6','#1abc9c'];
+const PN=['J1','J2','J3','J4','J5','J6'];
 
 const SEGS=[
   {de:'ATV',a:'Hypothalamus',seq:['R','B','R','V','R','B']},
@@ -103,105 +106,124 @@ const SEGS=[
   {de:'Amygdale',a:'Cortex PF',seq:['J','R','V','J','R','V','R','V','R','J']},
 ];
 const PARC=[];
-SEGS.forEach(s=>s.seq.forEach(c=>PARC.push({c,lbl:s.de+'→'+s.a})));
+SEGS.forEach(s=>s.seq.forEach(c=>PARC.push({c,lbl:s.a})));
 PARC.push({c:'FIN',lbl:'Cortex PF'});
 const TOTAL=PARC.length;
 
-const CCOL={R:'#c0392b',B:'2471a3',V:'#1e8449',J:'#d68910',C:'#7d3c98',FIN:'#ecf0f1'};
 const CNOM={R:'Zone Rouge',B:'Zone Bleue',V:'Zone Verte',J:'Ressources',C:'Consultation',FIN:'Arrivée'};
-const ZS={
-  R:{bg:'#3d0a0a',col:'#e74c3c',nom:'ZONE ROUGE'},
-  B:{bg:'#0a1e3d',col:'#5dade2',nom:'ZONE BLEUE'},
-  V:{bg:'#0a2e14',col:'#52be80',nom:'ZONE VERTE'},
-  J:{bg:'#3d2200',col:'#f0b27a',nom:'RESSOURCES'},
-  C:{bg:'#1e0a3d',col:'#af7ac5',nom:'CONSULTATION'},
-};
-const SCOL={20:'#1e8449',10:'#2471a3',0:'#888',-10:'#d68910',-20:'#c0392b'};
-const SNOM={20:'Régulation active',10:'Régulation fragile',0:'Tension neutre',-10:'Tension modérée',-20:'Zone de danger'};
+const CCOL={R:'#c0392b',B:'#2471a3',V:'#1e8449',J:'#d68910',C:'#7d3c98',FIN:'#ecf0f1'};
+const ZS={R:{bg:'#3d0a0a',col:'#e74c3c',n:'ZONE ROUGE'},B:{bg:'#0a1e3d',col:'#5dade2',n:'ZONE BLEUE'},V:{bg:'#0a2e14',col:'#52be80',n:'ZONE VERTE'},J:{bg:'#3d2200',col:'#f0b27a',n:'RESSOURCES'},C:{bg:'#1e0a3d',col:'#af7ac5',n:'CONSULTATION'}};
+const SC={20:'#1e8449',10:'#2471a3',0:'#888',-10:'#d68910',-20:'#c0392b'};
+const SN={20:'Régulation active',10:'Régulation fragile',0:'Tension neutre',-10:'Tension modérée',-20:'Zone de danger'};
 
 const CARTES={
 R:[
-  {t:'Le Buzz Social',s:'Une de tes publications devient virale. Tu vérifies les notifications toutes les minutes.',c:'Récompense aléatoire intermittente.',da:10,co:40,pts:-20},
-  {t:'Le Sucre de 16h',s:'Coup de barre. Un soda pour repartir.',c:'Pic glycémique couplé à dopamine sensorielle rapide.',da:10,co:30,pts:-20},
-  {t:'Le Feedback Acide',s:'Un commentaire sec d\'un client. Ton sang ne fait qu\'un tour.',c:'Menace sociale perçue. Alerte neurochimique majeure.',da:10,co:50,pts:-20},
-  {t:'L\'Idée Géniale',s:'Tu viens de trouver LA solution. Ton cerveau s\'illumine.',c:'Décharge massive de dopamine créative (Eurêka).',da:40,co:10,pts:20},
-  {t:'Le Verre de Trop',s:'Pour décompresser. Le premier soulage, le troisième embrume.',c:'Alcool : stimulation GABA puis rebond dopaminergique.',da:10,co:50,pts:-20},
-  {t:'Le Swipe Infini',s:'Réseaux ou applis de rencontre. Tu cherches le prochain visage.',c:'Mécanisme de récompense aléatoire. Hyperexcitation.',da:10,co:50,pts:-20},
-  {t:'Cigarette / Vape',s:'La pause nécessaire. Le geste calme, mais la nicotine fouette.',c:'Décharge flash de dopamine.',da:10,co:50,pts:-20},
-  {t:'Colère Routière',s:'Quelqu\'un te coupe. Tu exploses, tu klaxonnes.',c:'Réaction amygdalienne brute.',da:10,co:40,pts:-20},
-  {t:'L\'Ego Trip',s:'On te demande ton avis comme expert. Tu te sens fier.',c:'Validation du statut social.',da:40,co:20,pts:20},
-  {t:'L\'Appel de l\'Ancien',s:'Un ami perdu de vue te contacte. Nostalgie et joie.',c:'Ocytocine + Dopamine.',da:40,co:10,pts:20},
-  {t:'Workaholisme',s:'Répondre aux mails pendant le dîner. Tu te sens indispensable.',c:'Identification totale au travail.',da:10,co:50,pts:-20},
+  {t:'Le Buzz Social',s:'Une de tes publications devient virale.',c:'Récompense aléatoire intermittente.',da:10,co:40,pts:-20},
+  {t:'Le Sucre de 16h',s:'Coup de barre. Un soda pour repartir.',c:'Pic glycémique couplé à dopamine rapide.',da:10,co:30,pts:-20},
+  {t:'Le Feedback Acide',s:"Un commentaire sec d'un client.",c:'Menace sociale perçue.',da:10,co:50,pts:-20},
+  {t:"L'Idée Géniale",s:'Tu viens de trouver LA solution.',c:'Décharge massive de dopamine créative.',da:40,co:10,pts:20},
+  {t:'Le Verre de Trop',s:'Pour décompresser. Le premier soulage, le troisième embrume.',c:'Alcool : rebond dopaminergique artificiel.',da:10,co:50,pts:-20},
+  {t:'Le Swipe Infini',s:'Tu cherches le prochain visage.',c:'Mécanisme de récompense aléatoire.',da:10,co:50,pts:-20},
+  {t:'Cigarette / Vape',s:'La pause nécessaire. La nicotine fouette.',c:'Décharge flash de dopamine.',da:10,co:50,pts:-20},
+  {t:'Colère Routière',s:'Quelqu\'un te coupe. Tu exploses.',c:'Réaction amygdalienne brute.',da:10,co:40,pts:-20},
+  {t:"L'Ego Trip",s:'On te demande ton avis comme expert.',c:'Validation du statut social.',da:40,co:20,pts:20},
+  {t:"L'Appel de l'Ancien",s:'Un ami perdu de vue te contacte.',c:'Ocytocine + Dopamine.',da:40,co:10,pts:20},
+  {t:'Workaholisme',s:'Répondre aux mails pendant le dîner.',c:'Identification totale au travail.',da:10,co:50,pts:-20},
   {t:'La Ligne de Poudre',s:'Un boost foudroyant. Tu te sens invincible.',c:'Blocage massif de la recapture de dopamine.',da:80,co:40,pts:-20,sub:true},
-  {t:'Le Flash Héroïque',s:'Une déferlante de coton tiède. Plus rien n\'a d\'importance.',c:'Saturation des récepteurs opioïdes.',da:90,co:30,pts:-20,sub:true},
-  {t:'Descente Brutale',s:'Le pic est passé. Le monde est gris, froid.',c:'Hypodopaminergie de sevrage.',da:10,co:60,pts:-20,sub:true},
-  {t:'L\'Herbe de l\'Oubli',s:'Le temps ralentit, les problèmes s\'effacent.',c:'Perturbation des récepteurs cannabinoïdes.',da:40,co:20,pts:-20,sub:true},
-  {t:'L\'Écran de Nuit',s:'La lumière bleue pique les yeux, mais tu ne peux pas lâcher.',c:'Inhibition de la mélatonine. Mode Chasse.',da:10,co:40,pts:-20},
-  {t:'Le Flash-Back',s:'Un souvenir d\'échec remonte brutalement.',c:'Réactivation de la trace mnésique par l\'amygdale.',da:10,co:60,pts:-20},
-  {t:'Le Pari Risqué',s:'Tu tentes un coup de bluff en réunion.',c:'Prise de risque. Adrénaline couplée à la DA.',da:20,co:50,pts:-20},
+  {t:'Le Flash Héroïque',s:'Une déferlante de coton tiède.',c:'Saturation des récepteurs opioïdes.',da:90,co:30,pts:-20,sub:true},
+  {t:'Descente Brutale',s:'Le pic est passé. Le monde est gris.',c:'Hypodopaminergie de sevrage.',da:10,co:60,pts:-20,sub:true},
+  {t:"L'Écran de Nuit",s:'Tu ne peux pas lâcher ce feed.',c:'Inhibition de la mélatonine.',da:10,co:40,pts:-20},
+  {t:'Le Flash-Back',s:'Un souvenir douloureux remonte.',c:"Réactivation mnésique par l'amygdale.",da:10,co:60,pts:-20},
+  {t:'Le Pari Risqué',s:'Tu tentes un coup de bluff en réunion.',c:'Adrénaline couplée à la DA.',da:20,co:50,pts:-20},
+  {t:'Obsession Santé',s:'Tu vérifies tes symptômes en ligne.',c:"Dopamine d'alerte. Recherche compulsive.",da:10,co:40,pts:-20},
 ],
 B:[
-  {t:'État de Flow',s:'Tu ne sens plus le temps passer. Ton action est fluide.',c:'Harmonie cortex/striatum. Dopamine stable.',da:30,co:10,pts:20},
+  {t:'État de Flow',s:'Tu ne sens plus le temps passer.',c:'Harmonie cortex/striatum. Dopamine stable.',da:30,co:10,pts:20},
   {t:'Mentorat',s:'Tu transmets ton savoir à un junior.',c:'Ocytocine + Dopamine sociale.',da:40,co:10,pts:20},
-  {t:'Eurêka !',s:'La pièce du puzzle s\'emboîte enfin.',c:'Libération brutale de dopamine après effort cognitif.',da:40,co:10,pts:20},
+  {t:'Eurêka !',s:"La pièce du puzzle s'emboîte.",c:'Libération brutale de dopamine.',da:40,co:10,pts:20},
   {t:'Brainstorming Sincère',s:'Les idées rebondissent. Personne ne juge.',c:'Récompense par la collaboration.',da:30,co:10,pts:20},
   {t:'Apprentissage Actif',s:'Tu maîtrises enfin ce nouvel outil.',c:'Plasticité neuronale.',da:30,co:10,pts:20},
-  {t:'La Transmission',s:'Expliquer un concept et voir l\'étincelle.',c:'Neurones miroirs et satisfaction altruiste.',da:40,co:10,pts:20},
-  {t:'L\'Heure de Génie',s:'Une heure sans aucune distraction.',c:'Concentration exécutive maximale.',da:40,co:10,pts:20},
-  {t:'Auto-Discipline',s:'Tu as résisté à une distraction.',c:'Victoire du cortex préfrontal sur le striatum.',da:30,co:10,pts:20},
-  {t:'Réussite Collective',s:'L\'équipe atteint l\'objectif ensemble.',c:'Ocytocine massive. Récompense partagée.',da:40,co:10,pts:20},
-  {t:'Brouillard Mental',s:'Tu lis 10 fois la même ligne sans comprendre.',c:'Hypo-frontalité. Manque d\'énergie préfrontale.',da:10,co:50,pts:-20},
-  {t:'Le Vide (Apathie)',s:'Plus rien ne t\'amuse, même ton activité préférée.',c:'Désensibilisation des récepteurs.',da:10,co:50,pts:-20},
-  {t:'Le Projet Passion',s:'Travailler sur ce dossier qui te tient à cœur.',c:'Motivation intrinsèque. Circuit mésolimbique auto-alimenté.',da:40,co:10,pts:20},
+  {t:'La Transmission',s:"Voir l'étincelle chez l'autre.",c:'Neurones miroirs et satisfaction altruiste.',da:40,co:10,pts:20},
+  {t:"L'Heure de Génie",s:'Une heure sans aucune distraction.',c:'Concentration exécutive maximale.',da:40,co:10,pts:20},
+  {t:'Auto-Discipline',s:'Tu as résisté à une distraction.',c:'Victoire du cortex préfrontal.',da:30,co:10,pts:20},
+  {t:'Réussite Collective',s:"L'équipe atteint l'objectif ensemble.",c:'Ocytocine massive.',da:40,co:10,pts:20},
+  {t:'Brouillard Mental',s:'Tu lis 10 fois la même ligne.',c:'Hypo-frontalité.',da:10,co:50,pts:-20},
+  {t:'Le Vide (Apathie)',s:"Plus rien ne t'amuse.",c:'Désensibilisation des récepteurs.',da:10,co:50,pts:-20},
+  {t:'Le Projet Passion',s:'Ce dossier qui te tient à cœur.',c:'Motivation intrinsèque.',da:40,co:10,pts:20},
 ],
 V:[
-  {t:'Mode Avion',s:'Couper le monde numérique 2 heures. Ton cerveau respire.',c:'Repos des récepteurs dopaminergiques.',da:30,co:10,pts:20},
-  {t:'Marche en Forêt',s:'Le vert, le silence, l\'odeur de l\'humus.',c:'Réduction du cortisol, parasympathique activé.',da:40,co:10,pts:20},
+  {t:'Mode Avion',s:'Couper le monde numérique 2 heures.',c:'Repos des récepteurs dopaminergiques.',da:30,co:10,pts:20},
+  {t:'Marche en Forêt',s:"Le vert, le silence, l'odeur de l'humus.",c:'Réduction du cortisol.',da:40,co:10,pts:20},
   {t:'Méditation',s:'10 minutes à respirer consciemment.',c:'Stimulation du nerf vague.',da:30,co:10,pts:20},
-  {t:'Micro-Sieste',s:'20 min de sommeil flash.',c:'Nettoyage de l\'adénosine. Réserves DA rechargées.',da:40,co:10,pts:20},
-  {t:'Sport Cardiaque',s:'Transpirer, essouffler le mental.',c:'Libération d\'endorphines.',da:40,co:10,pts:20},
-  {t:'Jardinage',s:'Les mains dans la terre.',c:'Bactéries du sol dopant la sérotonine.',da:40,co:10,pts:20},
-  {t:'Écriture Journal',s:'Poser ses pensées sur le papier.',c:'Externalisation émotionnelle. L\'amygdale se calme.',da:30,co:10,pts:20},
-  {t:'Câlin / Affection',s:'20 secondes d\'étreinte sincère.',c:'Ocytocine massive, antagoniste du cortisol.',da:40,co:10,pts:20},
-  {t:'Sommeil de 9h',s:'Une nuit complète, sans réveil.',c:'Cycle REM complet. Purge toxique.',da:40,co:10,pts:20},
-  {t:'Repas en Conscience',s:'Manger sans écran, sentir chaque texture.',c:'Régulation de la ghréline. La satiété revient.',da:30,co:10,pts:20},
-  {t:'Discussion Philo',s:'Parler du sens de la vie plutôt que de la météo.',c:'Dopamine de sens (Eudaimonia).',da:30,co:10,pts:20},
+  {t:'Micro-Sieste',s:'20 min de sommeil flash.',c:'Nettoyage de l\'adénosine.',da:40,co:10,pts:20},
+  {t:'Sport Cardiaque',s:'Transpirer, essouffler le mental.',c:"Libération d'endorphines.",da:40,co:10,pts:20},
+  {t:'Jardinage',s:'Les mains dans la terre.',c:'Sérotonine naturelle.',da:40,co:10,pts:20},
+  {t:'Écriture Journal',s:'Poser ses pensées sur le papier.',c:"L'amygdale se calme.",da:30,co:10,pts:20},
+  {t:'Câlin / Affection',s:"20 secondes d'étreinte sincère.",c:'Ocytocine massive.',da:40,co:10,pts:20},
+  {t:'Sommeil de 9h',s:'Une nuit complète, sans réveil.',c:'Cycle REM complet.',da:40,co:10,pts:20},
+  {t:'Repas en Conscience',s:'Manger sans écran.',c:'La satiété revient.',da:30,co:10,pts:20},
+  {t:'Discussion Philo',s:'Parler du sens de la vie.',c:'Dopamine de sens.',da:30,co:10,pts:20},
 ],
 J:[
-  {t:'Cohérence Cardiaque',s:'5 min à respirer au rythme de ton cœur.',c:'Stimulation du nerf vague. Calme l\'amygdale.',da:40,co:10,pts:20,e:'Réduis ton Co actuel de 20 pts immédiatement.'},
-  {t:'Le Mentor',s:'Une figure inspirante qui te guide sans juger.',c:'Externalisation de la décision préfrontale.',da:40,co:10,pts:20,e:'Cartes Rouges : -10 DA supplémentaires ce tour.'},
-  {t:'Vrai Fou Rire',s:'Une blague avec un ami. Ton corps se relâche.',c:'Chute du cortisol. Amygdale apaisée.',da:40,co:10,pts:20,e:'Annule l\'effet d\'une carte Rouge de ton choix.'},
-  {t:'Sieste Flash',s:'20 min de pause totale. Un reboot flash.',c:'Reset neurologique. Recharge le cortex.',da:30,co:10,pts:20,e:'Rejoue une carte Verte de ta main.'},
-  {t:'Sport Intensif',s:'Tu as transpiré fort. Tes idées sont claires.',c:'Évacue le surplus de cortisol.',da:40,co:10,pts:20,e:'Défausse toutes tes cartes Rouges actives.'},
-  {t:'Repas en Famille',s:'On discute, on partage. Tu te sens entouré.',c:'Pic d\'ocytocine. Stabilité émotionnelle.',da:40,co:10,pts:20,e:'Tous les joueurs gagnent +10 pts ce tour.'},
-  {t:'Méditation Focus',s:'Tu observes tes pensées sans les suivre.',c:'Renfort préfrontal.',da:40,co:10,pts:20,e:'Ta prochaine carte Rouge ne dépasse pas -10 pts.'},
-  {t:'Sommeil de Qualité',s:'Chambre fraîche, sans écran. Nuit réparatrice.',c:'Optimisation du système glymphatique.',da:40,co:10,pts:20,e:'Annule le prochain malus Crash ou Descente.'},
+  {t:'Cohérence Cardiaque',s:'5 min à respirer au rythme de ton cœur.',c:"Calme l'amygdale.",da:40,co:10,pts:20,e:'Réduis ton Co de 20 pts immédiatement.'},
+  {t:'Le Mentor',s:'Une figure inspirante qui te guide.',c:'Externalisation de la décision.',da:40,co:10,pts:20,e:'Cartes Rouges : -10 DA ce tour.'},
+  {t:'Vrai Fou Rire',s:'Une blague avec un ami.',c:'Chute du cortisol.',da:40,co:10,pts:20,e:"Annule l'effet d'une carte Rouge."},
+  {t:'Sieste Flash',s:'20 min de pause totale.',c:'Reset neurologique.',da:30,co:10,pts:20,e:'Rejoue une carte Verte.'},
+  {t:'Sport Intensif',s:'Tu as transpiré fort.',c:'Évacue le surplus de cortisol.',da:40,co:10,pts:20,e:'Défausse toutes tes cartes Rouges.'},
+  {t:'Repas en Famille',s:'On discute, on partage.',c:"Pic d'ocytocine.",da:40,co:10,pts:20,e:'Tous les joueurs +10 pts ce tour.'},
+  {t:'Méditation Focus',s:'Tu observes tes pensées.',c:'Renfort préfrontal.',da:40,co:10,pts:20,e:'Ta prochaine Rouge ne dépasse pas -10.'},
+  {t:'Sommeil de Qualité',s:'Chambre fraîche, sans écran.',c:'Système glymphatique optimisé.',da:40,co:10,pts:20,e:'Annule le prochain malus Descente.'},
 ],
 C:[
-  {t:'Consultation Addiction',s:'Admettre que le comportement a pris le dessus.',c:'Le premier pas est neurobiologiquement le plus difficile.',da:40,co:10,pts:20,p:'Demander de l\'aide n\'est pas perdre. C\'est reprendre le contrôle autrement.'},
-  {t:'Bilan de Burn-out',s:'Ton corps dit stop. Tu n\'as plus de jus.',c:'Épuisement total des catécholamines.',da:30,co:20,pts:20,p:'Le burn-out n\'est pas une faiblesse. C\'est un signal.'},
-  {t:'Thérapie Brève',s:'Comprendre pourquoi tu cherches la validation par le stress.',c:'Désensibilisation des traces mnésiques.',da:40,co:20,pts:20,p:'Comprendre n\'est pas excuser. C\'est se libérer.'},
-  {t:'Cercle de Parole',s:'Partager ton vécu avec tes pairs.',c:'Libération d\'ocytocine. Le Co chute immédiatement.',da:40,co:20,pts:20,p:'Être entendu par ses pairs change neurobiologiquement le cerveau.'},
-  {t:'Décodage Émotionnel',s:'Mettre des mots sur l\'émotion brute.',c:'Le langage calme l\'amygdale par rétroaction.',da:40,co:20,pts:20,p:'Nommer une émotion, c\'est reprendre 30% du contrôle.'},
-  {t:'Thérapie Cognitive',s:'Identifier tes biais de pensée.',c:'Restructuration cognitive. Cortex reprend dialogue amygdale.',da:40,co:20,pts:20,p:'Ce n\'est pas la situation qui stresse. C\'est ce qu\'on en pense.'},
-  {t:'Stage de Déconnexion',s:'Une semaine sans signal numérique.',c:'Resensibilisation des récepteurs D2.',da:40,co:10,pts:20,p:'Ce que tu retrouves sans écran, c\'est toi.'},
-  {t:'Médiation de Conflit',s:'Vider l\'abcès avec ton entourage.',c:'Baisse de l\'alerte de menace sociale.',da:40,co:20,pts:20,p:'Un conflit non dit continue à coûter de l\'énergie.'},
+  {t:'Consultation Addiction',s:'Admettre que le comportement a pris le dessus.',c:'Le premier pas est le plus difficile.',da:40,co:10,pts:20,p:"Demander de l'aide n'est pas perdre."},
+  {t:'Bilan de Burn-out',s:"Ton corps dit stop.",c:'Épuisement des catécholamines.',da:30,co:20,pts:20,p:"Le burn-out n'est pas une faiblesse."},
+  {t:'Thérapie Brève',s:'Comprendre pourquoi tu cherches le stress.',c:'Désensibilisation mnésique.',da:40,co:20,pts:20,p:"Comprendre, c'est se libérer."},
+  {t:'Cercle de Parole',s:'Partager ton vécu avec tes pairs.',c:"Le Co chute immédiatement.",da:40,co:20,pts:20,p:'Être entendu change le cerveau.'},
+  {t:'Décodage Émotionnel',s:"Mettre des mots sur l'émotion brute.",c:"Le langage calme l'amygdale.",da:40,co:20,pts:20,p:"Nommer, c'est reprendre 30% du contrôle."},
+  {t:'Thérapie Cognitive',s:'Identifier tes biais de pensée.',c:'Restructuration cognitive.',da:40,co:20,pts:20,p:"Ce n'est pas la situation qui stresse."},
+  {t:'Stage de Déconnexion',s:'Une semaine sans signal numérique.',c:'Resensibilisation des récepteurs D2.',da:40,co:10,pts:20,p:"Ce que tu retrouves sans écran, c'est toi."},
+  {t:'Médiation de Conflit',s:"Vider l'abcès avec ton entourage.",c:"Baisse de l'alerte de menace sociale.",da:40,co:20,pts:20,p:"Un conflit non dit coûte de l'énergie."},
 ]
 };
 
+// Points SVG du parcours (viewBox 600x560)
+const cx=300,cy=248,L=190;
+const PTS_STAT={
+  ATV:{x:cx,y:cy-L},
+  HYP:{x:cx,y:cy},
+  NA:{x:cx,y:cy+L*0.72},
+  HIP:{x:cx+L,y:cy},
+  AMY:{x:cx-L,y:cy},
+  COR:{x:cx+L*0.8,y:cy+L*0.78}
+};
+
+function interp(a,b,n){
+  return Array.from({length:n},(_,i)=>{const t=(i+.5)/n;return{x:a.x+(b.x-a.x)*t,y:a.y+(b.y-a.y)*t};});
+}
+const {ATV,HYP,NA,HIP,AMY,COR}=PTS_STAT;
+const CASE_PTS=[
+  ...interp(ATV,HYP,6),
+  ...interp(HYP,NA,6),
+  ...interp(NA,HIP,6),
+  ...interp(HIP,HYP,6),
+  ...interp(HYP,AMY,7),
+  ...interp(AMY,COR,10),
+  COR
+];
+
 // ÉTAT
-let joueurs=Array.from({length:N},(_,i)=>({nom:NOMS[i],col:PCOLS[i],score:0,pos:0}));
-let jA=0,tour=1,deVal=0,dest=-1,carte=null,decks={};
+let joueurs=Array.from({length:N},(_,i)=>({nom:PN[i],col:PC[i],score:0,pos:0}));
+let jA=0,tour=1,dest=-1,carte=null,decks={};
 
 function melangerDecks(){Object.keys(CARTES).forEach(k=>{decks[k]=[...CARTES[k]].sort(()=>Math.random()-.5)});}
-function tirerDeck(k){if(!decks[k]||!decks[k].length)decks[k]=[...CARTES[k]].sort(()=>Math.random()-.5);return decks[k].pop();}
+function tirer(k){if(!decks[k]||!decks[k].length)decks[k]=[...CARTES[k]].sort(()=>Math.random()-.5);return decks[k].pop();}
 
 function lancerDe(){
-  deVal=Math.floor(Math.random()*6)+1;
-  dest=Math.min(joueurs[jA].pos+deVal,TOTAL-1);
-  document.getElementById('die-face').textContent=['⚀','⚁','⚂','⚃','⚄','⚅'][deVal-1];
-  document.getElementById('case-lbl').textContent='Case '+(dest+1)+' · '+(CNOM[PARC[dest].c]||'');
-  document.querySelector('.btn-die').disabled=true;
+  const d=Math.floor(Math.random()*6)+1;
+  dest=Math.min(joueurs[jA].pos+d,TOTAL-1);
+  document.getElementById('die-show').textContent=['⚀','⚁','⚂','⚃','⚄','⚅'][d-1];
+  document.getElementById('case-info').textContent='Case '+(dest+1)+' · '+(CNOM[PARC[dest].c]||'');
+  document.getElementById('btn-die').disabled=true;
   document.getElementById('btn-draw').disabled=false;
   dessiner();
 }
@@ -210,215 +232,152 @@ function piocher(){
   joueurs[jA].pos=dest;
   const cc=PARC[dest];
   if(cc.c==='FIN'){
-    document.getElementById('card-content').innerHTML='<div style="text-align:center;padding:16px"><div style="font-size:32px">🧠</div><div style="font-size:15px;font-weight:600;margin-top:8px;color:#ecf0f1">Cortex PF atteint !</div></div>';
+    document.getElementById('card').innerHTML='<div style="text-align:center;padding:12px"><div style="font-size:28px">🧠</div><div style="font-size:14px;font-weight:bold;margin-top:6px">Cortex PF atteint !</div></div>';
     document.getElementById('btn-draw').disabled=true;
     document.getElementById('btn-next').disabled=false;
-    dessiner();rendrePlayers();return;
+    dessiner();majScores();return;
   }
-  const c=tirerDeck(cc.c);
+  const c=tirer(cc.c);
   carte={...c,fam:cc.c};
   joueurs[jA].score+=c.pts;
   majPontDA(c.co);
   afficherCarte(carte);
   document.getElementById('btn-draw').disabled=true;
   document.getElementById('btn-next').disabled=false;
-  dessiner();rendrePlayers();
+  dessiner();majScores();
 }
 
 function majPontDA(co){
-  const el=document.getElementById('pontda-st');
-  el.className='';
-  if(co<40){el.style.cssText='padding:5px 8px;border-radius:6px;font-size:11px;font-weight:600;text-align:center;margin-top:4px;background:#0a2e14;color:#52be80';el.textContent='Co<40 · Pont FERMÉ — accès direct Cortex PF';}
-  else if(co<=70){el.style.cssText='padding:5px 8px;border-radius:6px;font-size:11px;font-weight:600;text-align:center;margin-top:4px;background:#2e1a00;color:#f0b27a';el.textContent='Co 40–70 · Pont ENTROUVERT — carte DA obligatoire';}
-  else{el.style.cssText='padding:5px 8px;border-radius:6px;font-size:11px;font-weight:600;text-align:center;margin-top:4px;background:#3d0a0a;color:#e74c3c';el.className='pforce';el.textContent='Co>70 · Pont FORCÉ — Bascule automatique !';}
+  const el=document.getElementById('pontda');
+  if(co<40){el.style.background='#0a2e14';el.style.color='#52be80';el.textContent='Co<40 · Pont FERMÉ';}
+  else if(co<=70){el.style.background='#2e1a00';el.style.color='#f0b27a';el.textContent='Co 40–70 · Pont ENTROUVERT';}
+  else{el.style.background='#3d0a0a';el.style.color='#e74c3c';el.textContent='Co>70 · Pont FORCÉ !';}
 }
 
 function afficherCarte(c){
-  const z=ZS[c.fam]||{bg:'#1a1a2e',col:'#aaa',nom:'—'};
+  const z=ZS[c.fam]||{bg:'#1a1a2e',col:'#aaa',n:'—'};
   const ec=c.da-c.co;
-  const pc=SCOL[c.pts]||'#666';
-  const pn=SNOM[c.pts]||'';
-  let extra='';
-  if(c.e) extra=`<div style="margin-top:7px;padding:5px 8px;background:#2e2000;color:#f0b27a;border-radius:5px;font-size:10px;line-height:1.4"><strong>Effet :</strong> ${c.e}</div>`;
-  if(c.p) extra=`<div style="margin-top:7px;padding:5px 8px;background:#1e0a3d;color:#af7ac5;border-radius:5px;font-size:10px;line-height:1.4;font-style:italic">"${c.p}"</div>`;
-  document.getElementById('card-content').innerHTML=`
-    <span style="display:inline-block;padding:2px 9px;border-radius:20px;font-size:10px;font-weight:600;letter-spacing:.05em;background:${z.bg};color:${z.col};margin-bottom:5px">${z.nom}${c.sub?' ■':''}</span>
-    <div style="font-family:'Bebas Neue',sans-serif;font-size:19px;letter-spacing:.04em;line-height:1.1;margin-bottom:5px;color:#e8e8f0">${c.t}</div>
-    <div style="font-size:11px;color:#aab;line-height:1.45;margin-bottom:5px;font-style:italic">${c.s}</div>
-    <div style="font-size:10px;color:#7878a0;line-height:1.4;margin-bottom:7px">${c.c}</div>
-    <div class="da-co"><span class="pill da-p">DA ${c.da>0?'+':''}${c.da}</span><span class="pill co-p">Co ${c.co>0?'+':''}${c.co}</span></div>
-    <div style="font-size:10px;color:#7878a0;margin-bottom:4px">Écart DA−Co = ${ec>0?'+':''}${ec}</div>
-    <span style="font-size:11px;font-weight:600;padding:3px 10px;border-radius:5px;background:${pc}22;color:${pc}">${pn} ${c.pts>0?'+':''}${c.pts} pts</span>
-    ${extra}`;
+  const pc=SC[c.pts]||'#666';
+  const pn=SN[c.pts]||'';
+  let ex='';
+  if(c.e)ex=`<div class="effet"><b>Effet :</b> ${c.e}</div>`;
+  if(c.p)ex=`<div class="parole">"${c.p}"</div>`;
+  document.getElementById('card').innerHTML=`
+    <span class="badge" style="background:${z.bg};color:${z.col}">${z.n}${c.sub?' ■':''}</span>
+    <div class="ctitle">${c.t}</div>
+    <div class="csit">${c.s}</div>
+    <div class="cbrain">${c.c}</div>
+    <div class="pills"><span class="pill da">DA ${c.da>0?'+':''}${c.da}</span><span class="pill co">Co ${c.co>0?'+':''}${c.co}</span></div>
+    <div style="font-size:10px;color:#666;margin-bottom:4px">Écart DA−Co = ${ec>0?'+':''}${ec}</div>
+    <span class="score-pill" style="background:${pc}22;color:${pc}">${pn} ${c.pts>0?'+':''}${c.pts} pts</span>
+    ${ex}`;
 }
 
 function tourSuivant(){
   jA=(jA+1)%N;if(jA===0)tour++;
-  document.getElementById('turn-info').textContent='Tour '+tour+' · '+joueurs[jA].nom;
-  document.getElementById('die-face').textContent='—';
-  document.getElementById('case-lbl').textContent='Lance le dé pour commencer';
-  document.getElementById('card-content').innerHTML='<div class="no-card">Lance le dé puis pioche</div>';
-  const ps=document.getElementById('pontda-st');
-  ps.className='';ps.style.cssText='padding:5px 8px;border-radius:6px;font-size:11px;font-weight:600;text-align:center;margin-top:4px;background:#1a1a2e;color:#7878a0';
-  ps.textContent='— en attente —';
-  document.querySelector('.btn-die').disabled=false;
+  document.getElementById('turn').textContent='Tour '+tour+' · '+joueurs[jA].nom;
+  document.getElementById('die-show').textContent='—';
+  document.getElementById('case-info').textContent='Lance le dé';
+  document.getElementById('card').innerHTML='<div class="no-c">Lance le dé puis pioche</div>';
+  document.getElementById('pontda').style.background='#1a1a2e';
+  document.getElementById('pontda').style.color='#666';
+  document.getElementById('pontda').textContent='— en attente —';
+  document.getElementById('btn-die').disabled=false;
   document.getElementById('btn-draw').disabled=true;
   document.getElementById('btn-next').disabled=true;
-  carte=null;dest=-1;
-  dessiner();rendrePlayers();
+  dest=-1;dessiner();majScores();
 }
 
 function resetJeu(){
-  joueurs=Array.from({length:N},(_,i)=>({nom:NOMS[i],col:PCOLS[i],score:0,pos:0}));
-  jA=0;tour=1;deVal=0;dest=-1;carte=null;
+  joueurs=Array.from({length:N},(_,i)=>({nom:PN[i],col:PC[i],score:0,pos:0}));
+  jA=0;tour=1;dest=-1;carte=null;
   melangerDecks();
-  document.getElementById('turn-info').textContent='Tour 1 · Joueur 1';
-  document.getElementById('die-face').textContent='—';
-  document.getElementById('case-lbl').textContent='Lance le dé pour commencer';
-  document.getElementById('card-content').innerHTML='<div class="no-card">Lance le dé puis pioche</div>';
-  const ps=document.getElementById('pontda-st');
-  ps.className='';ps.style.cssText='padding:5px 8px;border-radius:6px;font-size:11px;font-weight:600;text-align:center;margin-top:4px;background:#1a1a2e;color:#7878a0';
-  ps.textContent='— en attente —';
-  document.querySelector('.btn-die').disabled=false;
+  document.getElementById('turn').textContent='Tour 1 · Joueur 1';
+  document.getElementById('die-show').textContent='—';
+  document.getElementById('case-info').textContent='Lance le dé';
+  document.getElementById('card').innerHTML='<div class="no-c">Lance le dé puis pioche</div>';
+  document.getElementById('pontda').style.background='#1a1a2e';
+  document.getElementById('pontda').style.color='#666';
+  document.getElementById('pontda').textContent='— en attente —';
+  document.getElementById('btn-die').disabled=false;
   document.getElementById('btn-draw').disabled=true;
   document.getElementById('btn-next').disabled=true;
-  dessiner();rendrePlayers();
+  dessiner();majScores();
 }
 
-function rendrePlayers(){
-  const st=pos=>{let c=0;for(let i=0;i<SEGS.length;i++){c+=SEGS[i].seq.length;if(pos<c)return SEGS[i].a;}return 'Cortex PF';};
-  document.getElementById('players-list').innerHTML=joueurs.map((j,i)=>`
-    <div class="player-row${i===jA?' active':''}">
+function majScores(){
+  const st=pos=>{let c=0;for(let i=0;i<SEGS.length;i++){c+=SEGS[i].seq.length;if(pos<c)return SEGS[i].a;}return'Cortex PF';};
+  document.getElementById('scores').innerHTML=joueurs.map((j,i)=>`
+    <div class="prow${i===jA?' cur':''}">
       <div class="pdot" style="background:${j.col}"></div>
-      <div class="pname">${j.nom}</div>
-      <div class="ppos">${st(j.pos)}</div>
-      <div class="pscore" style="color:${j.score>=0?'#52be80':'#e74c3c'}">${j.score>0?'+':''}${j.score}</div>
+      <div class="pn">${j.nom}</div>
+      <div class="pp">${st(j.pos)}</div>
+      <div class="ps" style="color:${j.score>=0?'#52be80':'#e74c3c'}">${j.score>0?'+':''}${j.score}</div>
     </div>`).join('');
 }
 
-// PLATEAU CANVAS
-const canvas=document.getElementById('board');
-const ctx=canvas.getContext('2d');
-
-function getPts(){
-  const W=canvas.width,H=canvas.height;
-  const cx=W/2,cy=H*0.44;
-  const L=Math.min(W,H)*0.37;
-  const ATV={x:cx,y:cy-L};
-  const HYP={x:cx,y:cy};
-  const NA={x:cx,y:cy+L*0.72};
-  const HIP={x:cx+L,y:cy};
-  const AMY={x:cx-L,y:cy};
-  const COR={x:cx+L*0.8,y:cy+L*0.78};
-  function ip(a,b,n){return Array.from({length:n},(_,i)=>{const t=(i+.5)/n;return{x:a.x+(b.x-a.x)*t,y:a.y+(b.y-a.y)*t};});}
-  const pts=[
-    ...ip(ATV,HYP,6),...ip(HYP,NA,6),...ip(NA,HIP,6),
-    ...ip(HIP,HYP,6),...ip(HYP,AMY,7),...ip(AMY,COR,10),COR
-  ];
-  return{pts,ATV,HYP,NA,HIP,AMY,COR};
-}
-
 function dessiner(){
-  const W=canvas.width,H=canvas.height;
-  if(!W||!H)return;
-  ctx.clearRect(0,0,W,H);
-  ctx.fillStyle='#0d0d1a';ctx.fillRect(0,0,W,H);
+  const svg=document.getElementById('svg');
+  let html='';
 
+  // fond
+  html+='<rect width="600" height="560" fill="#0d0d1a"/>';
   // grille déco
-  ctx.strokeStyle='rgba(255,255,255,0.015)';ctx.lineWidth=1;
-  for(let x=0;x<W;x+=40){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke();}
-  for(let y=0;y<H;y+=40){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}
+  for(let x=0;x<600;x+=40)html+=`<line x1="${x}" y1="0" x2="${x}" y2="560" stroke="rgba(255,255,255,0.02)"/>`;
+  for(let y=0;y<560;y+=40)html+=`<line x1="0" y1="${y}" x2="600" y2="${y}" stroke="rgba(255,255,255,0.02)"/>`;
 
-  const{pts,ATV,HYP,NA,HIP,AMY,COR}=getPts();
-
-  // Bras
-  function bras(a,b){
-    ctx.save();ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);
-    ctx.strokeStyle='rgba(255,255,255,0.05)';ctx.lineWidth=22;ctx.lineCap='round';ctx.stroke();ctx.restore();
-  }
+  // bras
+  function bras(a,b){html+=`<line x1="${a.x}" y1="${a.y}" x2="${b.x}" y2="${b.y}" stroke="rgba(255,255,255,0.06)" stroke-width="22" stroke-linecap="round"/>`;}
   bras(ATV,HYP);bras(HYP,NA);bras(NA,HIP);bras(HIP,HYP);bras(HYP,AMY);bras(AMY,COR);
 
-  // Pont DA triangle
-  ctx.save();ctx.beginPath();ctx.moveTo(NA.x,NA.y);
-  ctx.lineTo(HIP.x-25,HIP.y+45);ctx.lineTo(COR.x,COR.y-18);ctx.closePath();
-  ctx.strokeStyle='rgba(155,89,182,0.45)';ctx.lineWidth=1.5;ctx.setLineDash([6,5]);ctx.stroke();ctx.restore();
-  ctx.fillStyle='#af7ac5';ctx.font='10px DM Sans,sans-serif';ctx.textAlign='center';
-  ctx.fillText('Pont DA',NA.x+55,NA.y+26);
+  // Pont DA
+  html+=`<polygon points="${NA.x},${NA.y} ${HIP.x-25},${HIP.y+45} ${COR.x},${COR.y-18}" fill="none" stroke="rgba(155,89,182,0.5)" stroke-width="1.5" stroke-dasharray="6,5"/>`;
+  html+=`<text x="${NA.x+52}" y="${NA.y+24}" fill="#af7ac5" font-size="9" text-anchor="middle">Pont DA</text>`;
 
   // Cases
-  const CCOLMAP={R:'#c0392b',B:'#2471a3',V:'#1e8449',J:'#d68910',C:'#7d3c98',FIN:'#ecf0f1'};
-  pts.forEach((p,i)=>{
+  CASE_PTS.forEach((p,i)=>{
     if(i>=PARC.length)return;
-    const col=CCOLMAP[PARC[i].c]||'#555';
+    const col=CCOL[PARC[i].c]||'#555';
     const isDest=i===dest;
-    const r=isDest?13:9;
-    if(isDest){
-      ctx.beginPath();ctx.arc(p.x,p.y,r+7,0,Math.PI*2);
-      ctx.fillStyle=col+'44';ctx.fill();
-    }
-    ctx.beginPath();ctx.arc(p.x,p.y,r,0,Math.PI*2);
-    ctx.fillStyle=col;ctx.fill();
-    ctx.strokeStyle='rgba(0,0,0,0.5)';ctx.lineWidth=1;ctx.stroke();
-    ctx.fillStyle='rgba(255,255,255,0.75)';
-    ctx.font='bold 7px sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';
-    ctx.fillText(i+1,p.x,p.y);
+    const r=isDest?12:8;
+    if(isDest)html+=`<circle cx="${p.x}" cy="${p.y}" r="${r+7}" fill="${col}44"/>`;
+    html+=`<circle cx="${p.x}" cy="${p.y}" r="${r}" fill="${col}" stroke="rgba(0,0,0,0.5)" stroke-width="1"/>`;
+    html+=`<text x="${p.x}" y="${p.y+3}" fill="rgba(255,255,255,0.8)" font-size="7" font-weight="bold" text-anchor="middle">${i+1}</text>`;
   });
 
   // Stations
   const STATS=[
     {p:ATV,l:'ATV',c:'#3498db'},
-    {p:HYP,l:'Hypothalamus',c:'#27ae60'},
+    {p:HYP,l:'Hypo',c:'#27ae60'},
     {p:NA,l:'NA',c:'#f39c12'},
-    {p:HIP,l:'Hippocampe',c:'#8e44ad'},
-    {p:AMY,l:'Amygdale',c:'#e74c3c'},
-    {p:COR,l:'Cortex PF',c:'#ecf0f1'},
+    {p:HIP,l:'Hippo',c:'#8e44ad'},
+    {p:AMY,l:'Amyg',c:'#e74c3c'},
+    {p:COR,l:'Cortex',c:'#95a5a6'},
   ];
   STATS.forEach(st=>{
-    ctx.beginPath();ctx.arc(st.p.x,st.p.y,17,0,Math.PI*2);
-    ctx.fillStyle=st.c;ctx.fill();
-    ctx.strokeStyle='rgba(255,255,255,0.2)';ctx.lineWidth=2;ctx.stroke();
-    ctx.fillStyle='#fff';ctx.font='bold 8px sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';
-    const sh=st.l.length>8?st.l.substring(0,5)+'…':st.l;
-    ctx.fillText(sh,st.p.x,st.p.y);
-    ctx.fillStyle=st.c;ctx.font='9px sans-serif';ctx.textBaseline='top';
-    ctx.fillText(st.l,st.p.x,st.p.y+19);
+    html+=`<circle cx="${st.p.x}" cy="${st.p.y}" r="16" fill="${st.c}" stroke="rgba(255,255,255,0.2)" stroke-width="2"/>`;
+    html+=`<text x="${st.p.x}" y="${st.p.y+4}" fill="#fff" font-size="8" font-weight="bold" text-anchor="middle">${st.l}</text>`;
   });
 
   // Pions
   const OFF=[[-10,-10],[10,-10],[-10,10],[10,10],[0,-14],[0,14]];
   joueurs.forEach((j,i)=>{
-    if(j.pos<0||j.pos>=pts.length)return;
-    const p=pts[j.pos];
+    if(j.pos<0||j.pos>=CASE_PTS.length)return;
+    const p=CASE_PTS[j.pos];
     const o=OFF[i]||[0,0];
     const px=p.x+o[0],py=p.y+o[1];
-    ctx.beginPath();ctx.arc(px+1,py+1,8,0,Math.PI*2);
-    ctx.fillStyle='rgba(0,0,0,0.4)';ctx.fill();
-    ctx.beginPath();ctx.arc(px,py,8,0,Math.PI*2);
-    ctx.fillStyle=i===jA?j.col:j.col+'99';ctx.fill();
-    ctx.strokeStyle=i===jA?'#fff':'rgba(255,255,255,0.3)';
-    ctx.lineWidth=i===jA?2:1;ctx.stroke();
-    ctx.fillStyle='#fff';ctx.font='bold 7px sans-serif';
-    ctx.textAlign='center';ctx.textBaseline='middle';
-    ctx.fillText(i+1,px,py);
+    const op=i===jA?'ff':'88';
+    html+=`<circle cx="${px+1}" cy="${py+1}" r="8" fill="rgba(0,0,0,0.4)"/>`;
+    html+=`<circle cx="${px}" cy="${py}" r="8" fill="${j.col}${op}" stroke="${i===jA?'#fff':'rgba(255,255,255,0.3)'}" stroke-width="${i===jA?2:1}"/>`;
+    html+=`<text x="${px}" y="${py+3}" fill="#fff" font-size="7" font-weight="bold" text-anchor="middle">${i+1}</text>`;
   });
-  ctx.textBaseline='alphabetic';
+
+  svg.innerHTML=html;
 }
 
-function ajusterCanvas(){
-  const wrap=document.getElementById('board-wrap');
-  canvas.width=wrap.clientWidth;
-  canvas.height=wrap.clientHeight;
-  dessiner();
-}
-
-// INIT — on attend que le DOM soit complètement rendu
 melangerDecks();
-rendrePlayers();
-// Double requestAnimationFrame pour garantir que le layout est calculé
-requestAnimationFrame(()=>requestAnimationFrame(()=>{
-  ajusterCanvas();
-}));
-window.addEventListener('resize',ajusterCanvas);
+majScores();
+dessiner();
 </script>
 </body>
 </html>
