@@ -103,6 +103,29 @@ button:disabled{opacity:0.3;cursor:not-allowed}
 .fermer-overlay{position:absolute;top:12px;right:16px;font-size:22px;cursor:pointer;color:#888;background:none;border:none;font-family:Arial}
 .fermer-overlay:hover{color:#1a1a2e}
 #zoom-hint{text-align:center;margin-top:10px;font-size:10px;color:#aaa;font-family:Arial,sans-serif}
+
+/* ÉCRAN ANALYSE FINALE */
+#analyse-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(26,26,46,0.92);display:none;align-items:center;justify-content:center;z-index:600;overflow-y:auto;padding:20px}
+#analyse-overlay.visible{display:flex}
+#analyse-box{background:#f5f0e8;border-radius:16px;padding:28px;max-width:720px;width:95%;max-height:90vh;overflow-y:auto;animation:zoomIn .3s ease}
+#analyse-box h2{font-size:20px;color:#1a1a2e;margin-bottom:4px;font-family:Georgia,serif;text-align:center}
+#analyse-box .sous-titre{font-size:11px;color:#888;text-align:center;margin-bottom:20px;font-family:Arial,sans-serif}
+.joueur-analyse{background:#fff;border-radius:10px;padding:14px;margin-bottom:12px;border-left:4px solid #ddd}
+.ja-header{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.ja-pion{width:16px;height:16px;border-radius:50%}
+.ja-nom{font-size:14px;font-weight:bold;color:#1a1a2e;font-family:Georgia,serif}
+.ja-scores{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:10px}
+.ja-metric{background:#f9f6f0;border-radius:8px;padding:8px;text-align:center}
+.ja-metric-val{font-size:22px;font-weight:bold;font-family:Georgia,serif}
+.ja-metric-lbl{font-size:9px;text-transform:uppercase;letter-spacing:.06em;color:#888;margin-top:2px;font-family:Arial,sans-serif}
+.ja-barre{margin-bottom:6px}
+.ja-barre-lbl{font-size:10px;color:#555;font-family:Arial,sans-serif;margin-bottom:2px;display:flex;justify-content:space-between}
+.ja-barre-track{height:10px;background:#e8e0d4;border-radius:5px;overflow:hidden}
+.ja-barre-fill{height:100%;border-radius:5px;transition:width .5s}
+.ja-synthese{margin-top:10px;padding:10px;border-radius:8px;font-size:11px;line-height:1.5;font-family:Arial,sans-serif;font-style:italic;border-left:3px solid #ddd}
+.btn-fermer-analyse{display:block;margin:16px auto 0;padding:10px 28px;background:#1a1a2e;color:#f5f0e8;border:none;border-radius:8px;font-size:13px;cursor:pointer;font-family:Georgia,serif}
+.btn-fermer-analyse:hover{background:#c0392b}
+.pont-detail{font-size:10px;color:#888;font-family:Arial,sans-serif;margin-top:4px;text-align:center}
 </style>
 </head>
 <body>
@@ -124,6 +147,17 @@ button:disabled{opacity:0.3;cursor:not-allowed}
   </div>
 </div>
 
+
+<!-- OVERLAY ANALYSE FINALE -->
+<div id="analyse-overlay">
+  <div id="analyse-box">
+    <h2>🧠 Analyse du Parcours Dopaminergique</h2>
+    <div class="sous-titre">Densité neurochimique · Équilibre du Pont DA · AliaSkill Formation</div>
+    <div id="analyse-contenu"></div>
+    <button class="btn-fermer-analyse" onclick="fermerAnalyse()">Fermer l'analyse</button>
+  </div>
+</div>
+
 <!-- OVERLAY CARTE ZOOMÉE -->
 <div id="carte-overlay" onclick="fermerOverlay(event)">
   <div id="carte-zoom">
@@ -140,6 +174,7 @@ button:disabled{opacity:0.3;cursor:not-allowed}
   <button id="btn-draw" onclick="piocher()" disabled>Piocher</button>
   <button id="btn-next" onclick="tourSuivant()" disabled>Tour suivant</button>
   <button onclick="resetJeu()">↺ Reset</button>
+  <button onclick="ouvrirAnalyse()" style="background:#1e8449;border-color:#1e8449;color:#fff">📊 Analyse</button>
 </div>
 <div id="wrap">
   <div id="plateau-area">
@@ -381,7 +416,7 @@ var carteEnnuiEnCours=null;
 
 function init(){
   joueurs=[];
-  for(var i=0;i<N;i++) joueurs.push({nom:PN[i],col:PC[i],score:0,pos:0});
+  for(var i=0;i<N;i++) joueurs.push({nom:PN[i],col:PC[i],score:0,pos:0,totalDA:0,totalCo:0,ptsPont:0,passagesPont:0,nbCartes:0});
   jA=0;tour=1;dest=-1;carte=null;
   derniereCaseGrise={};
   for(var i=0;i<N;i++) derniereCaseGrise[i]=false;
@@ -420,7 +455,7 @@ function piocher(){
   document.getElementById('btn-next').disabled=false;
 
   if(cc.c==='FIN'){
-    document.getElementById('card-content').innerHTML='<div style="text-align:center;padding:16px"><div style="font-size:28px">🧠</div><div style="font-size:16px;font-weight:bold;margin-top:8px;color:#1a1a2e">Cortex PF atteint !</div><div style="font-size:11px;color:#888;margin-top:4px">Circuit dopaminergique complet.</div></div>';
+    document.getElementById('card-content').innerHTML='<div style="text-align:center;padding:16px"><div style="font-size:28px">🧠</div><div style="font-size:16px;font-weight:bold;margin-top:8px;color:#1a1a2e">Cortex PF atteint !</div><div style="font-size:11px;color:#888;margin-top:4px">Circuit dopaminergique complet.</div><div style="margin-top:10px"><button onclick="ouvrirAnalyse()" style="padding:8px 18px;background:#1a1a2e;color:#fff;border:none;border-radius:6px;cursor:pointer;font-family:Arial,sans-serif;font-size:12px">📊 Voir l'analyse</button></div></div>';
     rendrePlateau();rendreScores();return;
   }
 
@@ -447,6 +482,15 @@ function piocher(){
     var c=tirer(cc.c);
     carte=c; carte.fam=cc.c;
     joueurs[jA].score+=c.pts;
+    joueurs[jA].totalDA+=(c.da||0);
+    joueurs[jA].totalCo+=(c.co||0);
+    joueurs[jA].nbCartes++;
+    // Points Pont DA si on vient de NA (segment 1 = Hypoth->NA, idx 10-19)
+    var ptsPont=calculerPtsPont(c.co);
+    if(cc.seg && cc.seg.indexOf('NA')!==-1 || dest>=10 && dest<=19){
+      joueurs[jA].ptsPont+=ptsPont;
+      joueurs[jA].passagesPont++;
+    }
     majPontDA(c.co);
     afficherCarte(c);
   }
@@ -659,6 +703,63 @@ function rendrePlateau(){
   document.getElementById('circuit').innerHTML=h;
 }
 
+
+
+// ── PONT DA POINTS ───────────────────────
+function calculerPtsPont(co){
+  if(co<40) return 20;
+  if(co<=70) return 10;
+  return -20;
+}
+
+// ── ANALYSE FINALE ───────────────────────
+function synthese(j){
+  var ratio=j.totalCo>0?(j.totalDA/j.totalCo).toFixed(2):j.totalDA>0?'∞':'—';
+  var ptsPont=j.ptsPont;
+  var msg='';
+  if(j.totalDA>j.totalCo*1.5){
+    msg='Profil à dominante dopaminergique. Le circuit de la récompense a été fortement activé. Bonne capacité de régulation, élan motivationnel soutenu.';
+  } else if(j.totalCo>j.totalDA*1.5){
+    msg='Profil à dominante cortisolique. Le système de stress a été davantage sollicité que le circuit de la récompense. Des ressources de régulation sont à mobiliser.';
+  } else {
+    msg='Profil équilibré entre dopamine et cortisol. Le cerveau a navigué entre activation et régulation avec une certaine fluidité neurochimique.';
+  }
+  if(ptsPont>30) msg+=' Le Pont DA a été traversé en régulation active : accès préfrontal maintenu.';
+  else if(ptsPont<0) msg+=' Le Pont DA a subi plusieurs basculements forcés : le circuit limbique a pris le dessus à plusieurs reprises.';
+  else msg+=' Le Pont DA a été traversé en régulation fragile : des ressources additionnelles renforceraient la stabilité.';
+  return {ratio:ratio, msg:msg};
+}
+
+function ouvrirAnalyse(){
+  var h='';
+  var maxDA=1, maxCo=1;
+  joueurs.forEach(function(j){if(j.totalDA>maxDA)maxDA=j.totalDA; if(j.totalCo>maxCo)maxCo=j.totalCo;});
+  
+  joueurs.forEach(function(j,i){
+    var syn=synthese(j);
+    var pctDA=Math.round(j.totalDA/maxDA*100);
+    var pctCo=Math.round(j.totalCo/maxCo*100);
+    var pontCol=j.ptsPont>0?'#1e8449':j.ptsPont<0?'#c0392b':'#888';
+    h+='<div class="joueur-analyse" style="border-left-color:'+j.col+'">';
+    h+='<div class="ja-header"><div class="ja-pion" style="background:'+j.col+'"></div><div class="ja-nom">'+j.nom+'</div></div>';
+    h+='<div class="ja-scores">';
+    h+='<div class="ja-metric"><div class="ja-metric-val" style="color:#2471a3">'+j.totalDA+'</div><div class="ja-metric-lbl">Total DA</div></div>';
+    h+='<div class="ja-metric"><div class="ja-metric-val" style="color:#c0392b">'+j.totalCo+'</div><div class="ja-metric-lbl">Total Co</div></div>';
+    h+='<div class="ja-metric"><div class="ja-metric-val" style="color:'+pontCol+'">'+j.ptsPont+'</div><div class="ja-metric-lbl">Pts Pont DA</div><div class="pont-detail">'+j.passagesPont+' passage(s)</div></div>';
+    h+='<div class="ja-metric"><div class="ja-metric-val" style="color:#1a1a2e">'+j.score+'</div><div class="ja-metric-lbl">Score total</div></div>';
+    h+='</div>';
+    h+='<div class="ja-barre"><div class="ja-barre-lbl"><span>Densité DA</span><span>'+j.totalDA+'</span></div><div class="ja-barre-track"><div class="ja-barre-fill" style="width:'+pctDA+'%;background:#2471a3"></div></div></div>';
+    h+='<div class="ja-barre"><div class="ja-barre-lbl"><span>Densité Co</span><span>'+j.totalCo+'</span></div><div class="ja-barre-track"><div class="ja-barre-fill" style="width:'+pctCo+'%;background:#e74c3c"></div></div></div>';
+    h+='<div class="ja-synthese" style="background:'+(j.totalDA>j.totalCo?'#eaf4fb':'#fdf2f8')+';border-left-color:'+j.col+'">'+syn.msg+'</div>';
+    h+='</div>';
+  });
+  document.getElementById('analyse-contenu').innerHTML=h;
+  document.getElementById('analyse-overlay').classList.add('visible');
+}
+
+function fermerAnalyse(){
+  document.getElementById('analyse-overlay').classList.remove('visible');
+}
 
 // ── ACCUEIL ──────────────────────────────
 var nbJoueursChoisi=0;
