@@ -2,84 +2,93 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<title>Dope à Mines · Visio</title>
+<title>Dope a Mines - Visio</title>
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
-html,body{height:100%;background:#0d0d1a;color:#e8e8f0;font-family:Arial,sans-serif;overflow:hidden}
-#app{height:100vh;display:flex;flex-direction:column}
-#bar{height:50px;min-height:50px;background:#161628;border-bottom:1px solid #333;display:flex;align-items:center;padding:0 12px;gap:8px}
-#bar h1{font-size:15px;font-weight:bold;flex:1}
-.btn{padding:5px 12px;border-radius:6px;font-size:12px;cursor:pointer;border:1px solid #444;background:#1e1e35;color:#e8e8f0}
-.btn:hover{background:#2a2a4a}
-.btn:disabled{opacity:0.3;cursor:not-allowed}
+body{margin:0;background:#111;color:#eee;font-family:Arial,sans-serif;font-size:13px}
+#bar{background:#1a1a2e;padding:8px 12px;display:flex;align-items:center;gap:8px;border-bottom:2px solid #333;flex-wrap:wrap}
+#bar h1{font-size:14px;font-weight:bold;flex:1;margin:0}
+button{padding:6px 14px;border-radius:5px;border:1px solid #555;background:#2a2a4a;color:#eee;cursor:pointer;font-size:12px}
+button:hover{background:#3a3a6a}
+button:disabled{opacity:0.3;cursor:not-allowed}
 #btn-die{background:#c0392b;border-color:#c0392b;color:#fff;font-size:14px}
-#turn{font-size:11px;color:#888;white-space:nowrap}
-#main{flex:1;display:flex;min-height:0}
-#board-area{flex:1;min-width:0;min-height:0;overflow:hidden;display:flex;align-items:center;justify-content:center}
-#board-area svg{display:block;width:100%;height:100%}
-#side{width:260px;min-width:260px;background:#161628;border-left:1px solid #222;overflow-y:auto;padding:8px;display:flex;flex-direction:column;gap:8px}
-.box{background:#1e1e35;border-radius:8px;padding:8px}
-.box-t{font-size:9px;text-transform:uppercase;letter-spacing:.08em;color:#666;margin-bottom:5px}
-#die-show{font-size:36px;text-align:center;line-height:1.1}
-#case-info{font-size:10px;color:#888;text-align:center;margin-top:2px}
-.no-c{color:#555;font-size:11px;text-align:center;padding:8px 0}
-.badge{display:inline-block;padding:2px 8px;border-radius:20px;font-size:9px;font-weight:bold;margin-bottom:4px}
-.ctitle{font-size:15px;font-weight:bold;margin-bottom:3px;line-height:1.2}
-.csit{font-size:10px;color:#aab;font-style:italic;margin-bottom:3px;line-height:1.4}
-.cbrain{font-size:9px;color:#555;margin-bottom:6px;line-height:1.4}
-.pills{display:flex;gap:5px;margin-bottom:4px}
-.pill{padding:2px 8px;border-radius:20px;font-size:10px;font-weight:bold}
+#wrap{display:flex;height:calc(100vh - 50px)}
+#plateau{flex:1;padding:16px;overflow-y:auto}
+#side{width:280px;background:#1a1a2e;border-left:2px solid #333;padding:12px;overflow-y:auto;display:flex;flex-direction:column;gap:10px}
+h3{font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:#888;margin:0 0 6px}
+.box{background:#222;border-radius:8px;padding:10px;border:1px solid #333}
+
+/* Plateau visuel */
+.parcours{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px}
+.case-item{width:52px;height:52px;border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;border:2px solid rgba(255,255,255,0.1);cursor:default;position:relative;font-size:10px;font-weight:bold;color:rgba(255,255,255,0.8)}
+.case-item.dest{border-color:#fff;border-width:3px;transform:scale(1.1);z-index:2}
+.case-num{font-size:9px;opacity:0.7;margin-bottom:2px}
+.case-pions{display:flex;gap:2px;flex-wrap:wrap;justify-content:center}
+.pion{width:12px;height:12px;border-radius:50%;border:1px solid rgba(255,255,255,0.5);font-size:7px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:bold}
+
+/* Segments */
+.seg-label{font-size:11px;color:#888;margin:10px 0 4px;font-style:italic;width:100%}
+
+/* Carte */
+.zone-badge{display:inline-block;padding:2px 10px;border-radius:20px;font-size:10px;font-weight:bold;margin-bottom:6px}
+.card-title{font-size:16px;font-weight:bold;margin-bottom:5px}
+.card-sit{font-size:11px;color:#aaa;font-style:italic;margin-bottom:5px;line-height:1.4}
+.card-brain{font-size:10px;color:#666;margin-bottom:8px;line-height:1.4}
+.pills{display:flex;gap:6px;margin-bottom:5px}
+.pill{padding:3px 10px;border-radius:20px;font-size:11px;font-weight:bold}
 .da{background:#1a3a5c;color:#5dade2}
 .co{background:#4a0f0f;color:#e74c3c}
-.spill{font-size:10px;font-weight:bold;padding:2px 8px;border-radius:5px;display:inline-block}
-.effet{margin-top:5px;padding:4px 6px;background:#2e2000;color:#f0b27a;border-radius:4px;font-size:9px;line-height:1.4}
-.parole{margin-top:5px;padding:4px 6px;background:#1e0a3d;color:#af7ac5;border-radius:4px;font-size:9px;line-height:1.4;font-style:italic}
-.prow{display:flex;align-items:center;gap:5px;padding:2px 4px;border-radius:4px}
-.prow.cur{background:#ffffff0d}
-.pdot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
-.pn{font-size:10px;flex:1}
-.pp{font-size:9px;color:#555}
-.ps{font-size:11px;font-weight:bold}
-#pontda{padding:5px 6px;border-radius:6px;font-size:10px;font-weight:bold;text-align:center;background:#1a1a2e;color:#555}
-.leg{display:flex;flex-wrap:wrap;gap:4px}
-.li{display:flex;align-items:center;gap:3px;font-size:9px;color:#777}
-.ld{width:8px;height:8px;border-radius:50%}
+.score-p{font-size:11px;font-weight:bold;padding:3px 10px;border-radius:5px;display:inline-block;margin-top:3px}
+.effet-box{margin-top:7px;padding:6px;background:#2e2000;color:#f0b27a;border-radius:5px;font-size:10px;line-height:1.4}
+.parole-box{margin-top:7px;padding:6px;background:#1e0a3d;color:#af7ac5;border-radius:5px;font-size:10px;line-height:1.4;font-style:italic}
+
+/* Scores */
+.prow{display:flex;align-items:center;gap:6px;padding:3px 5px;border-radius:5px;margin-bottom:3px}
+.prow.cur{background:#ffffff12}
+.pdot{width:12px;height:12px;border-radius:50%}
+.pname{flex:1;font-size:11px}
+.ppos{font-size:10px;color:#666}
+.pscore{font-size:12px;font-weight:bold}
+
+#die-big{font-size:48px;text-align:center;margin:4px 0}
+#case-lbl{font-size:11px;color:#888;text-align:center}
+#pontda{padding:6px;border-radius:5px;font-size:11px;font-weight:bold;text-align:center;background:#1a1a2e;color:#666;margin-top:4px}
+.leg{display:flex;flex-wrap:wrap;gap:5px}
+.li{display:flex;align-items:center;gap:3px;font-size:10px;color:#888}
+.ld{width:9px;height:9px;border-radius:50%}
+#turn-info{font-size:11px;color:#aaa}
 </style>
 </head>
 <body>
-<div id="app">
 <div id="bar">
-  <h1>DOPE À MINES · ADULTES · VISIO</h1>
-  <span id="turn">Tour 1 · J1</span>
-  <button class="btn" id="btn-die" onclick="lancerDe()">🎲 Lancer le dé</button>
-  <button class="btn" id="btn-draw" onclick="piocher()" disabled>Piocher</button>
-  <button class="btn" id="btn-next" onclick="tourSuivant()" disabled>Tour suivant</button>
-  <button class="btn" onclick="resetJeu()">↺</button>
+  <h1>DOPE A MINES - ADULTES - VISIO</h1>
+  <span id="turn-info">Tour 1 - Joueur 1</span>
+  <button id="btn-die" onclick="lancerDe()">Lancer le de</button>
+  <button id="btn-draw" onclick="piocher()" disabled>Piocher</button>
+  <button id="btn-next" onclick="tourSuivant()" disabled>Tour suivant</button>
+  <button onclick="resetJeu()">Reset</button>
 </div>
-<div id="main">
-  <div id="board-area">
-    <div id="svg-container" style="width:100%;height:100%"></div>
-  </div>
+<div id="wrap">
+  <div id="plateau"></div>
   <div id="side">
     <div class="box">
-      <div class="box-t">Dé</div>
-      <div id="die-show">—</div>
-      <div id="case-info">Lance le dé</div>
+      <h3>De</h3>
+      <div id="die-big">-</div>
+      <div id="case-lbl">Lance le de pour commencer</div>
     </div>
     <div class="box">
-      <div class="box-t">Carte</div>
-      <div id="card"><div class="no-c">Lance le dé puis pioche</div></div>
+      <h3>Carte</h3>
+      <div id="card-content"><div style="color:#555;text-align:center;padding:10px">Lance le de puis pioche</div></div>
     </div>
     <div class="box">
-      <div class="box-t">Pont DA</div>
-      <div id="pontda">— en attente —</div>
+      <h3>Pont DA - NA</h3>
+      <div id="pontda">en attente</div>
     </div>
     <div class="box">
-      <div class="box-t">Scores</div>
+      <h3>Scores</h3>
       <div id="scores"></div>
     </div>
     <div class="box">
-      <div class="box-t">Légende</div>
+      <h3>Legende</h3>
       <div class="leg">
         <div class="li"><div class="ld" style="background:#c0392b"></div>Rouge</div>
         <div class="li"><div class="ld" style="background:#2471a3"></div>Bleu</div>
@@ -90,13 +99,13 @@ html,body{height:100%;background:#0d0d1a;color:#e8e8f0;font-family:Arial,sans-se
     </div>
   </div>
 </div>
-</div>
-<script>
-const N=6;
-const PC=['#e74c3c','#3498db','#2ecc71','#f39c12','#9b59b6','#1abc9c'];
-const PN=['J1','J2','J3','J4','J5','J6'];
 
-const SEGS=[
+<script>
+var N=6;
+var PC=['#e74c3c','#3498db','#2ecc71','#f39c12','#9b59b6','#1abc9c'];
+var PN=['J1','J2','J3','J4','J5','J6'];
+
+var SEGS=[
   {de:'ATV',a:'Hypothalamus',seq:['R','B','R','V','R','B']},
   {de:'Hypothalamus',a:'NA',seq:['R','B','R','B','R','V']},
   {de:'NA',a:'Hippocampe',seq:['R','B','R','B','R','R']},
@@ -104,58 +113,60 @@ const SEGS=[
   {de:'Hypothalamus',a:'Amygdale',seq:['R','B','V','B','V','B','V']},
   {de:'Amygdale',a:'Cortex PF',seq:['J','R','V','J','R','V','R','V','R','J']},
 ];
-const PARC=[];
-SEGS.forEach(s=>s.seq.forEach(c=>PARC.push({c,lbl:s.a})));
-PARC.push({c:'FIN',lbl:'Cortex PF'});
-const TOTAL=PARC.length;
 
-const CNOM={R:'Zone Rouge',B:'Zone Bleue',V:'Zone Verte',J:'Ressources',C:'Consultation',FIN:'Arrivée'};
-const CCOL={R:'#c0392b',B:'#2471a3',V:'#1e8449',J:'#d68910',C:'#7d3c98',FIN:'#ecf0f1'};
-const ZS={R:{bg:'#3d0a0a',col:'#e74c3c',n:'ZONE ROUGE'},B:{bg:'#0a1e3d',col:'#5dade2',n:'ZONE BLEUE'},V:{bg:'#0a2e14',col:'#52be80',n:'ZONE VERTE'},J:{bg:'#3d2200',col:'#f0b27a',n:'RESSOURCES'},C:{bg:'#1e0a3d',col:'#af7ac5',n:'CONSULTATION'}};
-const SC={20:'#1e8449',10:'#2471a3',0:'#888',-10:'#d68910',-20:'#c0392b'};
-const SN={20:'Régulation active',10:'Régulation fragile',0:'Tension neutre',-10:'Tension modérée',-20:'Zone de danger'};
+var PARC=[];
+SEGS.forEach(function(s){s.seq.forEach(function(c){PARC.push({c:c,seg:s.de+' vers '+s.a});});});
+PARC.push({c:'FIN',seg:'Cortex PF'});
+var TOTAL=PARC.length;
 
-const CARTES={
+var CCOL={R:'#c0392b',B:'#2471a3',V:'#1e8449',J:'#d68910',C:'#7d3c98',FIN:'#ecf0f1'};
+var CNOM={R:'Zone Rouge',B:'Zone Bleue',V:'Zone Verte',J:'Ressources',C:'Consultation',FIN:'Arrivee'};
+var ZS={R:{bg:'#3d0a0a',col:'#e74c3c',n:'ZONE ROUGE'},B:{bg:'#0a1e3d',col:'#5dade2',n:'ZONE BLEUE'},V:{bg:'#0a2e14',col:'#52be80',n:'ZONE VERTE'},J:{bg:'#3d2200',col:'#f0b27a',n:'RESSOURCES'},C:{bg:'#1e0a3d',col:'#af7ac5',n:'CONSULTATION'}};
+var SC={20:'#1e8449',10:'#2471a3',0:'#888','-10':'#d68910','-20':'#c0392b'};
+var SN={20:'Regulation active',10:'Regulation fragile',0:'Tension neutre','-10':'Tension moderee','-20':'Zone de danger'};
+
+var CARTES={
 R:[
-  {t:'Le Buzz Social',s:'Une de tes publications devient virale.',c:'Récompense aléatoire intermittente.',da:10,co:40,pts:-20},
-  {t:'Le Sucre de 16h',s:'Coup de barre. Un soda pour repartir.',c:'Pic glycémique couplé à dopamine rapide.',da:10,co:30,pts:-20},
-  {t:"L'Idée Géniale",s:'Tu viens de trouver LA solution.',c:'Décharge massive de dopamine créative.',da:40,co:10,pts:20},
-  {t:'Le Verre de Trop',s:'Le premier soulage, le troisième embrume.',c:'Alcool : rebond dopaminergique artificiel.',da:10,co:50,pts:-20},
-  {t:'Le Swipe Infini',s:'Tu cherches le prochain visage.',c:'Mécanisme de récompense aléatoire.',da:10,co:50,pts:-20},
-  {t:'Cigarette / Vape',s:'La nicotine fouette le cerveau.',c:'Décharge flash de dopamine.',da:10,co:50,pts:-20},
-  {t:'Colère Routière',s:'Quelqu\'un te coupe. Tu exploses.',c:'Réaction amygdalienne brute.',da:10,co:40,pts:-20},
+  {t:'Le Buzz Social',s:'Une de tes publications devient virale. Tu verifie les notifs toutes les minutes.',c:'Recompense aleatoire intermittente.',da:10,co:40,pts:-20},
+  {t:'Le Sucre de 16h',s:'Coup de barre. Un soda pour repartir.',c:'Pic glycemique couple a dopamine rapide.',da:10,co:30,pts:-20},
+  {t:"L'Idee Geniale",s:'Tu viens de trouver LA solution.',c:'Decharge massive de dopamine creative.',da:40,co:10,pts:20},
+  {t:'Le Verre de Trop',s:'Le premier soulage, le troisieme embrume.',c:'Alcool : rebond dopaminergique artificiel.',da:10,co:50,pts:-20},
+  {t:'Le Swipe Infini',s:'Tu cherches le prochain visage.',c:'Mecanisme de recompense aleatoire.',da:10,co:50,pts:-20},
+  {t:'Cigarette Vape',s:'La nicotine fouette le cerveau.',c:'Decharge flash de dopamine.',da:10,co:50,pts:-20},
+  {t:'Colere Routiere',s:'Quelqu un te coupe. Tu exploses.',c:'Reaction amygdalienne brute.',da:10,co:40,pts:-20},
   {t:"L'Ego Trip",s:'On te demande ton avis comme expert.',c:'Validation du statut social.',da:40,co:20,pts:20},
-  {t:'Workaholisme',s:'Répondre aux mails pendant le dîner.',c:'Identification totale au travail.',da:10,co:50,pts:-20},
+  {t:"L'Appel de l'Ancien",s:'Un ami perdu de vue te contacte.',c:'Ocytocine + Dopamine.',da:40,co:10,pts:20},
+  {t:'Workaholisme',s:'Repondre aux mails pendant le diner.',c:'Identification totale au travail.',da:10,co:50,pts:-20},
   {t:'La Ligne de Poudre',s:'Un boost foudroyant.',c:'Blocage massif de la recapture de dopamine.',da:80,co:40,pts:-20,sub:true},
-  {t:'Le Flash Héroïque',s:'Une déferlante de coton tiède.',c:'Saturation des récepteurs opioïdes.',da:90,co:30,pts:-20,sub:true},
-  {t:'Descente Brutale',s:'Le pic est passé. Le monde est gris.',c:'Hypodopaminergie de sevrage.',da:10,co:60,pts:-20,sub:true},
-  {t:"L'Écran de Nuit",s:'Tu ne peux pas lâcher ce feed.',c:'Inhibition de la mélatonine.',da:10,co:40,pts:-20},
-  {t:'Le Flash-Back',s:'Un souvenir douloureux remonte.',c:"Réactivation mnésique par l'amygdale.",da:10,co:60,pts:-20},
+  {t:'Le Flash Heroique',s:'Une deferlante de coton tiede.',c:'Saturation des recepteurs opioides.',da:90,co:30,pts:-20,sub:true},
+  {t:'Descente Brutale',s:'Le pic est passe. Le monde est gris.',c:'Hypodopaminergie de sevrage.',da:10,co:60,pts:-20,sub:true},
+  {t:"L'Ecran de Nuit",s:'Tu ne peux pas lacher ce feed.',c:'Inhibition de la melatonine.',da:10,co:40,pts:-20},
+  {t:'Le Flash-Back',s:'Un souvenir douloureux remonte.',c:'Reactivation mnesique par l amygdale.',da:10,co:60,pts:-20},
 ],
 B:[
-  {t:'État de Flow',s:'Tu ne sens plus le temps passer.',c:'Harmonie cortex/striatum. Dopamine stable.',da:30,co:10,pts:20},
-  {t:'Mentorat',s:'Tu transmets ton savoir à un junior.',c:'Ocytocine + Dopamine sociale.',da:40,co:10,pts:20},
-  {t:'Eurêka !',s:"La pièce du puzzle s'emboîte.",c:'Libération brutale de dopamine.',da:40,co:10,pts:20},
-  {t:'Brainstorming Sincère',s:'Les idées rebondissent.',c:'Récompense par la collaboration.',da:30,co:10,pts:20},
-  {t:'Apprentissage Actif',s:'Tu maîtrises enfin ce nouvel outil.',c:'Plasticité neuronale.',da:30,co:10,pts:20},
-  {t:"L'Heure de Génie",s:'Une heure sans aucune distraction.',c:'Concentration exécutive maximale.',da:40,co:10,pts:20},
-  {t:'Auto-Discipline',s:'Tu as résisté à une distraction.',c:'Victoire du cortex préfrontal.',da:30,co:10,pts:20},
-  {t:'Réussite Collective',s:"L'équipe atteint l'objectif ensemble.",c:'Ocytocine massive.',da:40,co:10,pts:20},
-  {t:'Brouillard Mental',s:'Tu lis 10 fois la même ligne.',c:'Hypo-frontalité.',da:10,co:50,pts:-20},
-  {t:'Le Vide (Apathie)',s:"Plus rien ne t'amuse.",c:'Désensibilisation des récepteurs.',da:10,co:50,pts:-20},
+  {t:'Etat de Flow',s:'Tu ne sens plus le temps passer.',c:'Harmonie cortex striatum. Dopamine stable.',da:30,co:10,pts:20},
+  {t:'Mentorat',s:'Tu transmets ton savoir a un junior.',c:'Ocytocine + Dopamine sociale.',da:40,co:10,pts:20},
+  {t:'Eureka !',s:'La piece du puzzle s emboite.',c:'Liberation brutale de dopamine.',da:40,co:10,pts:20},
+  {t:'Brainstorming Sincere',s:'Les idees rebondissent.',c:'Recompense par la collaboration.',da:30,co:10,pts:20},
+  {t:'Apprentissage Actif',s:'Tu maitrises enfin ce nouvel outil.',c:'Plasticite neuronale.',da:30,co:10,pts:20},
+  {t:"L'Heure de Genie",s:'Une heure sans aucune distraction.',c:'Concentration executive maximale.',da:40,co:10,pts:20},
+  {t:'Auto-Discipline',s:'Tu as resiste a une distraction.',c:'Victoire du cortex prefrontal.',da:30,co:10,pts:20},
+  {t:'Reussite Collective',s:"L'equipe atteint l'objectif ensemble.",c:'Ocytocine massive.',da:40,co:10,pts:20},
+  {t:'Brouillard Mental',s:'Tu lis 10 fois la meme ligne.',c:'Hypo-frontalite.',da:10,co:50,pts:-20},
+  {t:'Le Vide Apathie',s:'Plus rien ne t amuse.',c:'Desensibilisation des recepteurs.',da:10,co:50,pts:-20},
 ],
 V:[
-  {t:'Mode Avion',s:'Couper le monde numérique 2 heures.',c:'Repos des récepteurs dopaminergiques.',da:30,co:10,pts:20},
-  {t:'Marche en Forêt',s:"Le vert, le silence, l'odeur de l'humus.",c:'Réduction du cortisol.',da:40,co:10,pts:20},
-  {t:'Méditation',s:'10 minutes à respirer consciemment.',c:'Stimulation du nerf vague.',da:30,co:10,pts:20},
-  {t:'Micro-Sieste',s:'20 min de sommeil flash.',c:"Nettoyage de l'adénosine.",da:40,co:10,pts:20},
-  {t:'Sport Cardiaque',s:'Transpirer, essouffler le mental.',c:"Libération d'endorphines.",da:40,co:10,pts:20},
-  {t:'Câlin / Affection',s:"20 secondes d'étreinte sincère.",c:'Ocytocine massive.',da:40,co:10,pts:20},
-  {t:'Sommeil de 9h',s:'Une nuit complète, sans réveil.',c:'Cycle REM complet.',da:40,co:10,pts:20},
-  {t:'Repas en Conscience',s:'Manger sans écran.',c:'La satiété revient.',da:30,co:10,pts:20},
+  {t:'Mode Avion',s:'Couper le monde numerique 2 heures.',c:'Repos des recepteurs dopaminergiques.',da:30,co:10,pts:20},
+  {t:'Marche en Foret',s:'Le vert, le silence.',c:'Reduction du cortisol.',da:40,co:10,pts:20},
+  {t:'Meditation',s:'10 minutes a respirer consciemment.',c:'Stimulation du nerf vague.',da:30,co:10,pts:20},
+  {t:'Micro-Sieste',s:'20 min de sommeil flash.',c:'Nettoyage de l adenosine.',da:40,co:10,pts:20},
+  {t:'Sport Cardiaque',s:'Transpirer, essouffler le mental.',c:'Liberation d endorphines.',da:40,co:10,pts:20},
+  {t:'Calin Affection',s:'20 secondes d etreinte sincere.',c:'Ocytocine massive.',da:40,co:10,pts:20},
+  {t:'Sommeil de 9h',s:'Une nuit complete, sans reveil.',c:'Cycle REM complet.',da:40,co:10,pts:20},
+  {t:'Repas en Conscience',s:'Manger sans ecran.',c:'La satiete revient.',da:30,co:10,pts:20},
 ],
 J:[
-  {t:'Cohérence Cardiaque',s:'5 min à respirer au rythme de ton coeur.',c:"Calme l'amygdale.",da:40,co:10,pts:20,e:'Reduis ton Co de 20 pts immediatemement.'},
+  {t:'Coherence Cardiaque',s:'5 min a respirer au rythme de ton coeur.',c:'Calme l amygdale.',da:40,co:10,pts:20,e:'Reduis ton Co de 20 pts immediatement.'},
   {t:'Le Mentor',s:'Une figure inspirante qui te guide.',c:'Externalisation de la decision.',da:40,co:10,pts:20,e:'Cartes Rouges : -10 DA ce tour.'},
   {t:'Vrai Fou Rire',s:'Une blague avec un ami.',c:'Chute du cortisol.',da:40,co:10,pts:20,e:"Annule l'effet d'une carte Rouge."},
   {t:'Sieste Flash',s:'20 min de pause totale.',c:'Reset neurologique.',da:30,co:10,pts:20,e:'Rejoue une carte Verte.'},
@@ -166,190 +177,173 @@ C:[
   {t:'Consultation Addiction',s:'Admettre que le comportement a pris le dessus.',c:'Le premier pas est le plus difficile.',da:40,co:10,pts:20,p:"Demander de l'aide n'est pas perdre."},
   {t:'Bilan de Burn-out',s:'Ton corps dit stop.',c:'Epuisement des catecholamines.',da:30,co:20,pts:20,p:"Le burn-out n'est pas une faiblesse."},
   {t:'Therapie Breve',s:'Comprendre pourquoi tu cherches le stress.',c:'Desensibilisation mnesique.',da:40,co:20,pts:20,p:"Comprendre, c'est se liberer."},
-  {t:'Cercle de Parole',s:'Partager ton vecu avec tes pairs.',c:"Le Co chute immediatement.",da:40,co:20,pts:20,p:'Etre entendu change le cerveau.'},
-  {t:'Decodage Emotionnel',s:"Mettre des mots sur l'emotion brute.",c:"Le langage calme l'amygdale.",da:40,co:20,pts:20,p:"Nommer, c'est reprendre 30% du controle."},
+  {t:'Cercle de Parole',s:'Partager ton vecu avec tes pairs.',c:'Le Co chute immediatement.',da:40,co:20,pts:20,p:'Etre entendu change le cerveau.'},
+  {t:'Decodage Emotionnel',s:"Mettre des mots sur l'emotion.",c:"Le langage calme l'amygdale.",da:40,co:20,pts:20,p:"Nommer, c'est reprendre 30% du controle."},
   {t:'Therapie Cognitive',s:'Identifier tes biais de pensee.',c:'Restructuration cognitive.',da:40,co:20,pts:20,p:"Ce n'est pas la situation qui stresse."},
 ]
 };
 
-// Coordonnées plateau viewBox 600x520
-const cx=290,cy=230,L=175;
-const ATV={x:cx,y:50};
-const HYP={x:cx,y:cy};
-const NA={x:cx,y:cy+130};
-const HIP={x:cx+L,y:cy};
-const AMY={x:cx-L,y:cy};
-const COR={x:cx+L*0.8,y:cy+L*0.85};
+var joueurs=[];
+var jA=0,tour=1,dest=-1,carte=null,decks={};
 
-function ip(a,b,n){return Array.from({length:n},(_,i)=>{const t=(i+.5)/n;return{x:Math.round(a.x+(b.x-a.x)*t),y:Math.round(a.y+(b.y-a.y)*t)};});}
+function init(){
+  joueurs=[];
+  for(var i=0;i<N;i++) joueurs.push({nom:PN[i],col:PC[i],score:0,pos:0});
+  jA=0;tour=1;dest=-1;carte=null;
+  melangerDecks();
+}
 
-const CASE_PTS=[
-  ...ip(ATV,HYP,6),
-  ...ip(HYP,NA,6),
-  ...ip(NA,HIP,6),
-  ...ip(HIP,HYP,6),
-  ...ip(HYP,AMY,7),
-  ...ip(AMY,COR,10),
-  {x:COR.x,y:COR.y}
-];
+function melangerDecks(){
+  var keys=Object.keys(CARTES);
+  for(var k=0;k<keys.length;k++){
+    decks[keys[k]]=CARTES[keys[k]].slice().sort(function(){return Math.random()-.5;});
+  }
+}
 
-let joueurs=Array.from({length:N},(_,i)=>({nom:PN[i],col:PC[i],score:0,pos:0}));
-let jA=0,tour=1,dest=-1,carte=null,decks={};
-
-function melangerDecks(){Object.keys(CARTES).forEach(k=>{decks[k]=[...CARTES[k]].sort(()=>Math.random()-.5)});}
-function tirer(k){if(!decks[k]||!decks[k].length)decks[k]=[...CARTES[k]].sort(()=>Math.random()-.5);return decks[k].pop();}
+function tirer(k){
+  if(!decks[k]||!decks[k].length) decks[k]=CARTES[k].slice().sort(function(){return Math.random()-.5;});
+  return decks[k].pop();
+}
 
 function lancerDe(){
-  const d=Math.floor(Math.random()*6)+1;
+  var d=Math.floor(Math.random()*6)+1;
   dest=Math.min(joueurs[jA].pos+d,TOTAL-1);
-  document.getElementById('die-show').textContent=['1','2','3','4','5','6'][d-1];
-  document.getElementById('case-info').textContent='Case '+(dest+1)+' - '+(CNOM[PARC[dest].c]||'');
+  document.getElementById('die-big').textContent=d;
+  document.getElementById('case-lbl').textContent='Case '+(dest+1)+' - '+(CNOM[PARC[dest].c]||'');
   document.getElementById('btn-die').disabled=true;
   document.getElementById('btn-draw').disabled=false;
-  dessiner();
+  rendrePlateau();
 }
 
 function piocher(){
   joueurs[jA].pos=dest;
-  const cc=PARC[dest];
+  var cc=PARC[dest];
   if(cc.c==='FIN'){
-    document.getElementById('card').innerHTML='<div style="text-align:center;padding:10px"><div style="font-size:24px">Cerveau</div><div style="font-size:13px;font-weight:bold;margin-top:5px">Cortex PF atteint !</div></div>';
+    document.getElementById('card-content').innerHTML='<div style="text-align:center;padding:12px;font-size:18px;font-weight:bold">Cerveau complet !<br>Cortex PF atteint !</div>';
     document.getElementById('btn-draw').disabled=true;
     document.getElementById('btn-next').disabled=false;
-    dessiner();majScores();return;
+    rendrePlateau();rendreScores();return;
   }
-  const c=tirer(cc.c);
-  carte={...c,fam:cc.c};
+  var c=tirer(cc.c);
+  carte=c;carte.fam=cc.c;
   joueurs[jA].score+=c.pts;
   majPontDA(c.co);
-  afficherCarte(carte);
+  afficherCarte(c);
   document.getElementById('btn-draw').disabled=true;
   document.getElementById('btn-next').disabled=false;
-  dessiner();majScores();
+  rendrePlateau();rendreScores();
 }
 
 function majPontDA(co){
-  const el=document.getElementById('pontda');
-  if(co<40){el.style.background='#0a2e14';el.style.color='#52be80';el.textContent='Co<40 - Pont FERME';}
-  else if(co<=70){el.style.background='#2e1a00';el.style.color='#f0b27a';el.textContent='Co 40-70 - ENTROUVERT';}
-  else{el.style.background='#3d0a0a';el.style.color='#e74c3c';el.textContent='Co>70 - FORCE !';}
+  var el=document.getElementById('pontda');
+  if(co<40){el.style.background='#0a2e14';el.style.color='#52be80';el.textContent='Co<40 - Pont FERME - acces direct Cortex PF';}
+  else if(co<=70){el.style.background='#2e1a00';el.style.color='#f0b27a';el.textContent='Co 40-70 - Pont ENTROUVERT - carte DA obligatoire';}
+  else{el.style.background='#3d0a0a';el.style.color='#e74c3c';el.textContent='Co>70 - Pont FORCE - Bascule automatique !';}
 }
 
 function afficherCarte(c){
-  const z=ZS[c.fam]||{bg:'#1a1a2e',col:'#aaa',n:'--'};
-  const ec=c.da-c.co;
-  const pc=SC[c.pts]||'#666';
-  const pn=SN[c.pts]||'';
-  let ex='';
-  if(c.e)ex='<div class="effet">Effet : '+c.e+'</div>';
-  if(c.p)ex='<div class="parole">'+c.p+'</div>';
-  document.getElementById('card').innerHTML=
-    '<span class="badge" style="background:'+z.bg+';color:'+z.col+'">'+z.n+(c.sub?' SS':'')+' </span>'+
-    '<div class="ctitle">'+c.t+'</div>'+
-    '<div class="csit">'+c.s+'</div>'+
-    '<div class="cbrain">'+c.c+'</div>'+
+  var z=ZS[c.fam]||{bg:'#1a1a2e',col:'#aaa',n:'--'};
+  var ec=c.da-c.co;
+  var pc=SC[c.pts]||'#666';
+  var pn=SN[c.pts]||'';
+  var ex='';
+  if(c.e) ex='<div class="effet-box">Effet : '+c.e+'</div>';
+  if(c.p) ex='<div class="parole-box">'+c.p+'</div>';
+  document.getElementById('card-content').innerHTML=
+    '<span class="zone-badge" style="background:'+z.bg+';color:'+z.col+'">'+z.n+(c.sub?' SS':'')+' </span>'+
+    '<div class="card-title">'+c.t+'</div>'+
+    '<div class="card-sit">'+c.s+'</div>'+
+    '<div class="card-brain">'+c.c+'</div>'+
     '<div class="pills"><span class="pill da">DA '+(c.da>0?'+':'')+c.da+'</span><span class="pill co">Co '+(c.co>0?'+':'')+c.co+'</span></div>'+
-    '<div style="font-size:9px;color:#555;margin-bottom:3px">Ecart DA-Co = '+(ec>0?'+':'')+ec+'</div>'+
-    '<span class="spill" style="background:'+pc+'22;color:'+pc+'">'+pn+' '+(c.pts>0?'+':'')+c.pts+' pts</span>'+
+    '<div style="font-size:10px;color:#555;margin-bottom:4px">Ecart DA-Co = '+(ec>0?'+':'')+ec+'</div>'+
+    '<span class="score-p" style="background:'+pc+'33;color:'+pc+'">'+pn+' '+(c.pts>0?'+':'')+c.pts+' pts</span>'+
     ex;
 }
 
 function tourSuivant(){
-  jA=(jA+1)%N;if(jA===0)tour++;
-  document.getElementById('turn').textContent='Tour '+tour+' - '+joueurs[jA].nom;
-  document.getElementById('die-show').textContent='--';
-  document.getElementById('case-info').textContent='Lance le de';
-  document.getElementById('card').innerHTML='<div class="no-c">Lance le de puis pioche</div>';
-  document.getElementById('pontda').style.cssText='background:#1a1a2e;color:#555;padding:5px 6px;border-radius:6px;font-size:10px;font-weight:bold;text-align:center';
-  document.getElementById('pontda').textContent='-- en attente --';
+  jA=(jA+1)%N;
+  if(jA===0) tour++;
+  document.getElementById('turn-info').textContent='Tour '+tour+' - '+joueurs[jA].nom;
+  document.getElementById('die-big').textContent='-';
+  document.getElementById('case-lbl').textContent='Lance le de pour commencer';
+  document.getElementById('card-content').innerHTML='<div style="color:#555;text-align:center;padding:10px">Lance le de puis pioche</div>';
+  document.getElementById('pontda').style.cssText='padding:6px;border-radius:5px;font-size:11px;font-weight:bold;text-align:center;background:#1a1a2e;color:#666;margin-top:4px';
+  document.getElementById('pontda').textContent='en attente';
   document.getElementById('btn-die').disabled=false;
   document.getElementById('btn-draw').disabled=true;
   document.getElementById('btn-next').disabled=true;
-  dest=-1;dessiner();majScores();
+  dest=-1;rendrePlateau();rendreScores();
 }
 
 function resetJeu(){
-  joueurs=Array.from({length:N},(_,i)=>({nom:PN[i],col:PC[i],score:0,pos:0}));
-  jA=0;tour=1;dest=-1;carte=null;
-  melangerDecks();
-  document.getElementById('turn').textContent='Tour 1 - J1';
-  document.getElementById('die-show').textContent='--';
-  document.getElementById('case-info').textContent='Lance le de';
-  document.getElementById('card').innerHTML='<div class="no-c">Lance le de puis pioche</div>';
-  document.getElementById('pontda').style.cssText='background:#1a1a2e;color:#555;padding:5px 6px;border-radius:6px;font-size:10px;font-weight:bold;text-align:center';
-  document.getElementById('pontda').textContent='-- en attente --';
+  init();
+  document.getElementById('turn-info').textContent='Tour 1 - Joueur 1';
+  document.getElementById('die-big').textContent='-';
+  document.getElementById('case-lbl').textContent='Lance le de pour commencer';
+  document.getElementById('card-content').innerHTML='<div style="color:#555;text-align:center;padding:10px">Lance le de puis pioche</div>';
+  document.getElementById('pontda').style.cssText='padding:6px;border-radius:5px;font-size:11px;font-weight:bold;text-align:center;background:#1a1a2e;color:#666;margin-top:4px';
+  document.getElementById('pontda').textContent='en attente';
   document.getElementById('btn-die').disabled=false;
   document.getElementById('btn-draw').disabled=true;
   document.getElementById('btn-next').disabled=true;
-  dessiner();majScores();
+  rendrePlateau();rendreScores();
 }
 
-function majScores(){
-  const st=pos=>{let c=0;for(let i=0;i<SEGS.length;i++){c+=SEGS[i].seq.length;if(pos<c)return SEGS[i].a;}return'Cortex PF';};
-  document.getElementById('scores').innerHTML=joueurs.map((j,i)=>
-    '<div class="prow'+(i===jA?' cur':'')+'">'+
-    '<div class="pdot" style="background:'+j.col+'"></div>'+
-    '<div class="pn">'+j.nom+'</div>'+
-    '<div class="pp">'+st(j.pos)+'</div>'+
-    '<div class="ps" style="color:'+(j.score>=0?'#52be80':'#e74c3c')+'">'+(j.score>0?'+':'')+j.score+'</div>'+
-    '</div>').join('');
+function rendreScores(){
+  var st=function(pos){var c=0;for(var i=0;i<SEGS.length;i++){c+=SEGS[i].seq.length;if(pos<c)return SEGS[i].a;}return'Cortex PF';};
+  var h='';
+  for(var i=0;i<joueurs.length;i++){
+    var j=joueurs[i];
+    h+='<div class="prow'+(i===jA?' cur':'')+'">';
+    h+='<div class="pdot" style="background:'+j.col+'"></div>';
+    h+='<div class="pname">'+j.nom+'</div>';
+    h+='<div class="ppos">'+st(j.pos)+'</div>';
+    h+='<div class="pscore" style="color:'+(j.score>=0?'#2ecc71':'#e74c3c')+'">'+(j.score>0?'+':'')+j.score+'</div>';
+    h+='</div>';
+  }
+  document.getElementById('scores').innerHTML=h;
 }
 
-function dessiner(){
-  const container=document.getElementById('svg-container');
-  let h='<svg viewBox="0 0 600 520" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">';
-  h+='<rect width="600" height="520" fill="#0d0d1a"/>';
-  for(let x=0;x<600;x+=40)h+='<line x1="'+x+'" y1="0" x2="'+x+'" y2="520" stroke="rgba(255,255,255,0.015)"/>';
-  for(let y=0;y<520;y+=40)h+='<line x1="0" y1="'+y+'" x2="600" y2="'+y+'" stroke="rgba(255,255,255,0.015)"/>';
-
-  function bras(a,b){h+='<line x1="'+a.x+'" y1="'+a.y+'" x2="'+b.x+'" y2="'+b.y+'" stroke="rgba(255,255,255,0.07)" stroke-width="20" stroke-linecap="round"/>';}
-  bras(ATV,HYP);bras(HYP,NA);bras(NA,HIP);bras(HIP,HYP);bras(HYP,AMY);bras(AMY,COR);
-
-  h+='<polygon points="'+NA.x+','+NA.y+' '+(HIP.x-20)+','+(HIP.y+40)+' '+COR.x+','+(COR.y-15)+'" fill="none" stroke="rgba(155,89,182,0.5)" stroke-width="1.5" stroke-dasharray="5,5"/>';
-  h+='<text x="'+(NA.x+48)+'" y="'+(NA.y+22)+'" fill="#9b59b6" font-size="9" text-anchor="middle">Pont DA</text>';
-
-  CASE_PTS.forEach(function(p,i){
-    if(i>=PARC.length)return;
-    var col=CCOL[PARC[i].c]||'#555';
-    var isDest=i===dest;
-    var r=isDest?12:8;
-    if(isDest)h+='<circle cx="'+p.x+'" cy="'+p.y+'" r="'+(r+6)+'" fill="'+col+'44"/>';
-    h+='<circle cx="'+p.x+'" cy="'+p.y+'" r="'+r+'" fill="'+col+'" stroke="rgba(0,0,0,0.5)" stroke-width="1"/>';
-    h+='<text x="'+p.x+'" y="'+(p.y+3)+'" fill="rgba(255,255,255,0.85)" font-size="6" font-weight="bold" text-anchor="middle">'+(i+1)+'</text>';
-  });
-
-  var STATS=[
-    {p:ATV,l:'ATV',c:'#3498db'},
-    {p:HYP,l:'Hypo',c:'#27ae60'},
-    {p:NA,l:'NA',c:'#f39c12'},
-    {p:HIP,l:'Hippo',c:'#8e44ad'},
-    {p:AMY,l:'Amygd',c:'#e74c3c'},
-    {p:COR,l:'Cortex',c:'#95a5a6'},
-  ];
-  STATS.forEach(function(st){
-    h+='<circle cx="'+st.p.x+'" cy="'+st.p.y+'" r="16" fill="'+st.c+'" stroke="rgba(255,255,255,0.2)" stroke-width="2"/>';
-    h+='<text x="'+st.p.x+'" y="'+(st.p.y+4)+'" fill="#fff" font-size="8" font-weight="bold" text-anchor="middle">'+st.l+'</text>';
-  });
-
-  var OFF=[[-10,-10],[10,-10],[-10,10],[10,10],[0,-14],[0,14]];
-  joueurs.forEach(function(j,i){
-    if(j.pos<0||j.pos>=CASE_PTS.length)return;
-    var p=CASE_PTS[j.pos];
-    var o=OFF[i]||[0,0];
-    var px=p.x+o[0],py=p.y+o[1];
-    var op=i===jA?'ff':'77';
-    h+='<circle cx="'+(px+1)+'" cy="'+(py+1)+'" r="8" fill="rgba(0,0,0,0.4)"/>';
-    h+='<circle cx="'+px+'" cy="'+py+'" r="8" fill="'+j.col+op+'" stroke="'+(i===jA?'#fff':'rgba(255,255,255,0.25)')+'" stroke-width="'+(i===jA?2:1)+'"/>';
-    h+='<text x="'+px+'" y="'+(py+3)+'" fill="#fff" font-size="7" font-weight="bold" text-anchor="middle">'+(i+1)+'</text>';
-  });
-
-  h+='</svg>';
-  container.innerHTML=h;
+function rendrePlateau(){
+  var h='';
+  var segStart=0;
+  for(var s=0;s<SEGS.length;s++){
+    var seg=SEGS[s];
+    h+='<div class="seg-label">'+seg.de+' &rarr; '+seg.a+'</div>';
+    for(var i=0;i<seg.seq.length;i++){
+      var idx=segStart+i;
+      var col=CCOL[PARC[idx].c]||'#333';
+      var isDest=(idx===dest);
+      var pionsHere=[];
+      for(var p=0;p<joueurs.length;p++){if(joueurs[p].pos===idx)pionsHere.push(p);}
+      h+='<div class="case-item'+(isDest?' dest':'')+'" style="background:'+col+'22;border-color:'+(isDest?'#fff':col)+'44">';
+      h+='<div class="case-num">'+(idx+1)+'</div>';
+      if(pionsHere.length){
+        h+='<div class="case-pions">';
+        for(var q=0;q<pionsHere.length;q++){
+          h+='<div class="pion" style="background:'+joueurs[pionsHere[q]].col+'">'+(pionsHere[q]+1)+'</div>';
+        }
+        h+='</div>';
+      }
+      h+='</div>';
+    }
+    segStart+=seg.seq.length;
+  }
+  // Arrivee
+  var idxFin=TOTAL-1;
+  var pionsArrivee=[];
+  for(var p=0;p<joueurs.length;p++){if(joueurs[p].pos===idxFin)pionsArrivee.push(p);}
+  h+='<div class="seg-label">Arrivee</div>';
+  h+='<div class="case-item" style="background:#ecf0f122;border-color:#ecf0f144;width:80px">';
+  h+='<div style="font-size:11px;font-weight:bold">Cortex PF</div>';
+  if(pionsArrivee.length){h+='<div class="case-pions">';for(var q=0;q<pionsArrivee.length;q++){h+='<div class="pion" style="background:'+joueurs[pionsArrivee[q]].col+'">'+(pionsArrivee[q]+1)+'</div>';}h+='</div>';}
+  h+='</div>';
+  document.getElementById('plateau').innerHTML='<div class="parcours">'+h+'</div>';
 }
 
-melangerDecks();
-majScores();
-dessiner();
+init();
+rendrePlateau();
+rendreScores();
 </script>
 </body>
 </html>
