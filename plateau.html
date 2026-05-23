@@ -58,7 +58,7 @@ html,body{height:100%;background:#0d0d1a;color:#e8e8f0;font-family:Arial,sans-se
 </div>
 <div id="main">
   <div id="board-area">
-    <svg id="svg" viewBox="0 0 600 520" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg"></svg>
+    <div id="svg-container" style="width:100%;height:100%"></div>
   </div>
   <div id="side">
     <div class="box">
@@ -296,8 +296,8 @@ function majScores(){
 }
 
 function dessiner(){
-  const svg=document.getElementById('svg');
-  let h='';
+  const container=document.getElementById('svg-container');
+  let h='<svg viewBox="0 0 600 520" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">';
   h+='<rect width="600" height="520" fill="#0d0d1a"/>';
   for(let x=0;x<600;x+=40)h+='<line x1="'+x+'" y1="0" x2="'+x+'" y2="520" stroke="rgba(255,255,255,0.015)"/>';
   for(let y=0;y<520;y+=40)h+='<line x1="0" y1="'+y+'" x2="600" y2="'+y+'" stroke="rgba(255,255,255,0.015)"/>';
@@ -343,7 +343,8 @@ function dessiner(){
     h+='<text x="'+px+'" y="'+(py+3)+'" fill="#fff" font-size="7" font-weight="bold" text-anchor="middle">'+(i+1)+'</text>';
   });
 
-  svg.innerHTML=h;
+  h+='</svg>';
+  container.innerHTML=h;
 }
 
 melangerDecks();
