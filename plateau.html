@@ -442,6 +442,7 @@ function demarrer(){
   PC = PC_ALL.slice(0, N);
   PN = PN_ALL.slice(0, N);
   init();
+  PARTIE_DEMARREE = true;
   rendrePlateau();
   rendreScores();
   document.getElementById('accueil').style.display = 'none';
@@ -676,14 +677,20 @@ function afficherInfoStation(nom, evt){
   rendrePlateau();
 }
 
+var PARTIE_DEMARREE = false;
+
 function fermerInfoStation(){
+  if(!PARTIE_DEMARREE) return;
   STATION_POPUP_NOM = null;
   var el = document.getElementById('station-popup');
   if(el) el.style.display = 'none';
   rendrePlateau();
 }
 
-document.addEventListener('click', function(){ fermerInfoStation(); });
+document.addEventListener('click', function(e){
+  if(!PARTIE_DEMARREE) return;
+  fermerInfoStation();
+});
 
 function getPositionsSegment(de, a, n){
   var s = STATIONS[de], e = STATIONS[a];
