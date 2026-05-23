@@ -349,9 +349,11 @@ function dessiner(){
   svg.innerHTML=h;
 }
 
-melangerDecks();
-majScores();
-dessiner();
+window.addEventListener("DOMContentLoaded", function(){
+  melangerDecks();
+  majScores();
+  dessiner();
+});
 </script>
 </body>
 </html>
