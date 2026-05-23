@@ -695,10 +695,7 @@ function fermerInfoStation(){
   rendrePlateau();
 }
 
-document.addEventListener('click', function(e){
-  if(!PARTIE_DEMARREE) return;
-  fermerInfoStation();
-});
+// listener supprimé
 
 function getPositionsSegment(de, a, n){
   var s = STATIONS[de], e = STATIONS[a];
