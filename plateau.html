@@ -606,189 +606,190 @@ function rendreScores(){
 }
 
 // ═══════════════════════════════════════════
-// RENDU DU PLATEAU — Circuit dopaminergique
-// Géométrie : ATV gauche, Hypoth centre,
-// NA droite, Hippoc haut, Amyg bas,
-// Cortex PF haut-droite
+// STATIONS & DESCRIPTIONS NEUROLOGIQUES
 // ═══════════════════════════════════════════
-
-// Positions des stations (dans un espace 700x560)
 var STATIONS={
-  ATV:      {x:60,  y:280, col:'#2471a3', label:'ATV'},
-  Hypothalamus:{x:310, y:280, col:'#27ae60', label:'Hypoth.'},
-  NA:       {x:560, y:280, col:'#f39c12', label:'NA'},
-  Hippocampe:{x:430, y:80,  col:'#8e44ad', label:'Hippoc.'},
-  Amygdale: {x:430, y:480, col:'#e74c3c', label:'Amygdale'},
-  'Cortex PF':{x:630, y:80,  col:'#1a1a2e', label:'Cortex PF'},
+  ATV:         {x:70,  y:280, col:'#2471a3', label:'ATV',
+    desc:'Point de depart du circuit dopaminergique. L ATV produit la dopamine et l envoie vers le Noyau Accumbens et le Cortex Prefrontal. C est ici que nait la motivation, l anticipation du plaisir et l elan vers l action.'},
+  Hypothalamus:{x:310, y:280, col:'#27ae60', label:'Hypothalamus',
+    desc:'Carrefour neuroendocrinien central. Il regulate les besoins fondamentaux et orchestre la reponse au stress via l axe HPA. Il est traverse deux fois : en montee vers la recompense, puis en descente vers la regulation.'},
+  NA:          {x:560, y:280, col:'#f39c12', label:'NA',
+    desc:'Noyau Accumbens - Coeur du circuit de la recompense. Il integre les signaux dopaminergiques de l ATV. C est ici que se joue le Pont DA : selon le niveau de cortisol, l acces au Cortex Prefrontal est libre, conditionne ou bloque.'},
+  Hippocampe:  {x:430, y:80,  col:'#8e44ad', label:'Hippocampe',
+    desc:'Siege de la memoire et du contexte. L hippocampe encode les souvenirs associes aux recompenses et aux experiences stressantes. Role cle dans la dependance : il relie les lieux, personnes et emotions aux comportements addictifs.'},
+  Amygdale:    {x:430, y:480, col:'#e74c3c', label:'Amygdale',
+    desc:'Sentinelle emotionnelle du cerveau. Detecte les menaces, declenche la peur et module les emotions intenses. Quand le cortisol est eleve, elle court-circuite le raisonnement prefrontal. Zone critique dans les comportements impulsifs.'},
+  'Cortex PF': {x:640, y:80,  col:'#1a1a2e', label:'Cortex PF',
+    desc:'Siege de la regulation, du jugement et de la prise de decision consciente. Destination finale du parcours. Quand il reprend le controle sur le circuit limbique, la regulation devient possible. Objectif neurobiologique du jeu.'},
 };
 
+var STATION_POPUP_NOM = null;
+
+function afficherInfoStation(nom, evt){
+  evt.stopPropagation();
+  if(STATION_POPUP_NOM === nom){ fermerInfoStation(); return; }
+  STATION_POPUP_NOM = nom;
+  var st = STATIONS[nom];
+  var el = document.getElementById('station-popup');
+  if(!el) return;
+  el.innerHTML =
+    '<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">' +
+    '<div style="width:14px;height:14px;border-radius:50%;background:'+st.col+';flex-shrink:0"></div>' +
+    '<strong style="font-size:13px;color:#1a1a2e;font-family:Georgia,serif">'+nom+'</strong>' +
+    '<button onclick="fermerInfoStation()" style="margin-left:auto;background:none;border:none;font-size:18px;cursor:pointer;color:#888;line-height:1">x</button>' +
+    '</div>' +
+    '<div style="font-size:11px;color:#444;line-height:1.6;font-family:Arial,sans-serif">'+st.desc+'</div>';
+  el.style.display = 'block';
+  rendrePlateau();
+}
+
+function fermerInfoStation(){
+  STATION_POPUP_NOM = null;
+  var el = document.getElementById('station-popup');
+  if(el) el.style.display = 'none';
+  rendrePlateau();
+}
+
+document.addEventListener('click', function(){ fermerInfoStation(); });
+
 function getPositionsSegment(de, a, n){
-  var s=STATIONS[de], e=STATIONS[a];
-  var pts=[];
-  for(var i=0;i<n;i++){
-    var t=(i+1)/(n+1);
-    pts.push({x:s.x+(e.x-s.x)*t, y:s.y+(e.y-s.y)*t});
+  var s = STATIONS[de], e = STATIONS[a];
+  var pts = [];
+  for(var i=0; i<n; i++){
+    var t = (i+1)/(n+1);
+    pts.push({x: s.x+(e.x-s.x)*t, y: s.y+(e.y-s.y)*t});
   }
   return pts;
 }
 
 function rendrePlateau(){
-  var h='';
-  var idxGlobal=0;
+  var circuit = document.getElementById('circuit');
+  if(!circuit) return;
 
-  // Fond du circuit
-  h+='<div style="position:absolute;top:0;left:0;width:700px;height:560px;background:linear-gradient(135deg,#fdfbf7 0%,#f5f0e8 100%);border-radius:16px;border:2px solid #ddd;overflow:hidden">';
+  var W=700, H=560;
+  var atv=STATIONS['ATV'], hyp=STATIONS['Hypothalamus'], na=STATIONS['NA'];
+  var hip=STATIONS['Hippocampe'], amy=STATIONS['Amygdale'], cor=STATIONS['Cortex PF'];
 
-  // Lignes de connexion entre stations (fond)
-  h+='<svg style="position:absolute;top:0;left:0;width:700px;height:560px" xmlns="http://www.w3.org/2000/svg">';
-  var connexions=[
-    ['ATV','Hypothalamus'],['Hypothalamus','NA'],
-    ['NA','Hippocampe'],['Hippocampe','Hypothalamus'],
-    ['Hypothalamus','Amygdale'],['Amygdale','Cortex PF']
-  ];
-  connexions.forEach(function(pair){
-    var s=STATIONS[pair[0]], e=STATIONS[pair[1]];
-    h+='<line x1="'+s.x+'" y1="'+s.y+'" x2="'+e.x+'" y2="'+e.y+'" stroke="rgba(26,26,46,0.1)" stroke-width="28" stroke-linecap="round"/>';
-    h+='<line x1="'+s.x+'" y1="'+s.y+'" x2="'+e.x+'" y2="'+e.y+'" stroke="rgba(26,26,46,0.05)" stroke-width="36" stroke-linecap="round"/>';
+  // ── SVG complet (fond + cerveau + circuit) ──
+  var svg = '<svg style="position:absolute;top:0;left:0;width:'+W+'px;height:'+H+'px" viewBox="0 0 '+W+' '+H+'" xmlns="http://www.w3.org/2000/svg">';
+
+  // Fond dégradé
+  svg += '<defs>';
+  svg += '<linearGradient id="bggrad" x1="0" y1="0" x2="1" y2="1">';
+  svg += '<stop offset="0%" stop-color="#fdfcf8"/>';
+  svg += '<stop offset="100%" stop-color="#ede8dc"/>';
+  svg += '</linearGradient>';
+  svg += '</defs>';
+  svg += '<rect width="'+W+'" height="'+H+'" fill="url(#bggrad)" rx="14"/>';
+
+  // Cerveau coupe sagittale (silhouette stylisée, très légère)
+  svg += '<g opacity="0.07" fill="#1a1a2e">';
+  svg += '<ellipse cx="390" cy="270" rx="270" ry="220"/>'; // corps
+  svg += '</g>';
+  svg += '<g opacity="0.05" fill="none" stroke="#1a1a2e" stroke-width="2.5">';
+  // Sillons corticaux
+  svg += '<path d="M 180 140 C 220 110 280 100 330 125 C 375 148 390 185 430 170 C 465 155 500 120 540 135"/>';
+  svg += '<path d="M 160 210 C 200 185 260 180 310 200 C 355 218 370 255 410 242 C 450 228 490 192 535 208"/>';
+  svg += '<path d="M 155 290 C 195 268 255 265 305 285 C 348 302 360 338 400 325 C 440 312 480 275 525 290"/>';
+  svg += '<path d="M 175 370 C 210 350 265 348 310 368 C 350 385 362 415 395 408"/>';
+  // Tronc cérébral
+  svg += '<path d="M 340 480 C 335 510 330 535 335 550 C 340 558 355 558 360 550 C 365 535 360 510 355 480 Z" fill="#1a1a2e" opacity="0.07"/>';
+  svg += '</g>';
+
+  // Bras du circuit (pistes larges)
+  var bras = [[atv,hyp],[hyp,na],[na,hip],[hip,hyp],[hyp,amy],[amy,cor]];
+  bras.forEach(function(b){
+    svg += '<line x1="'+b[0].x+'" y1="'+b[0].y+'" x2="'+b[1].x+'" y2="'+b[1].y+'" stroke="rgba(210,200,185,0.9)" stroke-width="44" stroke-linecap="round"/>';
+    svg += '<line x1="'+b[0].x+'" y1="'+b[0].y+'" x2="'+b[1].x+'" y2="'+b[1].y+'" stroke="rgba(190,180,165,0.3)" stroke-width="50" stroke-linecap="round"/>';
   });
+
   // Triangle Pont DA
-  var na=STATIONS['NA'], hip=STATIONS['Hippocampe'], cor=STATIONS['Cortex PF'];
-  h+='<polygon points="'+na.x+','+na.y+' '+hip.x+','+hip.y+' '+cor.x+','+cor.y+'" fill="none" stroke="rgba(142,68,173,0.3)" stroke-width="1.5" stroke-dasharray="6,5"/>';
-  h+='<text x="'+(na.x+30)+'" y="'+(na.y-20)+'" fill="#8e44ad" font-size="10" text-anchor="middle" font-family="Arial">Pont DA</text>';
-  h+='</svg>';
+  svg += '<polygon points="'+na.x+','+na.y+' '+hip.x+','+hip.y+' '+cor.x+','+cor.y+'" fill="rgba(142,68,173,0.07)" stroke="rgba(142,68,173,0.55)" stroke-width="1.8" stroke-dasharray="7,5"/>';
+  var pcx = Math.round((na.x+hip.x+cor.x)/3);
+  var pcy = Math.round((na.y+hip.y+cor.y)/3);
+  svg += '<text x="'+pcx+'" y="'+pcy+'" fill="#8e44ad" font-size="11" text-anchor="middle" font-family="Arial,sans-serif" font-weight="bold">Pont DA</text>';
 
-  // Cases de chaque segment
+  // Flèches de direction
+  function fleche(a, b){
+    var mx=(a.x+b.x)/2, my=(a.y+b.y)/2;
+    var ang=Math.atan2(b.y-a.y, b.x-a.x);
+    var d=11;
+    var x1=mx-Math.cos(ang-0.45)*d, y1=my-Math.sin(ang-0.45)*d;
+    var x2=mx+Math.cos(ang)*d*1.2, y2=my+Math.sin(ang)*d*1.2;
+    var x3=mx-Math.cos(ang+0.45)*d, y3=my-Math.sin(ang+0.45)*d;
+    svg += '<polygon points="'+Math.round(x1)+','+Math.round(y1)+' '+Math.round(x2)+','+Math.round(y2)+' '+Math.round(x3)+','+Math.round(y3)+'" fill="rgba(26,26,46,0.35)"/>';
+  }
+  fleche(atv,hyp); fleche(hyp,na); fleche(na,hip);
+  fleche(hip,hyp); fleche(hyp,amy); fleche(amy,cor);
+
+  svg += '</svg>';
+
+  // ── HTML des cases et stations ──
+  var divs = '';
+  var idxGlobal = 0;
+
   SEGS.forEach(function(seg){
-    var pts=getPositionsSegment(seg.de, seg.a, seg.seq.length);
+    var pts = getPositionsSegment(seg.de, seg.a, seg.seq.length);
     seg.seq.forEach(function(couleur, i){
-      var idx=idxGlobal;
-      var p=pts[i];
-      var col=CCOL[couleur]||'#bdc3c7';
-      var isDest=(idx===dest);
-      var pionsIci=[];
-      for(var pi=0;pi<joueurs.length;pi++){if(joueurs[pi].pos===idx)pionsIci.push(pi);}
-
-      h+='<div style="position:absolute;left:'+(p.x-18)+'px;top:'+(p.y-18)+'px;width:36px;height:36px;border-radius:8px;background:'+col+';border:'+(isDest?'3px solid #1a1a2e':'2px solid rgba(255,255,255,0.4)')+';display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:'+(isDest?8:5)+';transform:'+(isDest?'scale(1.2)':'scale(1)')+';box-shadow:'+(isDest?'0 3px 10px rgba(0,0,0,0.3)':'0 1px 4px rgba(0,0,0,0.15)')+';">';
-      h+='<div style="font-size:7px;opacity:0.7;color:#fff;font-family:Arial">'+(idx+1)+'</div>';
-      if(pionsIci.length){
-        h+='<div style="display:flex;gap:1px;flex-wrap:wrap;justify-content:center">';
-        pionsIci.forEach(function(pi){
-          h+='<div style="width:11px;height:11px;border-radius:50%;background:'+joueurs[pi].col+';border:1px solid rgba(255,255,255,0.6);font-size:6px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:bold">'+(pi+1)+'</div>';
-        });
-        h+='</div>';
+      var idx = idxGlobal;
+      var p = pts[i];
+      var col = CCOL[couleur] || '#bdc3c7';
+      var isDest = (idx === dest);
+      var pionsIci = [];
+      for(var pi=0; pi<joueurs.length; pi++){
+        if(joueurs[pi].pos === idx) pionsIci.push(pi);
       }
-      h+='</div>';
+
+      var shadow = isDest
+        ? '0 4px 16px rgba(0,0,0,0.4), 0 0 0 3px rgba(26,26,46,0.2)'
+        : '0 2px 6px rgba(0,0,0,0.18)';
+      var border = isDest ? '3px solid #1a1a2e' : '2px solid rgba(255,255,255,0.55)';
+      var scale  = isDest ? 'scale(1.28)' : 'scale(1)';
+      var zidx   = isDest ? 8 : 5;
+
+      divs += '<div style="position:absolute;left:'+Math.round(p.x-17)+'px;top:'+Math.round(p.y-17)+'px;width:34px;height:34px;border-radius:8px;background:'+col+';border:'+border+';display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:'+zidx+';transform:'+scale+';box-shadow:'+shadow+';transition:transform .18s">';
+      divs += '<div style="font-size:7px;color:rgba(255,255,255,0.85);font-family:Arial;font-weight:bold">'+(idx+1)+'</div>';
+
+      // Électrodes des joueurs
+      if(pionsIci.length){
+        divs += '<div style="display:flex;gap:2px;justify-content:center;margin-top:1px">';
+        pionsIci.forEach(function(pi){
+          var pcol = joueurs[pi].col;
+          // Électrode : corps rectangulaire + pointe fine
+          divs += '<div title="'+joueurs[pi].nom+'" style="display:flex;flex-direction:column;align-items:center;cursor:default">';
+          divs += '<div style="width:7px;height:11px;background:'+pcol+';border-radius:2px 2px 0 0;border:1px solid rgba(255,255,255,0.8);box-shadow:0 1px 4px rgba(0,0,0,0.35)"></div>';
+          divs += '<div style="width:2px;height:5px;background:'+pcol+';margin-top:0"></div>';
+          divs += '<div style="width:0;height:0;border-left:3px solid transparent;border-right:3px solid transparent;border-top:4px solid '+pcol+'"></div>';
+          divs += '</div>';
+        });
+        divs += '</div>';
+      }
+      divs += '</div>';
       idxGlobal++;
     });
   });
 
-  // Case arrivée (Cortex PF)
-  var cor=STATIONS['Cortex PF'];
-  var pionsArrivee=[];
-  for(var pi=0;pi<joueurs.length;pi++){if(joueurs[pi].pos===TOTAL-1)pionsArrivee.push(pi);}
-  h+='<div style="position:absolute;left:'+(cor.x-22)+'px;top:'+(cor.y+30)+'px;width:44px;height:20px;border-radius:6px;background:#1a1a2e;border:2px solid rgba(255,255,255,0.4);display:flex;align-items:center;justify-content:center;z-index:5">';
-  h+='<div style="font-size:7px;color:#fff;font-family:Arial">Fin</div>';
-  h+='</div>';
+  // Case ARRIVÉE
+  divs += '<div style="position:absolute;left:'+(cor.x-26)+'px;top:'+(cor.y+38)+'px;padding:3px 8px;border-radius:5px;background:rgba(26,26,46,0.85);font-size:8px;color:#fff;font-family:Arial;z-index:5;font-weight:bold;letter-spacing:.05em">ARRIVÉE</div>';
 
-  // Stations anatomiques
+  // Stations anatomiques — grandes, cliquables
   Object.keys(STATIONS).forEach(function(nom){
-    var st=STATIONS[nom];
-    h+='<div style="position:absolute;left:'+(st.x-29)+'px;top:'+(st.y-29)+'px;width:58px;height:58px;border-radius:50%;background:'+st.col+';border:3px solid rgba(255,255,255,0.5);display:flex;align-items:center;justify-content:center;z-index:10;box-shadow:0 2px 8px rgba(0,0,0,0.2)">';
-    h+='<div style="font-size:9px;font-weight:bold;color:#fff;text-align:center;line-height:1.2;font-family:Arial">'+st.label+'</div>';
-    h+='</div>';
+    var st = STATIONS[nom];
+    var isActive = (STATION_POPUP_NOM === nom);
+    var border2 = isActive ? '4px solid #1a1a2e' : '3px solid rgba(255,255,255,0.75)';
+    var shadow2 = isActive
+      ? '0 4px 18px rgba(0,0,0,0.35), 0 0 0 4px '+st.col+'55'
+      : '0 3px 12px rgba(0,0,0,0.22)';
+    divs += '<div onclick="afficherInfoStation(\''+nom+'\',event)" onmouseover="this.style.transform=\'scale(1.1)\'" onmouseout="this.style.transform=\'scale(1)\'" style="position:absolute;left:'+(st.x-34)+'px;top:'+(st.y-34)+'px;width:68px;height:68px;border-radius:50%;background:'+st.col+';border:'+border2+';display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:12;cursor:pointer;box-shadow:'+shadow2+';transition:transform .15s,box-shadow .15s">';
+    divs += '<div style="font-size:9px;font-weight:bold;color:#fff;text-align:center;line-height:1.2;font-family:Arial;padding:2px 4px">'+st.label+'</div>';
+    divs += '<div style="font-size:11px;color:rgba(255,255,255,0.7);line-height:1">ℹ</div>';
+    divs += '</div>';
   });
 
-  h+='</div>'; // fin fond circuit
+  // Popup info station
+  var popup = '<div id="station-popup" style="display:none;position:absolute;top:10px;left:10px;width:270px;background:#fff;border-radius:10px;padding:14px;box-shadow:0 6px 24px rgba(0,0,0,0.18);z-index:50;border:1px solid #ddd"></div>';
 
-  document.getElementById('circuit').innerHTML=h;
-}
-
-
-
-// ── PONT DA POINTS ───────────────────────
-function calculerPtsPont(co){
-  if(co<40) return 20;
-  if(co<=70) return 10;
-  return -20;
-}
-
-// ── ANALYSE FINALE ───────────────────────
-function synthese(j){
-  var ratio=j.totalCo>0?(j.totalDA/j.totalCo).toFixed(2):j.totalDA>0?'∞':'—';
-  var ptsPont=j.ptsPont;
-  var msg='';
-  if(j.totalDA>j.totalCo*1.5){
-    msg='Profil à dominante dopaminergique. Le circuit de la récompense a été fortement activé. Bonne capacité de régulation, élan motivationnel soutenu.';
-  } else if(j.totalCo>j.totalDA*1.5){
-    msg='Profil à dominante cortisolique. Le système de stress a été davantage sollicité que le circuit de la récompense. Des ressources de régulation sont à mobiliser.';
-  } else {
-    msg='Profil équilibré entre dopamine et cortisol. Le cerveau a navigué entre activation et régulation avec une certaine fluidité neurochimique.';
-  }
-  if(ptsPont>30) msg+=' Le Pont DA a été traversé en régulation active : accès préfrontal maintenu.';
-  else if(ptsPont<0) msg+=' Le Pont DA a subi plusieurs basculements forcés : le circuit limbique a pris le dessus à plusieurs reprises.';
-  else msg+=' Le Pont DA a été traversé en régulation fragile : des ressources additionnelles renforceraient la stabilité.';
-  return {ratio:ratio, msg:msg};
-}
-
-function ouvrirAnalyse(){
-  var h='';
-  var maxDA=1, maxCo=1;
-  joueurs.forEach(function(j){if(j.totalDA>maxDA)maxDA=j.totalDA; if(j.totalCo>maxCo)maxCo=j.totalCo;});
-  
-  joueurs.forEach(function(j,i){
-    var syn=synthese(j);
-    var pctDA=Math.round(j.totalDA/maxDA*100);
-    var pctCo=Math.round(j.totalCo/maxCo*100);
-    var pontCol=j.ptsPont>0?'#1e8449':j.ptsPont<0?'#c0392b':'#888';
-    h+='<div class="joueur-analyse" style="border-left-color:'+j.col+'">';
-    h+='<div class="ja-header"><div class="ja-pion" style="background:'+j.col+'"></div><div class="ja-nom">'+j.nom+'</div></div>';
-    h+='<div class="ja-scores">';
-    h+='<div class="ja-metric"><div class="ja-metric-val" style="color:#2471a3">'+j.totalDA+'</div><div class="ja-metric-lbl">Total DA</div></div>';
-    h+='<div class="ja-metric"><div class="ja-metric-val" style="color:#c0392b">'+j.totalCo+'</div><div class="ja-metric-lbl">Total Co</div></div>';
-    h+='<div class="ja-metric"><div class="ja-metric-val" style="color:'+pontCol+'">'+j.ptsPont+'</div><div class="ja-metric-lbl">Pts Pont DA</div><div class="pont-detail">'+j.passagesPont+' passage(s)</div></div>';
-    h+='<div class="ja-metric"><div class="ja-metric-val" style="color:#1a1a2e">'+j.score+'</div><div class="ja-metric-lbl">Score total</div></div>';
-    h+='</div>';
-    h+='<div class="ja-barre"><div class="ja-barre-lbl"><span>Densité DA</span><span>'+j.totalDA+'</span></div><div class="ja-barre-track"><div class="ja-barre-fill" style="width:'+pctDA+'%;background:#2471a3"></div></div></div>';
-    h+='<div class="ja-barre"><div class="ja-barre-lbl"><span>Densité Co</span><span>'+j.totalCo+'</span></div><div class="ja-barre-track"><div class="ja-barre-fill" style="width:'+pctCo+'%;background:#e74c3c"></div></div></div>';
-    h+='<div class="ja-synthese" style="background:'+(j.totalDA>j.totalCo?'#eaf4fb':'#fdf2f8')+';border-left-color:'+j.col+'">'+syn.msg+'</div>';
-    h+='</div>';
-  });
-  document.getElementById('analyse-contenu').innerHTML=h;
-  document.getElementById('analyse-overlay').classList.add('visible');
-}
-
-function fermerAnalyse(){
-  document.getElementById('analyse-overlay').classList.remove('visible');
-}
-
-// ── ACCUEIL ──────────────────────────────
-var nbJoueursChoisi=0;
-function selNb(n){
-  nbJoueursChoisi=n;
-  document.querySelectorAll('.nb-btn').forEach(function(b){b.classList.remove('sel');});
-  document.querySelectorAll('.nb-btn').forEach(function(b){if(parseInt(b.textContent)===n)b.classList.add('sel');});
-  var btn=document.getElementById('btn-demarrer');
-  btn.classList.add('actif');
-}
-function demarrer(){
-  if(!nbJoueursChoisi) return;
-  N=nbJoueursChoisi;
-  PC=PC_ALL.slice(0,N);
-  PN=PN_ALL.slice(0,N);
-  init();
-  rendrePlateau();
-  rendreScores();
-  document.getElementById('accueil').style.display='none';
-}
-
-// ── OVERLAY CARTE ZOOMÉE ─────────────────
-function ouvrirOverlay(html){
-  document.getElementById('carte-zoom-content').innerHTML=html;
-  document.getElementById('carte-overlay').classList.add('visible');
-}
-function fermerOverlay(e){
-  if(e && e.target!==document.getElementById('carte-overlay')) return;
-  document.getElementById('carte-overlay').classList.remove('visible');
+  circuit.innerHTML = svg + divs + popup;
 }
 
 // ═══════════════════════════════════════════
