@@ -414,6 +414,32 @@ var jA=0,tour=1,dest=-1,carte=null,decks={};
 var derniereCaseGrise={}; // index joueur -> bool (dernière case était grise)
 var carteEnnuiEnCours=null;
 
+
+// ── ACCUEIL ──────────────────────────────
+var nbJoueursChoisi = 0;
+
+function selNb(n){
+  nbJoueursChoisi = n;
+  document.querySelectorAll('.nb-btn').forEach(function(b){
+    b.classList.remove('sel');
+    if(parseInt(b.textContent) === n) b.classList.add('sel');
+  });
+  var btn = document.getElementById('btn-demarrer');
+  if(btn){ btn.classList.add('actif'); }
+}
+
+function demarrer(){
+  if(!nbJoueursChoisi) return;
+  N = nbJoueursChoisi;
+  PC = PC_ALL.slice(0, N);
+  PN = PN_ALL.slice(0, N);
+  init();
+  rendrePlateau();
+  rendreScores();
+  var acc = document.getElementById('accueil');
+  if(acc) acc.style.display = 'none';
+}
+
 function init(){
   joueurs=[];
   for(var i=0;i<N;i++) joueurs.push({nom:PN[i],col:PC[i],score:0,pos:0,totalDA:0,totalCo:0,ptsPont:0,passagesPont:0,nbCartes:0});
