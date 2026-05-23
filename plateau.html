@@ -84,8 +84,8 @@ button:disabled{opacity:0.3;cursor:not-allowed}
 .nb-joueurs{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:28px}
 .nb-btn{width:52px;height:52px;border-radius:50%;border:2px solid #ddd;background:#fff;font-size:18px;font-weight:bold;cursor:pointer;color:#1a1a2e;transition:all .2s;font-family:Georgia,serif}
 .nb-btn:hover,.nb-btn.sel{background:#1a1a2e;color:#f5f0e8;border-color:#1a1a2e}
-#btn-demarrer{padding:12px 32px;background:#c0392b;color:#fff;border:none;border-radius:8px;font-size:15px;font-weight:bold;cursor:pointer;font-family:Georgia,serif;opacity:0.4;cursor:not-allowed}
-#btn-demarrer.actif{opacity:1;cursor:pointer}
+#btn-demarrer{padding:12px 32px;background:#c0392b;color:#fff;border:none;border-radius:8px;font-size:15px;font-weight:bold;cursor:pointer;font-family:Georgia,serif;opacity:0.4}
+#btn-demarrer.actif{opacity:1;cursor:pointer;box-shadow:0 3px 10px rgba(192,57,43,0.4)}
 #btn-demarrer.actif:hover{background:#a93226}
 
 /* OVERLAY CARTE ZOOMÉE */
@@ -420,24 +420,31 @@ var nbJoueursChoisi = 0;
 
 function selNb(n){
   nbJoueursChoisi = n;
-  document.querySelectorAll('.nb-btn').forEach(function(b){
-    b.classList.remove('sel');
-    if(parseInt(b.textContent) === n) b.classList.add('sel');
-  });
+  var btns = document.querySelectorAll('.nb-btn');
+  for(var i=0; i<btns.length; i++){
+    btns[i].classList.remove('sel');
+    if(parseInt(btns[i].textContent) === n) btns[i].classList.add('sel');
+  }
   var btn = document.getElementById('btn-demarrer');
-  if(btn){ btn.classList.add('actif'); }
+  if(btn){
+    btn.classList.add('actif');
+    btn.style.opacity = '1';
+    btn.style.cursor = 'pointer';
+  }
 }
 
 function demarrer(){
-  if(!nbJoueursChoisi) return;
+  if(!nbJoueursChoisi){
+    alert('Choisis le nombre de joueurs avant de lancer la partie.');
+    return;
+  }
   N = nbJoueursChoisi;
   PC = PC_ALL.slice(0, N);
   PN = PN_ALL.slice(0, N);
   init();
   rendrePlateau();
   rendreScores();
-  var acc = document.getElementById('accueil');
-  if(acc) acc.style.display = 'none';
+  document.getElementById('accueil').style.display = 'none';
 }
 
 function init(){
