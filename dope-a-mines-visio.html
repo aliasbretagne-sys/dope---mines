@@ -620,7 +620,31 @@ function piocher(){
   var html=buildCarte(carte);
   document.getElementById('card-content').innerHTML=html+'<div style="margin-top:8px"><button onclick="ouvrirCarte(buildCarte(carte))" style="font-size:11px;padding:4px 10px;border-radius:4px;border:1px solid #ddd;background:#f5f0e8;cursor:pointer">🔍 Voir en grand</button></div>';
   ouvrirCarte(html);
+  // Déclenchement automatique des stations
+  declencherStation(dest);
   rendrePlateau(); rendreScores();
+}
+
+function declencherStation(pos){
+  setTimeout(function(){
+    if(pos===9){
+      var k=jA+'_hyp';
+      hypPassages[k]=(hypPassages[k]||0)+1;
+      if(hypPassages[k]===1) stationHypothalamus1();
+    } else if(pos===19){
+      stationNA();
+    } else if(pos===29){
+      stationHippocampe();
+    } else if(pos===39){
+      var k=jA+'_hyp';
+      hypPassages[k]=(hypPassages[k]||0)+1;
+      stationHypothalamus2();
+    } else if(pos===49){
+      stationAmygdale();
+    } else if(pos===TOTAL-1){
+      stationCortexPF();
+    }
+  }, 300);
 }
 
 function ptsPont(co){ return co<40?20:co<=70?10:-20; }
@@ -773,20 +797,33 @@ var hypPassages={};
 
 function toggleStation(nom){
   if(POPUP_ST===nom){ fermerStation(); return; }
-  // Mécaniques spéciales par station
-  if(nom==='NA') { stationNA(); return; }
-  if(nom==='Hippocampe') { stationHippocampe(); return; }
-  if(nom==='Amygdale') { stationAmygdale(); return; }
-  if(nom==='Cortex PF') { stationCortexPF(); return; }
+  if(nom==='NA'){ stationNA(); return; }
+  if(nom==='Hippocampe'){ stationHippocampe(); return; }
+  if(nom==='Amygdale'){ stationAmygdale(); return; }
+  if(nom==='Cortex PF'){ stationCortexPF(); return; }
   if(nom==='Hypothalamus'){
     var k=jA+'_hyp';
-    hypPassages[k]=(hypPassages[k]||0)+1;
-    if(hypPassages[k]===1) stationHypothalamus1();
-    else stationHypothalamus2();
+    var p=hypPassages[k]||0;
+    if(p<=1) stationHypothalamus1(); else stationHypothalamus2();
     return;
   }
-  // ATV : description simple
-  POPUP_ST=nom; rendrePlateau();
+  stationATV();
+}
+
+function stationATV(){
+  var j=joueurs[jA];
+  var popup=document.getElementById('st-popup');
+  if(!popup) return;
+  popup.style.display='block';
+  popup.innerHTML=
+    '<div class="st-popup-titre"><div class="st-popup-dot" style="background:#2471a3"></div>'+
+    '<strong class="st-popup-nom">Aire Tegmentale Ventrale</strong>'+
+    '<button class="st-popup-close" onclick="fermerStation()">x</button></div>'+
+    '<div class="st-popup-desc">Point de depart du circuit dopaminergique. Source de la dopamine et de la motivation.</div>'+
+    '<div class="st-mecanique" style="background:#d6eaf8;border-left:3px solid #2471a3">'+
+    '<div class="st-mecanique-titre">ETAT DE DEPART</div>'+
+    '<div class="st-mecanique-val" style="color:#2471a3">DA='+j.totalDA+' Co='+j.totalCo+'</div></div>';
+  POPUP_ST='ATV';
 }
 
 function getPos(de,a,n){
