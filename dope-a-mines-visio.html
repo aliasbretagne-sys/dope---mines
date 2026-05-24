@@ -590,6 +590,9 @@ function piocher(){
   document.getElementById('btn-draw').disabled=true;
   document.getElementById('btn-next').disabled=false;
 
+  // Déclencher les stations traversées dans TOUS les cas
+  declencherStations(posAvant, dest);
+
   if(cc.c==='FIN'){
     document.getElementById('card-content').innerHTML='<div style="text-align:center;padding:16px"><div style="font-size:28px">🧠</div><div style="font-size:16px;font-weight:bold;margin-top:8px;color:#1a1a2e">Cortex PF atteint !</div><button onclick="ouvrirAnalyse()" style="margin-top:10px;padding:8px 18px;background:#1a1a2e;color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:12px">📊 Voir l\'analyse</button></div>';
     rendrePlateau(); rendreScores(); return;
@@ -626,7 +629,6 @@ function piocher(){
   var html=buildCarte(carte);
   document.getElementById('card-content').innerHTML=html+'<div style="margin-top:8px"><button onclick="ouvrirCarte(buildCarte(carte))" style="font-size:11px;padding:4px 10px;border-radius:4px;border:1px solid #ddd;background:#f5f0e8;cursor:pointer">🔍 Voir en grand</button></div>';
   ouvrirCarte(html);
-  declencherStations(posAvant, dest);
   rendrePlateau(); rendreScores();
 }
 
