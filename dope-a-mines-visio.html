@@ -643,6 +643,217 @@ function rendrePlateau(){
   c.innerHTML='<div style="position:absolute;top:0;left:0;width:700px;height:560px;border-radius:14px;overflow:hidden;border:2px solid #d4c9b8">'+svg+divs+'</div>';
 }
 
+
+// ═══ ROUE CASINEURONALE ════════════════════
+var RCASES = [
+  {n:'Sourire',       q:'GAIN STABLE',    da:20,  co:0,   c:'#27ae60'},
+  {n:'Ecouter',       q:'GAIN STABLE',    da:20,  co:10,  c:'#27ae60'},
+  {n:'Surprendre',    q:'GAIN STABLE',    da:30,  co:10,  c:'#27ae60'},
+  {n:'Bouger',        q:'GAIN STABLE',    da:20,  co:0,   c:'#27ae60'},
+  {n:'Creer',         q:'GAIN STABLE',    da:30,  co:10,  c:'#27ae60'},
+  {n:'Transmettre',   q:'GAIN STABLE',    da:20,  co:-10, c:'#27ae60'},
+  {n:'Se discipliner',q:'GAIN STABLE',    da:10,  co:-10, c:'#27ae60'},
+  {n:'Se nourrir',    q:'GAIN STABLE',    da:10,  co:0,   c:'#27ae60'},
+  {n:'Surprise',      q:'GAIN STABLE',    da:20,  co:-20, c:'#27ae60'},
+  {n:'Parier',        q:'FLASH / RISQUE', da:60,  co:30,  c:'#e74c3c'},
+  {n:'Dominer',       q:'FLASH / RISQUE', da:60,  co:30,  c:'#e74c3c'},
+  {n:'Scroller',      q:'FLASH / RISQUE', da:40,  co:20,  c:'#e74c3c'},
+  {n:'Acheter',       q:'FLASH / RISQUE', da:40,  co:20,  c:'#e74c3c'},
+  {n:'Etourdir',      q:'FLASH / RISQUE', da:40,  co:40,  c:'#e74c3c'},
+  {n:'Grignoter',     q:'FLASH / RISQUE', da:20,  co:20,  c:'#e74c3c'},
+  {n:'Zapper',        q:'FLASH / RISQUE', da:40,  co:40,  c:'#e74c3c'},
+  {n:'Verifier',      q:'FLASH / RISQUE', da:20,  co:20,  c:'#e74c3c'},
+  {n:"S'exciter",     q:'FLASH / RISQUE', da:20,  co:40,  c:'#e74c3c'},
+  {n:"S'immiscer",    q:'VIGILANCE',      da:-10, co:40,  c:'#8e44ad'},
+  {n:'Jugement Subi', q:'VIGILANCE',      da:-20, co:50,  c:'#8e44ad'},
+  {n:'Urgence',       q:'VIGILANCE',      da:0,   co:40,  c:'#8e44ad'},
+  {n:'Conflit',       q:'VIGILANCE',      da:-10, co:50,  c:'#8e44ad'},
+  {n:'Incertitude',   q:'VIGILANCE',      da:0,   co:30,  c:'#8e44ad'},
+  {n:'Enchaine',      q:'VIGILANCE',      da:20,  co:40,  c:'#8e44ad'},
+  {n:'Comparer',      q:'VIGILANCE',      da:-20, co:60,  c:'#8e44ad'},
+  {n:'Se perdre',     q:'VIGILANCE',      da:0,   co:20,  c:'#8e44ad'},
+  {n:'Subir',         q:'VIGILANCE',      da:-10, co:80,  c:'#8e44ad'},
+  {n:'Apprivoiser',   q:'CONSTRUCTION',   da:20,  co:0,   c:'#2471a3'},
+  {n:'Apprendre',     q:'CONSTRUCTION',   da:20,  co:10,  c:'#2471a3'},
+  {n:'Aider',         q:'CONSTRUCTION',   da:30,  co:0,   c:'#2471a3'},
+  {n:'Realiser',      q:'CONSTRUCTION',   da:10,  co:0,   c:'#2471a3'},
+  {n:'Ranger',        q:'CONSTRUCTION',   da:10,  co:-10, c:'#2471a3'},
+  {n:'Pauser',        q:'CONSTRUCTION',   da:20,  co:-20, c:'#2471a3'},
+  {n:'Resoudre',      q:'CONSTRUCTION',   da:20,  co:0,   c:'#2471a3'},
+  {n:'Transmettre',   q:'CONSTRUCTION',   da:30,  co:-10, c:'#2471a3'},
+  {n:'Partager',      q:'CONSTRUCTION',   da:20,  co:0,   c:'#2471a3'},
+];
+
+var RQCOLS = {
+  'GAIN STABLE':    {bg:'#d5f5e3',txt:'#1e8449'},
+  'FLASH / RISQUE': {bg:'#fadbd8',txt:'#c0392b'},
+  'VIGILANCE':      {bg:'#e8daef',txt:'#6c3483'},
+  'CONSTRUCTION':   {bg:'#d6eaf8',txt:'#1a5276'},
+};
+
+var rCV=null, rCX=null, rAngle=0, rSpinning=false;
+var rCaseIdx=-1, rCaseActuelle=null;
+var rJoueurIdx=0, rCasesJoueurs=[];
+
+function rDessiner(angle){
+  if(!rCX) return;
+  var W=360, CX=W/2, CY=W/2;
+  var RE=165, RM=110, RI=62, RC=32;
+  var N=36, step=Math.PI*2/N;
+  rCX.clearRect(0,0,W,W);
+  rCX.fillStyle='#f5f0e8';
+  rCX.beginPath(); rCX.arc(CX,CY,RE+8,0,Math.PI*2); rCX.fill();
+  for(var i=0;i<N;i++){
+    var c=RCASES[i];
+    var a1=angle+i*step-Math.PI/2;
+    var a2=a1+step;
+    var aM=a1+step/2;
+    var qc=RQCOLS[c.q];
+    var sel=(i===rCaseIdx);
+    rCX.beginPath();
+    rCX.moveTo(CX+RM*Math.cos(a1),CY+RM*Math.sin(a1));
+    rCX.arc(CX,CY,RE,a1,a2);
+    rCX.arc(CX,CY,RM,a2,a1,true);
+    rCX.closePath();
+    rCX.fillStyle=sel?'#fff5cc':qc.bg; rCX.fill();
+    rCX.strokeStyle='rgba(255,255,255,0.5)'; rCX.lineWidth=0.8; rCX.stroke();
+    rCX.save();
+    rCX.translate(CX+((RM+RE)/2)*Math.cos(aM),CY+((RM+RE)/2)*Math.sin(aM));
+    rCX.rotate(aM+Math.PI/2);
+    rCX.font='bold 8px Arial'; rCX.fillStyle=qc.txt; rCX.textAlign='center';
+    rCX.fillText((c.co>0?'+':'')+c.co,0,3);
+    rCX.restore();
+    rCX.beginPath();
+    rCX.moveTo(CX+RI*Math.cos(a1),CY+RI*Math.sin(a1));
+    rCX.arc(CX,CY,RM,a1,a2);
+    rCX.arc(CX,CY,RI,a2,a1,true);
+    rCX.closePath();
+    rCX.fillStyle=sel?c.c+'44':'rgba(255,255,255,0.75)'; rCX.fill();
+    rCX.strokeStyle='rgba(200,190,175,0.4)'; rCX.lineWidth=0.6; rCX.stroke();
+    rCX.save();
+    rCX.translate(CX+((RI+RM)/2)*Math.cos(aM),CY+((RI+RM)/2)*Math.sin(aM));
+    rCX.rotate(aM+Math.PI/2);
+    var sn=c.n.length>8?c.n.substring(0,7)+'.':c.n;
+    rCX.font='bold 6.5px Arial'; rCX.fillStyle='#1a1a2e'; rCX.textAlign='center';
+    rCX.fillText(sn,0,-4);
+    rCX.font='7px Arial'; rCX.fillStyle='#2471a3';
+    rCX.fillText((c.da>0?'+':'')+c.da,0,5);
+    rCX.restore();
+  }
+  [0,9,18,27].forEach(function(q){
+    var a=angle+q*step-Math.PI/2;
+    rCX.beginPath();
+    rCX.moveTo(CX+RI*Math.cos(a),CY+RI*Math.sin(a));
+    rCX.lineTo(CX+RE*Math.cos(a),CY+RE*Math.sin(a));
+    rCX.strokeStyle='rgba(26,26,46,0.35)'; rCX.lineWidth=2; rCX.stroke();
+  });
+  [{l:'GAIN STABLE',s:0,c:'#1e8449'},{l:'FLASH/RISQUE',s:9,c:'#c0392b'},{l:'VIGILANCE',s:18,c:'#6c3483'},{l:'CONSTRUCTION',s:27,c:'#1a5276'}].forEach(function(q){
+    var aC=angle+(q.s+4.5)*step-Math.PI/2;
+    var rL=RI-16;
+    rCX.save();
+    rCX.translate(CX+rL*Math.cos(aC),CY+rL*Math.sin(aC));
+    rCX.rotate(aC+Math.PI/2);
+    rCX.font='bold 6px Arial'; rCX.fillStyle=q.c; rCX.textAlign='center';
+    rCX.fillText(q.l,0,0);
+    rCX.restore();
+  });
+  rCX.beginPath(); rCX.arc(CX,CY,RC,0,Math.PI*2);
+  rCX.fillStyle='#1a1a2e'; rCX.fill();
+  rCX.strokeStyle='rgba(255,255,255,0.15)'; rCX.lineWidth=2; rCX.stroke();
+  rCX.font='bold 7px Georgia'; rCX.fillStyle='#f5f0e8';
+  rCX.textAlign='center'; rCX.textBaseline='middle';
+  rCX.fillText('Mon cerveau',CX,CY-6);
+  rCX.font='6px Arial'; rCX.fillStyle='rgba(255,255,255,0.55)';
+  rCX.fillText('Ici & Maintenant',CX,CY+5);
+  rCX.beginPath();
+  rCX.moveTo(CX,CY-RE-4);
+  rCX.lineTo(CX-7,CY-RE+9);
+  rCX.lineTo(CX+7,CY-RE+9);
+  rCX.closePath();
+  rCX.fillStyle='#e74c3c'; rCX.fill();
+}
+
+function roueSpin(){
+  if(rSpinning) return;
+  rSpinning=true; rCaseIdx=-1; rCaseActuelle=null;
+  document.getElementById('rbtn-ok').disabled=true;
+  document.getElementById('rbtn-spin').disabled=true;
+  document.getElementById('roue-cnom').style.color='rgba(255,255,255,0.4)';
+  document.getElementById('roue-cnom').textContent='...';
+  document.getElementById('roue-cquad').textContent='';
+  document.getElementById('roue-cvals').innerHTML='';
+  var N=36, step=Math.PI*2/N;
+  var tours=5+Math.random()*5;
+  var cible=rAngle+Math.PI*2*tours+Math.random()*Math.PI*2;
+  var startA=rAngle, diff=cible-startA;
+  var start=null, dur=3500+Math.random()*1500;
+  function frame(ts){
+    if(!start) start=ts;
+    var prog=Math.min((ts-start)/dur,1);
+    var ease=1-Math.pow(1-prog,3);
+    rAngle=startA+diff*ease;
+    rDessiner(rAngle);
+    if(prog<1){ requestAnimationFrame(frame); return; }
+    rAngle=cible; rSpinning=false;
+    var norm=((rAngle%(Math.PI*2))+(Math.PI*2))%(Math.PI*2);
+    var ptr=(Math.PI*2-norm)%(Math.PI*2);
+    rCaseIdx=Math.floor(ptr/step)%N;
+    rCaseActuelle=RCASES[rCaseIdx];
+    rDessiner(rAngle);
+    var qc=RQCOLS[rCaseActuelle.q];
+    document.getElementById('roue-cnom').textContent=rCaseActuelle.n;
+    document.getElementById('roue-cnom').style.color='#f5f0e8';
+    document.getElementById('roue-cquad').innerHTML=
+      '<span style="background:'+qc.bg+';color:'+qc.txt+';padding:2px 10px;border-radius:20px;font-size:11px;font-family:Arial;font-weight:bold">'+rCaseActuelle.q+'</span>';
+    document.getElementById('roue-cvals').innerHTML=
+      '<span style="background:#d6eaf8;color:#1a5276;padding:3px 12px;border-radius:20px;font-size:13px;font-weight:bold;font-family:Arial">DA '+(rCaseActuelle.da>0?'+':'')+rCaseActuelle.da+'</span>'+
+      '<span style="background:#fadbd8;color:#c0392b;padding:3px 12px;border-radius:20px;font-size:13px;font-weight:bold;font-family:Arial">Co '+(rCaseActuelle.co>0?'+':'')+rCaseActuelle.co+'</span>';
+    document.getElementById('rbtn-ok').disabled=false;
+    document.getElementById('rbtn-spin').disabled=false;
+  }
+  requestAnimationFrame(frame);
+}
+
+function roueValider(){
+  if(!rCaseActuelle) return;
+  var j=joueurs[rJoueurIdx];
+  j.totalDA+=(rCaseActuelle.da||0);
+  j.totalCo+=(rCaseActuelle.co||0);
+  rCasesJoueurs[rJoueurIdx]=rCaseActuelle;
+  rJoueurIdx++;
+  if(rJoueurIdx<N){
+    rCaseActuelle=null; rCaseIdx=-1;
+    document.getElementById('roue-jnom').textContent=joueurs[rJoueurIdx].nom+' — Lance ta roue !';
+    document.getElementById('rbtn-ok').disabled=true;
+    document.getElementById('rbtn-spin').disabled=false;
+    document.getElementById('roue-cnom').style.color='rgba(255,255,255,0.4)';
+    document.getElementById('roue-cnom').textContent='Lance la roue pour decouvrir ton etat de depart';
+    document.getElementById('roue-cquad').textContent='';
+    document.getElementById('roue-cvals').innerHTML='';
+    rDessiner(0); rAngle=0;
+  } else {
+    document.getElementById('roue-overlay').classList.remove('on');
+    rendreScores();
+    rendrePlateau();
+  }
+}
+
+function ouvrirRoue(){
+  rJoueurIdx=0; rCasesJoueurs=[];
+  rCaseActuelle=null; rCaseIdx=-1; rAngle=0;
+  rCV=document.getElementById('roue-cv');
+  rCX=rCV.getContext('2d');
+  document.getElementById('roue-jnom').textContent=joueurs[0].nom+' — Lance ta roue !';
+  document.getElementById('rbtn-ok').disabled=true;
+  document.getElementById('rbtn-spin').disabled=false;
+  document.getElementById('roue-cnom').style.color='rgba(255,255,255,0.4)';
+  document.getElementById('roue-cnom').textContent='Lance la roue pour decouvrir ton etat de depart';
+  document.getElementById('roue-cquad').textContent='';
+  document.getElementById('roue-cvals').innerHTML='';
+  document.getElementById('roue-overlay').classList.add('on');
+  rDessiner(0);
+}
+
 // ═══ ACCUEIL ═══════════════════════════════
 var NB=0;
 
