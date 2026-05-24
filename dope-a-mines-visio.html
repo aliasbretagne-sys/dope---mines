@@ -73,20 +73,22 @@ html,body{height:100%;font-family:Arial,sans-serif;background:#f5f0e8}
 /* ROUE CASINEURONALE */
 #roue-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:#1a1a2e;display:none;align-items:center;justify-content:center;z-index:8000;flex-direction:column}
 #roue-overlay.on{display:flex}
-#roue-container{display:flex;flex-direction:column;align-items:center;gap:20px;padding:20px}
-#roue-titre{font-family:Georgia,serif;font-size:22px;color:#f5f0e8;text-align:center;margin-bottom:4px}
-#roue-sous{font-family:Arial,sans-serif;font-size:13px;color:rgba(255,255,255,0.5);text-align:center;margin-bottom:8px}
-#roue-joueur-nom{font-family:Georgia,serif;font-size:18px;color:#f39c12;text-align:center;font-weight:bold}
-#roue-canvas{display:block;cursor:pointer;filter:drop-shadow(0 4px 20px rgba(0,0,0,0.5))}
-#roue-resultat{background:rgba(255,255,255,0.08);border-radius:12px;padding:16px 28px;text-align:center;min-height:80px;display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:320px}
-#roue-case-nom{font-family:Georgia,serif;font-size:20px;color:#f5f0e8;font-weight:bold;margin-bottom:6px}
-#roue-case-quad{font-family:Arial,sans-serif;font-size:11px;text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px}
-#roue-vals{display:flex;gap:12px;justify-content:center}
-#roue-btn{padding:12px 32px;background:#c0392b;color:#fff;border:none;border-radius:8px;font-family:Georgia,serif;font-size:15px;font-weight:bold;cursor:pointer;margin-top:4px}
-#roue-btn:hover{background:#a93226}
-#roue-btn-spin{padding:12px 32px;background:#f39c12;color:#1a1a2e;border:none;border-radius:8px;font-family:Georgia,serif;font-size:15px;font-weight:bold;cursor:pointer}
-#roue-btn-spin:hover{background:#d68910}
-#roue-btn-spin:disabled{opacity:0.4;cursor:not-allowed}
+#roue-wrap{display:flex;flex-direction:column;align-items:center;gap:14px;padding:20px}
+#roue-titre{font-family:Georgia,serif;font-size:20px;color:#f5f0e8;text-align:center}
+#roue-sous{font-family:Arial,sans-serif;font-size:12px;color:rgba(255,255,255,0.5);text-align:center}
+#roue-jnom{font-family:Georgia,serif;font-size:17px;color:#f39c12;text-align:center;font-weight:bold}
+#roue-result{background:rgba(255,255,255,0.08);border-radius:10px;padding:14px 24px;text-align:center;min-height:70px;display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:300px}
+#roue-cnom{font-family:Georgia,serif;font-size:18px;color:rgba(255,255,255,0.4);margin-bottom:5px}
+#roue-cquad{margin-bottom:7px}
+#roue-cvals{display:flex;gap:10px;justify-content:center}
+#roue-btns{display:flex;gap:10px}
+.rbtn{padding:10px 26px;border:none;border-radius:7px;font-family:Georgia,serif;font-size:14px;font-weight:bold;cursor:pointer}
+.rbtn-spin{background:#f39c12;color:#1a1a2e}
+.rbtn-spin:hover{background:#d68910}
+.rbtn-spin:disabled{opacity:0.4;cursor:not-allowed}
+.rbtn-ok{background:#c0392b;color:#fff}
+.rbtn-ok:hover{background:#a93226}
+.rbtn-ok:disabled{opacity:0.4;cursor:not-allowed}
 </style>
 </head>
 <body>
@@ -141,23 +143,22 @@ html,body{height:100%;font-family:Arial,sans-serif;background:#f5f0e8}
 
 <!-- ROUE CASINEURONALE -->
 <div id="roue-overlay">
-  <div id="roue-container">
+  <div id="roue-wrap">
     <div id="roue-titre">Roue Casineuronale</div>
     <div id="roue-sous">Mon cerveau · Ici &amp; Maintenant</div>
-    <div id="roue-joueur-nom"></div>
-    <canvas id="roue-canvas" width="380" height="380"></canvas>
-    <div id="roue-resultat">
-      <div id="roue-case-nom" style="color:rgba(255,255,255,0.4);font-size:14px">Lance la roue pour découvrir ton état de départ</div>
-      <div id="roue-case-quad"></div>
-      <div id="roue-vals"></div>
+    <div id="roue-jnom"></div>
+    <canvas id="roue-cv" width="360" height="360"></canvas>
+    <div id="roue-result">
+      <div id="roue-cnom">Lance la roue pour découvrir ton état de départ</div>
+      <div id="roue-cquad"></div>
+      <div id="roue-cvals"></div>
     </div>
-    <div style="display:flex;gap:12px;margin-top:4px">
-      <button id="roue-btn-spin" onclick="lancerRoue()">🎰 Tourner la roue</button>
-      <button id="roue-btn" onclick="validerRoue()" disabled>Valider →</button>
+    <div id="roue-btns">
+      <button class="rbtn rbtn-spin" id="rbtn-spin" onclick="roueSpin()">🎰 Tourner</button>
+      <button class="rbtn rbtn-ok" id="rbtn-ok" onclick="roueValider()" disabled>Valider →</button>
     </div>
   </div>
 </div>
-
 <!-- OVERLAY CARTE -->
 <div id="overlay-carte">
   <div id="overlay-inner">
@@ -289,6 +290,19 @@ C:[
   {t:'Médiation de Conflit',s:'Vider l\'abcès avec ton entourage.',c:'Baisse de l\'alerte de menace sociale.',da:40,co:20,pts:20,p:'Un conflit non dit continue à coûter de l\'énergie.'},
   {t:'Le Choix des Valeurs',s:'Redéfinir ce qui est vraiment important.',c:'Réalignement vers le sens.',da:40,co:20,pts:20,p:'Quand le sens revient, le stress change de nature.'},
 ],
+
+C:[
+  {t:'Bilan de Santé',s:'Ton corps envoie des signaux. Tu t\'arrêtes enfin.',c:'Le cerveau reçoit la permission de souffler.',da:30,co:20,pts:20,p:'S\'arrêter n\'est pas renoncer. C\'est le premier acte de soin.'},
+  {t:'Thérapie Brève',s:'Comprendre pourquoi tu cherches la validation par le stress.',c:'Désensibilisation des traces mnésiques.',da:40,co:20,pts:20,p:'Comprendre n\'est pas excuser. C\'est se libérer.'},
+  {t:'Cercle de Parole',s:'Partager ton vécu avec tes pairs.',c:'Libération d\'ocytocine. Le Co chute.',da:40,co:20,pts:20,p:'Être entendu par ses pairs change neurobiologiquement le cerveau.'},
+  {t:'Décodage Émotionnel',s:'Mettre des mots sur l\'émotion brute.',c:'Le langage calme l\'amygdale.',da:40,co:20,pts:20,p:'Nommer une émotion, c\'est reprendre 30% du contrôle.'},
+  {t:'Thérapie Cognitive',s:'Identifier tes biais de pensée.',c:'Restructuration cognitive.',da:40,co:20,pts:20,p:'Ce n\'est pas la situation qui stresse. C\'est ce qu\'on en pense.'},
+  {t:'Consultation Addiction',s:'Admettre que le comportement a pris le dessus.',c:'Le premier pas est le plus difficile.',da:40,co:10,pts:20,p:'Demander de l\'aide n\'est pas perdre. C\'est reprendre le contrôle.'},
+  {t:'Le Grand Stop',s:'Burn-out évité de justesse.',c:'Mise en sécurité du système nerveux.',da:30,co:20,pts:20,p:'S\'arrêter quand ça brûle, c\'est choisir de revenir plus fort.'},
+  {t:'Stage de Déconnexion',s:'Une semaine sans signal numérique.',c:'Resensibilisation des récepteurs D2.',da:40,co:10,pts:20,p:'Ce que tu retrouves sans écran, c\'est toi.'},
+  {t:'Médiation de Conflit',s:'Vider l\'abcès avec ton entourage.',c:'Baisse de l\'alerte de menace sociale.',da:40,co:20,pts:20,p:'Un conflit non dit continue à coûter de l\'énergie.'},
+  {t:'Le Choix des Valeurs',s:'Redéfinir ce qui est vraiment important.',c:'Réalignement vers le sens.',da:40,co:20,pts:20,p:'Quand le sens revient, le stress change de nature.'},
+],
 G:[
   {n:1,t:'Chaussettes dans le frigo',s:'Tu trouves tes chaussettes dans le frigo.',o1:'Les mettre (+10/+20)',o2:'Chercher le beurre dans la penderie (-10/+10)',bon:1,gain:'+2 jetons',debrief:'Qu\'est-ce que ton cerveau cherchait \u00e0 faire \u00e0 ce moment-l\u00e0 ?'},
   {n:2,t:'Douche avec son pull',s:'Tu te retrouves sous la douche avec ton pull.',o1:'Lessive express (+20/-10)',o2:'Sortir en splosh (+10/0)',bon:2,gain:'+3 cases',debrief:'C\'est quoi pour toi le signal que le cerveau a d\u00e9croch\u00e9 ?'},
@@ -327,8 +341,9 @@ G:[
 var joueurs=[], jA=0, tour=1, dest=-1, carte=null, decks={};
 var derniereGrise={}, carteEnnui=null;
 
-function initJeu(nb){
-  N=nb; PC=PC_ALL.slice(0,N); PN=PN_ALL.slice(0,N);
+function initJeu(nb, noms){
+  N=nb; PC=PC_ALL.slice(0,N);
+  PN=noms||PN_ALL.slice(0,N);
   joueurs=[];
   for(var i=0;i<N;i++) joueurs.push({nom:PN[i],col:PC[i],score:0,pos:0,totalDA:0,totalCo:0,ptsPont:0,passages:0});
   jA=0; tour=1; dest=-1; carte=null; carteEnnui=null;
@@ -636,20 +651,21 @@ window.onload=function(){
   var ac=document.createElement('div');
   ac.id='ac';
   ac.style.cssText='position:fixed;top:0;left:0;width:100%;height:100%;background:#1a1a2e;display:flex;align-items:center;justify-content:center;z-index:9999';
-  ac.innerHTML='<div style="background:#f5f0e8;border-radius:16px;padding:40px;text-align:center;width:380px;box-shadow:0 8px 32px rgba(0,0,0,0.5)">'+
-    '<div style="font-size:36px;margin-bottom:10px">🧠</div>'+
+  ac.innerHTML='<div style="background:#f5f0e8;border-radius:16px;padding:32px;text-align:center;width:420px;max-height:90vh;overflow-y:auto;box-shadow:0 8px 32px rgba(0,0,0,0.5)">'+
+    '<div style="font-size:36px;margin-bottom:8px">🧠</div>'+
     '<h2 style="font-family:Georgia,serif;font-size:22px;color:#1a1a2e;margin-bottom:4px">DOPE À MINES</h2>'+
-    '<p style="font-size:12px;color:#888;margin-bottom:24px">Adultes · Visio · AliaSkill Formation</p>'+
-    '<p style="font-size:13px;color:#444;margin-bottom:16px;font-weight:bold">Nombre de joueurs :</p>'+
-    '<div id="ac-btns" style="display:flex;gap:10px;justify-content:center;margin-bottom:20px">'+
-    '<button id="acb2" style="width:52px;height:52px;border-radius:50%;border:2px solid #ccc;background:#fff;font-size:20px;font-weight:bold;cursor:pointer">2</button>'+
-    '<button id="acb3" style="width:52px;height:52px;border-radius:50%;border:2px solid #ccc;background:#fff;font-size:20px;font-weight:bold;cursor:pointer">3</button>'+
-    '<button id="acb4" style="width:52px;height:52px;border-radius:50%;border:2px solid #ccc;background:#fff;font-size:20px;font-weight:bold;cursor:pointer">4</button>'+
-    '<button id="acb5" style="width:52px;height:52px;border-radius:50%;border:2px solid #ccc;background:#fff;font-size:20px;font-weight:bold;cursor:pointer">5</button>'+
-    '<button id="acb6" style="width:52px;height:52px;border-radius:50%;border:2px solid #ccc;background:#fff;font-size:20px;font-weight:bold;cursor:pointer">6</button>'+
+    '<p style="font-size:12px;color:#888;margin-bottom:20px">Adultes · Visio · AliaSkill Formation</p>'+
+    '<p style="font-size:13px;color:#444;margin-bottom:12px;font-weight:bold">Nombre de joueurs :</p>'+
+    '<div id="ac-btns" style="display:flex;gap:8px;justify-content:center;margin-bottom:20px">'+
+    '<button id="acb2" style="width:48px;height:48px;border-radius:50%;border:2px solid #ccc;background:#fff;font-size:18px;font-weight:bold;cursor:pointer">2</button>'+
+    '<button id="acb3" style="width:48px;height:48px;border-radius:50%;border:2px solid #ccc;background:#fff;font-size:18px;font-weight:bold;cursor:pointer">3</button>'+
+    '<button id="acb4" style="width:48px;height:48px;border-radius:50%;border:2px solid #ccc;background:#fff;font-size:18px;font-weight:bold;cursor:pointer">4</button>'+
+    '<button id="acb5" style="width:48px;height:48px;border-radius:50%;border:2px solid #ccc;background:#fff;font-size:18px;font-weight:bold;cursor:pointer">5</button>'+
+    '<button id="acb6" style="width:48px;height:48px;border-radius:50%;border:2px solid #ccc;background:#fff;font-size:18px;font-weight:bold;cursor:pointer">6</button>'+
     '</div>'+
-    '<div id="ac-lbl" style="font-size:12px;color:#c0392b;margin-bottom:14px;min-height:18px"></div>'+
-    '<button id="ac-start" style="padding:14px 36px;background:#c0392b;color:#fff;border:none;border-radius:8px;font-size:16px;font-weight:bold;cursor:pointer;font-family:Georgia,serif">Lancer la partie</button>'+
+    '<div id="ac-noms" style="display:none;margin-bottom:16px;text-align:left"></div>'+
+    '<div id="ac-lbl" style="font-size:12px;color:#c0392b;margin-bottom:12px;min-height:18px"></div>'+
+    '<button id="ac-start" style="padding:12px 32px;background:#c0392b;color:#fff;border:none;border-radius:8px;font-size:15px;font-weight:bold;cursor:pointer;font-family:Georgia,serif">Lancer la partie</button>'+
     '</div>';
   document.body.appendChild(ac);
 
@@ -662,14 +678,33 @@ window.onload=function(){
         b.style.color=m===n?'#fff':'#1a1a2e';
         b.style.borderColor=m===n?'#1a1a2e':'#ccc';
       });
-      document.getElementById('ac-lbl').textContent=n+' joueurs sélectionnés ✓';
+      document.getElementById('ac-lbl').textContent='';
+      // Afficher les champs de noms
+      var nomsDiv=document.getElementById('ac-noms');
+      var h='<p style="font-size:12px;font-weight:bold;color:#444;margin-bottom:10px">Prénoms des joueurs :</p>';
+      for(var i=0;i<n;i++){
+        h+='<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">';
+        h+='<div style="width:14px;height:14px;border-radius:50%;background:'+PC_ALL[i]+';flex-shrink:0"></div>';
+        h+='<input id="nom'+i+'" type="text" placeholder="Joueur '+(i+1)+'" value="" style="flex:1;padding:6px 10px;border-radius:6px;border:1px solid #ddd;font-size:13px;font-family:Arial,sans-serif;background:#fff">';
+        h+='</div>';
+      }
+      nomsDiv.innerHTML=h;
+      nomsDiv.style.display='block';
     });
   });
 
   document.getElementById('ac-start').addEventListener('click',function(){
     if(!NB){ document.getElementById('ac-lbl').textContent='⚠ Choisis un nombre de joueurs !'; return; }
+    // Récupérer les noms saisis
+    var noms=[];
+    for(var i=0;i<NB;i++){
+      var input=document.getElementById('nom'+i);
+      var val=input?input.value.trim():'';
+      noms.push(val||('Joueur '+(i+1)));
+    }
     document.body.removeChild(ac);
-    initJeu(NB);
+    initJeu(NB, noms);
+    ouvrirRoue();
   });
 };
 </script>
