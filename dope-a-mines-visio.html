@@ -1097,7 +1097,7 @@ function rDessiner(angle){
     rCX.save();
     rCX.translate(CX+((RM+RE)/2)*Math.cos(aM),CY+((RM+RE)/2)*Math.sin(aM));
     rCX.rotate(aM+Math.PI/2);
-    rCX.font='bold 9px Arial'; rCX.fillStyle=qc.txt; rCX.textAlign='center';
+    rCX.font='bold 10px Arial'; rCX.fillStyle=qc.txt; rCX.textAlign='center';
     rCX.fillText((c.co>0?'+':'')+c.co,0,3);
     rCX.restore();
     rCX.beginPath();
@@ -1110,11 +1110,12 @@ function rDessiner(angle){
     rCX.save();
     rCX.translate(CX+((RI+RM)/2)*Math.cos(aM),CY+((RI+RM)/2)*Math.sin(aM));
     rCX.rotate(aM+Math.PI/2);
-    var sn=c.n.length>8?c.n.substring(0,7)+'.':c.n;
-    rCX.font='bold 8px Arial'; rCX.fillStyle='#1a1a2e'; rCX.textAlign='center';
-    rCX.fillText(sn,0,-4);
-    rCX.font='8px Arial'; rCX.fillStyle='#2471a3';
-    rCX.fillText((c.da>0?'+':'')+c.da,0,6);
+    // Nom court (4 chars max) + valeur DA
+    var sn=c.n.substring(0,5);
+    rCX.font='bold 7px Arial'; rCX.fillStyle='#1a1a2e'; rCX.textAlign='center';
+    rCX.fillText(sn,0,-3);
+    rCX.font='bold 8px Arial'; rCX.fillStyle='#2471a3';
+    rCX.fillText((c.da>0?'+':'')+c.da,0,7);
     rCX.restore();
   }
   [0,9,18,27].forEach(function(q){
@@ -1130,7 +1131,7 @@ function rDessiner(angle){
     rCX.save();
     rCX.translate(CX+rL*Math.cos(aC),CY+rL*Math.sin(aC));
     rCX.rotate(aC+Math.PI/2);
-    rCX.font='bold 6px Arial'; rCX.fillStyle=q.c; rCX.textAlign='center';
+    rCX.font='bold 7px Arial'; rCX.fillStyle=q.c; rCX.textAlign='center';
     rCX.fillText(q.l,0,0);
     rCX.restore();
   });
