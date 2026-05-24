@@ -92,6 +92,28 @@ html,body{height:100%;font-family:Arial,sans-serif;background:#f5f0e8}
 .rbtn-ok{background:#c0392b;color:#fff}
 .rbtn-ok:hover{background:#a93226}
 .rbtn-ok:disabled{opacity:0.4;cursor:not-allowed}
+
+/* POPUPS STATIONS */
+.st-popup{position:absolute;top:10px;left:10px;width:280px;background:#fff;border-radius:12px;padding:16px;box-shadow:0 6px 24px rgba(0,0,0,0.18);z-index:50;border:1px solid #ddd}
+.st-popup-titre{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.st-popup-dot{width:14px;height:14px;border-radius:50%;flex-shrink:0}
+.st-popup-nom{font-size:13px;font-weight:bold;color:#1a1a2e;font-family:Georgia,serif}
+.st-popup-close{margin-left:auto;background:none;border:none;font-size:18px;cursor:pointer;color:#888;line-height:1}
+.st-popup-desc{font-size:11px;color:#444;line-height:1.6;font-family:Arial,sans-serif;margin-bottom:10px}
+.st-mecanique{padding:10px;border-radius:8px;margin-bottom:8px;font-family:Arial,sans-serif}
+.st-mecanique-titre{font-size:9px;text-transform:uppercase;letter-spacing:.08em;color:#888;margin-bottom:5px}
+.st-mecanique-val{font-size:14px;font-weight:bold;color:#1a1a2e}
+.st-mecanique-sub{font-size:10px;color:#666;margin-top:3px;line-height:1.4}
+.st-btn{width:100%;padding:8px;border:none;border-radius:7px;font-family:Georgia,serif;font-size:12px;font-weight:bold;cursor:pointer;margin-top:5px}
+.st-btn-vert{background:#1e8449;color:#fff}
+.st-btn-rouge{background:#c0392b;color:#fff}
+.st-btn-bleu{background:#2471a3;color:#fff}
+.st-btn-or{background:#d68910;color:#fff}
+.st-jeton-ctrl{display:flex;align-items:center;gap:8px;margin-top:8px;justify-content:center}
+.st-jeton-ctrl button{width:28px;height:28px;border-radius:50%;border:1px solid #ddd;background:#f5f0e8;font-size:16px;cursor:pointer;font-weight:bold;line-height:1}
+.st-jeton-ctrl span{font-size:14px;font-weight:bold;color:#1a1a2e;min-width:20px;text-align:center;font-family:Arial,sans-serif}
+/* Badge jetons dans scores */
+.jeton-badge{display:inline-block;background:#d68910;color:#fff;border-radius:10px;font-size:9px;padding:1px 6px;font-family:Arial,sans-serif;font-weight:bold;margin-left:4px}
 </style>
 </head>
 <body>
@@ -153,6 +175,28 @@ html,body{height:100%;font-family:Arial,sans-serif;background:#f5f0e8}
 #pres .pill-neuro{background:rgba(46,204,113,0.15);color:#2ecc71;border:1px solid rgba(46,204,113,0.3)}
 #pres .pill-ped{background:rgba(52,152,219,0.15);color:#5dade2;border:1px solid rgba(52,152,219,0.3)}
 #pres .pill-vis{background:rgba(231,76,60,0.15);color:#e74c3c;border:1px solid rgba(231,76,60,0.3)}
+
+/* POPUPS STATIONS */
+.st-popup{position:absolute;top:10px;left:10px;width:280px;background:#fff;border-radius:12px;padding:16px;box-shadow:0 6px 24px rgba(0,0,0,0.18);z-index:50;border:1px solid #ddd}
+.st-popup-titre{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.st-popup-dot{width:14px;height:14px;border-radius:50%;flex-shrink:0}
+.st-popup-nom{font-size:13px;font-weight:bold;color:#1a1a2e;font-family:Georgia,serif}
+.st-popup-close{margin-left:auto;background:none;border:none;font-size:18px;cursor:pointer;color:#888;line-height:1}
+.st-popup-desc{font-size:11px;color:#444;line-height:1.6;font-family:Arial,sans-serif;margin-bottom:10px}
+.st-mecanique{padding:10px;border-radius:8px;margin-bottom:8px;font-family:Arial,sans-serif}
+.st-mecanique-titre{font-size:9px;text-transform:uppercase;letter-spacing:.08em;color:#888;margin-bottom:5px}
+.st-mecanique-val{font-size:14px;font-weight:bold;color:#1a1a2e}
+.st-mecanique-sub{font-size:10px;color:#666;margin-top:3px;line-height:1.4}
+.st-btn{width:100%;padding:8px;border:none;border-radius:7px;font-family:Georgia,serif;font-size:12px;font-weight:bold;cursor:pointer;margin-top:5px}
+.st-btn-vert{background:#1e8449;color:#fff}
+.st-btn-rouge{background:#c0392b;color:#fff}
+.st-btn-bleu{background:#2471a3;color:#fff}
+.st-btn-or{background:#d68910;color:#fff}
+.st-jeton-ctrl{display:flex;align-items:center;gap:8px;margin-top:8px;justify-content:center}
+.st-jeton-ctrl button{width:28px;height:28px;border-radius:50%;border:1px solid #ddd;background:#f5f0e8;font-size:16px;cursor:pointer;font-weight:bold;line-height:1}
+.st-jeton-ctrl span{font-size:14px;font-weight:bold;color:#1a1a2e;min-width:20px;text-align:center;font-family:Arial,sans-serif}
+/* Badge jetons dans scores */
+.jeton-badge{display:inline-block;background:#d68910;color:#fff;border-radius:10px;font-size:9px;padding:1px 6px;font-family:Arial,sans-serif;font-weight:bold;margin-left:4px}
 </style>
 
 <nav>
@@ -499,8 +543,8 @@ function initJeu(nb, noms){
   N=nb; PC=PC_ALL.slice(0,N);
   PN=noms||PN_ALL.slice(0,N);
   joueurs=[];
-  for(var i=0;i<N;i++) joueurs.push({nom:PN[i],col:PC[i],score:0,pos:0,totalDA:0,totalCo:0,ptsPont:0,passages:0});
-  jA=0; tour=1; dest=-1; carte=null; carteEnnui=null;
+  for(var i=0;i<N;i++) joueurs.push({nom:PN[i],col:PC[i],score:0,pos:0,totalDA:0,totalCo:0,ptsPont:0,passages:0,jetons:0,toursRecup:0});
+  jA=0; tour=1; dest=-1; carte=null; carteEnnui=null; hypPassages={};
   derniereGrise={};
   for(var i=0;i<N;i++) derniereGrise[i]=false;
   Object.keys(CARTES).forEach(function(k){ decks[k]=CARTES[k].slice().sort(function(){return Math.random()-.5;}); });
@@ -702,8 +746,24 @@ function fermerAnalyse(){ document.getElementById('overlay-analyse').className='
 
 // ═══ PLATEAU ═══════════════════════════════
 var POPUP_ST=null;
+// Compteur de passages Hypothalamus
+var hypPassages={};
+
 function toggleStation(nom){
-  if(POPUP_ST===nom){ POPUP_ST=null; rendrePlateau(); return; }
+  if(POPUP_ST===nom){ fermerStation(); return; }
+  // Mécaniques spéciales par station
+  if(nom==='NA') { stationNA(); return; }
+  if(nom==='Hippocampe') { stationHippocampe(); return; }
+  if(nom==='Amygdale') { stationAmygdale(); return; }
+  if(nom==='Cortex PF') { stationCortexPF(); return; }
+  if(nom==='Hypothalamus'){
+    var k=jA+'_hyp';
+    hypPassages[k]=(hypPassages[k]||0)+1;
+    if(hypPassages[k]===1) stationHypothalamus1();
+    else stationHypothalamus2();
+    return;
+  }
+  // ATV : description simple
   POPUP_ST=nom; rendrePlateau();
 }
 
