@@ -579,6 +579,7 @@ function lancerDe(){
 }
 
 function piocher(){
+  var posAvant=joueurs[jA].pos;
   joueurs[jA].pos=dest;
   var cc=PARC[dest];
   document.getElementById('btn-draw').disabled=true;
@@ -620,31 +621,57 @@ function piocher(){
   var html=buildCarte(carte);
   document.getElementById('card-content').innerHTML=html+'<div style="margin-top:8px"><button onclick="ouvrirCarte(buildCarte(carte))" style="font-size:11px;padding:4px 10px;border-radius:4px;border:1px solid #ddd;background:#f5f0e8;cursor:pointer">🔍 Voir en grand</button></div>';
   ouvrirCarte(html);
-  // Déclenchement automatique des stations
-  declencherStation(dest);
+  // Déclenchement automatique des stations (passage inclus)
+  declencherStation(posAvant, dest);
   rendrePlateau(); rendreScores();
 }
 
-function declencherStation(pos){
-  setTimeout(function(){
-    if(pos===9){
+// Positions des stations dans le parcours
+var STATION_POS = {9:'Hypothalamus',19:'NA',29:'Hippocampe',39:'Hypothalamus',49:'Amygdale'};
+var STATION_FIN = 69; // Cortex PF
+
+function declencherStation(posAvant, posApres){
+  // Chercher toutes les stations traversées entre posAvant et posApres (inclus)
+  var stationsTraversees = [];
+  for(var p=posAvant+1; p<=posApres; p++){
+    if(STATION_POS[p]) stationsTraversees.push({pos:p, nom:STATION_POS[p]});
+    if(p===STATION_FIN) stationsTraversees.push({pos:p, nom:'Cortex PF'});
+  }
+  if(!stationsTraversees.length) return;
+
+  // Afficher les stations en séquence (si plusieurs traversées d'un coup)
+  var idx=0;
+  function afficherSuivante(){
+    if(idx>=stationsTraversees.length) return;
+    var st=stationsTraversees[idx]; idx++;
+    setTimeout(function(){
+      var nom=st.nom;
       var k=jA+'_hyp';
-      hypPassages[k]=(hypPassages[k]||0)+1;
-      if(hypPassages[k]===1) stationHypothalamus1();
-    } else if(pos===19){
-      stationNA();
-    } else if(pos===29){
-      stationHippocampe();
-    } else if(pos===39){
-      var k=jA+'_hyp';
-      hypPassages[k]=(hypPassages[k]||0)+1;
-      stationHypothalamus2();
-    } else if(pos===49){
-      stationAmygdale();
-    } else if(pos===TOTAL-1){
-      stationCortexPF();
-    }
-  }, 300);
+      if(nom==='Hypothalamus'){
+        hypPassages[k]=(hypPassages[k]||0)+1;
+        if(hypPassages[k]===1) stationHypothalamus1();
+        else stationHypothalamus2();
+      } else if(nom==='NA'){
+        stationNA();
+      } else if(nom==='Hippocampe'){
+        stationHippocampe();
+      } else if(nom==='Amygdale'){
+        stationAmygdale();
+      } else if(nom==='Cortex PF'){
+        stationCortexPF();
+      }
+      // Bouton "Continuer" dans chaque popup pour passer à la station suivante
+      var popup=document.getElementById('st-popup');
+      if(popup && stationsTraversees.length>idx){
+        var btn=document.createElement('button');
+        btn.className='st-btn st-btn-bleu';
+        btn.textContent='Station suivante →';
+        btn.onclick=function(){ fermerStation(); afficherSuivante(); };
+        popup.appendChild(btn);
+      }
+    }, 300);
+  }
+  afficherSuivante();
 }
 
 function ptsPont(co){ return co<40?20:co<=70?10:-20; }
