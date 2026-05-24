@@ -20,7 +20,7 @@ html,body{height:100%;font-family:Arial,sans-serif;background:#f5f0e8}
 #turn{font-size:11px;color:#aaa}
 #wrap{display:flex;height:calc(100vh - 50px)}
 #plateau-area{flex:1;padding:10px;overflow:auto;display:flex;align-items:flex-start;justify-content:center}
-#circuit{position:relative;width:700px;height:560px;flex-shrink:0}
+#circuit{position:relative;width:820px;height:640px;flex-shrink:0}
 #side{width:280px;flex-shrink:0;background:#fff;border-left:2px solid #ddd;padding:10px;overflow-y:auto;display:flex;flex-direction:column;gap:8px}
 .box{background:#f9f6f0;border-radius:8px;padding:10px;border:1px solid #e0d8cc}
 .box-t{font-size:9px;text-transform:uppercase;letter-spacing:.1em;color:#888;margin-bottom:6px}
@@ -210,13 +210,14 @@ html,body{height:100%;font-family:Arial,sans-serif;background:#f5f0e8}
     <h2 class="ptitle" style="color:#1a1a2e">Autrement.<br>Toujours autrement.</h2>
     <p class="psub" style="color:#888">À l'origine de tout ce que nous faisons</p>
     <div class="pdiv"></div>
-    <p class="ptxt" style="color:#333">Il existe des personnes que les systèmes ne savent pas accueillir. Le professionnel épuisé que la médecine du travail observe sans comprendre. La personne en conduites addictives que l'on traite par produit, par case, par protocole — rarement par humanité et par science à la fois.</p>
-    <p class="ptxt" style="color:#333">Ces personnes ne sont pas défaillantes. <strong style="color:#1a1a2e">Elles répondent neurobiologiquement à des systèmes qui ne leur conviennent pas.</strong></p>
+    <p class="ptxt" style="color:#333">Il existe des personnes que les systèmes ne savent pas accueillir. Ces personnes ne sont pas défaillantes.</p>
     <div class="pcit">
       <p style="color:#f5f0e8">« Ce n'est pas la personne qui est inadaptée. C'est l'espace entre la personne et le système qui n'a jamais été vraiment pensé. »</p>
       <small style="color:rgba(255,255,255,0.5)">Xavier Gautron — Fondateur AliaSkill Formation</small>
     </div>
-    <p class="ptxt" style="color:#333">AliaSkill ne travaille pas dans les cases. Nous travaillons dans les <strong style="color:#1a1a2e">angles morts</strong>. Ce langage, c'est celui des <strong style="color:#1a1a2e">neurosciences appliquées</strong> — accessible à tous, qui permet enfin de comprendre pourquoi on fait ce qu'on fait.</p>
+    <p class="ptxt" style="color:#333">AliaSkill ne travaille pas dans les cases. Nous travaillons dans les <strong style="color:#1a1a2e">angles morts</strong> — ces espaces entre l'éducation et le soin, entre la prévention et la formation, entre le travail et la vie.</p>
+    <p class="ptxt" style="color:#333">Ce langage, c'est celui des <strong style="color:#1a1a2e">neurosciences appliquées</strong>. Pas comme une discipline académique réservée aux experts. Comme un territoire commun, accessible à tous, qui permet enfin de comprendre pourquoi on fait ce qu'on fait — et comment on peut faire autrement.</p>
+    <p class="ptxt" style="color:#333">AliaSkill est née d'une conviction simple : <strong style="color:#1a1a2e">on peut faire autrement</strong>. Pas mieux que les autres — autrement. Avec des outils que personne n'avait encore pensé à croiser.</p>
   </div>
 </div>
 
@@ -300,7 +301,7 @@ html,body{height:100%;font-family:Arial,sans-serif;background:#f5f0e8}
     <div id="roue-titre">Roue Casineuronale</div>
     <div id="roue-sous">Mon cerveau · Ici &amp; Maintenant</div>
     <div id="roue-jnom"></div>
-    <canvas id="roue-cv" width="440" height="440"></canvas>
+    <canvas id="roue-cv" width="440" height="440" style="width:440px;height:440px;display:block"></canvas>
     <div id="roue-result">
       <div id="roue-cnom">Lance la roue pour découvrir ton état de départ</div>
       <div id="roue-cquad"></div>
@@ -356,12 +357,12 @@ var SC={20:'#1e8449',10:'#2471a3',0:'#888','-10':'#d68910','-20':'#c0392b'};
 var SN={20:'Régulation active',10:'Régulation fragile',0:'Tension neutre','-10':'Tension modérée','-20':'Zone de danger'};
 
 var STATIONS={
-  ATV:{x:70,y:280,col:'#2471a3',label:'ATV',desc:'Aire Tegmentale Ventrale. Point de départ du circuit dopaminergique. Produit la dopamine et l\'envoie vers le Noyau Accumbens et le Cortex Préfrontal. Source de la motivation et de l\'anticipation du plaisir.'},
-  Hypothalamus:{x:310,y:280,col:'#27ae60',label:'Hypoth.',desc:'Carrefour neuroendocrinien. Régule les besoins fondamentaux et orchestre la réponse au stress via l\'axe HPA. Traversé deux fois dans le parcours : en montée vers la récompense, puis en descente vers la régulation.'},
-  NA:{x:560,y:280,col:'#f39c12',label:'NA',desc:'Noyau Accumbens. Cœur du circuit de la récompense. Intègre les signaux dopaminergiques. Ici se joue le Pont DA : selon le cortisol, l\'accès au Cortex Préfrontal est libre, conditionné ou bloqué.'},
-  Hippocampe:{x:430,y:80,col:'#8e44ad',label:'Hippoc.',desc:'Siège de la mémoire et du contexte. Encode les souvenirs liés aux récompenses et aux expériences stressantes. Rôle clé dans la dépendance : relie lieux, personnes et émotions aux comportements addictifs.'},
-  Amygdale:{x:430,y:480,col:'#e74c3c',label:'Amygdale',desc:'Sentinelle émotionnelle. Détecte les menaces et déclenche la peur. Quand le cortisol est élevé, elle court-circuite le raisonnement préfrontal. Zone critique dans les comportements impulsifs et addictifs.'},
-  'Cortex PF':{x:640,y:80,col:'#1a1a2e',label:'Cortex PF',desc:'Siège de la régulation et de la décision consciente. Destination finale du parcours. Quand il reprend le contrôle sur le circuit limbique, la régulation devient possible. Objectif neurobiologique du jeu.'}
+  ATV:{x:80,y:320,col:'#2471a3',label:'ATV',desc:'Aire Tegmentale Ventrale. Point de départ du circuit dopaminergique. Produit la dopamine et l\'envoie vers le Noyau Accumbens et le Cortex Préfrontal. Source de la motivation et de l\'anticipation du plaisir.'},
+  Hypothalamus:{x:360,y:320,col:'#27ae60',label:'Hypoth.',desc:'Carrefour neuroendocrinien. Régule les besoins fondamentaux et orchestre la réponse au stress via l\'axe HPA. Traversé deux fois dans le parcours : en montée vers la récompense, puis en descente vers la régulation.'},
+  NA:{x:650,y:320,col:'#f39c12',label:'NA',desc:'Noyau Accumbens. Cœur du circuit de la récompense. Intègre les signaux dopaminergiques. Ici se joue le Pont DA : selon le cortisol, l\'accès au Cortex Préfrontal est libre, conditionné ou bloqué.'},
+  Hippocampe:{x:510,y:90,col:'#8e44ad',label:'Hippoc.',desc:'Siège de la mémoire et du contexte. Encode les souvenirs liés aux récompenses et aux expériences stressantes. Rôle clé dans la dépendance : relie lieux, personnes et émotions aux comportements addictifs.'},
+  Amygdale:{x:510,y:555,col:'#e74c3c',label:'Amygdale',desc:'Sentinelle émotionnelle. Détecte les menaces et déclenche la peur. Quand le cortisol est élevé, elle court-circuite le raisonnement préfrontal. Zone critique dans les comportements impulsifs et addictifs.'},
+  'Cortex PF':{x:750,y:90,col:'#1a1a2e',label:'Cortex PF',desc:'Siège de la régulation et de la décision consciente. Destination finale du parcours. Quand il reprend le contrôle sur le circuit limbique, la régulation devient possible. Objectif neurobiologique du jeu.'}
 };
 
 var CARTES={
@@ -718,7 +719,7 @@ function rendrePlateau(){
   var atv=STATIONS['ATV'],hyp=STATIONS['Hypothalamus'],na=STATIONS['NA'];
   var hip=STATIONS['Hippocampe'],amy=STATIONS['Amygdale'],cor=STATIONS['Cortex PF'];
 
-  var svg='<svg style="position:absolute;top:0;left:0;width:700px;height:560px" viewBox="0 0 700 560" xmlns="http://www.w3.org/2000/svg">';
+  var svg='<svg style="position:absolute;top:0;left:0;width:700px;height:560px" viewBox="0 0 820 640" xmlns="http://www.w3.org/2000/svg">';
   // Fond
   svg+='<rect width="700" height="560" fill="#fdfcf8" rx="14"/>';
   // Cerveau silhouette
