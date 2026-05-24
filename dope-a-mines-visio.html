@@ -621,57 +621,101 @@ function piocher(){
   var html=buildCarte(carte);
   document.getElementById('card-content').innerHTML=html+'<div style="margin-top:8px"><button onclick="ouvrirCarte(buildCarte(carte))" style="font-size:11px;padding:4px 10px;border-radius:4px;border:1px solid #ddd;background:#f5f0e8;cursor:pointer">🔍 Voir en grand</button></div>';
   ouvrirCarte(html);
-  // Déclenchement automatique des stations (passage inclus)
-  declencherStation(posAvant, dest);
+  declencherStations(posAvant, dest);
   rendrePlateau(); rendreScores();
 }
 
-// Positions des stations dans le parcours
-var STATION_POS = {9:'Hypothalamus',19:'NA',29:'Hippocampe',39:'Hypothalamus',49:'Amygdale'};
-var STATION_FIN = 69; // Cortex PF
+var SPOS={9:'Hypothalamus',19:'NA',29:'Hippocampe',39:'Hypothalamus2',49:'Amygdale'};
 
-function declencherStation(posAvant, posApres){
-  // Chercher toutes les stations traversées entre posAvant et posApres (inclus)
-  var stationsTraversees = [];
-  for(var p=posAvant+1; p<=posApres; p++){
-    if(STATION_POS[p]) stationsTraversees.push({pos:p, nom:STATION_POS[p]});
-    if(p===STATION_FIN) stationsTraversees.push({pos:p, nom:'Cortex PF'});
+function declencherStations(avant, apres){
+  var liste=[];
+  for(var p=avant+1;p<=apres;p++){
+    if(SPOS[p]) liste.push({p:p,n:SPOS[p]});
+    if(p===TOTAL-1) liste.push({p:p,n:'CortexPF'});
   }
-  if(!stationsTraversees.length) return;
-
-  // Afficher les stations en séquence (si plusieurs traversées d'un coup)
-  var idx=0;
-  function afficherSuivante(){
-    if(idx>=stationsTraversees.length) return;
-    var st=stationsTraversees[idx]; idx++;
+  if(!liste.length) return;
+  var i=0;
+  function suivante(){
+    if(i>=liste.length) return;
+    var s=liste[i]; i++;
     setTimeout(function(){
-      var nom=st.nom;
-      var k=jA+'_hyp';
-      if(nom==='Hypothalamus'){
-        hypPassages[k]=(hypPassages[k]||0)+1;
-        if(hypPassages[k]===1) stationHypothalamus1();
-        else stationHypothalamus2();
-      } else if(nom==='NA'){
-        stationNA();
-      } else if(nom==='Hippocampe'){
-        stationHippocampe();
-      } else if(nom==='Amygdale'){
-        stationAmygdale();
-      } else if(nom==='Cortex PF'){
-        stationCortexPF();
-      }
-      // Bouton "Continuer" dans chaque popup pour passer à la station suivante
-      var popup=document.getElementById('st-popup');
-      if(popup && stationsTraversees.length>idx){
-        var btn=document.createElement('button');
-        btn.className='st-btn st-btn-bleu';
-        btn.textContent='Station suivante →';
-        btn.onclick=function(){ fermerStation(); afficherSuivante(); };
-        popup.appendChild(btn);
-      }
-    }, 300);
+      ouvrirStationPopup(s.n, i<liste.length, suivante);
+    },350);
   }
-  afficherSuivante();
+  suivante();
+}
+
+function ouvrirStationPopup(nom, hasNext, cb){
+  var j=joueurs[jA];
+  var pont=getPont(j);
+  var niv=niveauPont(pont);
+  var popup=document.getElementById('st-popup');
+  if(!popup) return;
+  var html='';
+  var footer=hasNext?'<button class="st-btn st-btn-bleu" onclick="fermerStation();('+cb.toString()+')()">Station suivante →</button>':'';
+
+  if(nom==='Hypothalamus'){
+    var k=jA+'_hyp'; hypPassages[k]=(hypPassages[k]||0)+1;
+    html='<div class="st-popup-titre"><div class="st-popup-dot" style="background:#27ae60"></div><strong class="st-popup-nom">Hypothalamus — Point de situation</strong><button class="st-popup-close" onclick="fermerStation()">x</button></div>'+
+    '<div class="st-popup-desc">Carrefour neuroendocrinien. Faim, soif, sommeil, libido. Ton corps parle ici.</div>'+
+    '<div class="st-mecanique" style="background:'+niv.bg+';border-left:3px solid '+niv.col+'"><div class="st-mecanique-titre">PONT DA</div><div class="st-mecanique-val" style="color:'+niv.col+'">'+niv.lbl+' ('+(pont>0?'+':'')+pont+')</div><div class="st-mecanique-sub">DA='+j.totalDA+' Co='+j.totalCo+'</div></div>'+
+    '<div class="st-mecanique" style="background:#f5f0e8;border-left:3px solid #888"><div class="st-mecanique-titre">QUESTION ANIMATEUR</div><div class="st-mecanique-sub" style="font-style:italic">Qu’est-ce que ton corps te demande en ce moment ?</div></div>';
+  } else if(nom==='Hypothalamus2'){
+    var k=jA+'_hyp'; hypPassages[k]=(hypPassages[k]||0)+1;
+    var jetons=j.jetons||0;
+    html='<div class="st-popup-titre"><div class="st-popup-dot" style="background:#27ae60"></div><strong class="st-popup-nom">Hypothalamus — Régulation</strong><button class="st-popup-close" onclick="fermerStation()">x</button></div>'+
+    '<div class="st-popup-desc">2ème passage. Dépense des jetons pour réduire ton Co. 1 jeton = −10 pts Co.</div>'+
+    '<div class="st-mecanique" style="background:'+niv.bg+';border-left:3px solid '+niv.col+'"><div class="st-mecanique-titre">PONT DA — Jetons : '+jetons+'</div><div class="st-mecanique-val" style="color:'+niv.col+'">'+(pont>0?'+':'')+pont+'</div></div>'+
+    '<div class="st-jeton-ctrl"><button onclick="depHyp(-1)">-</button><span id="dep-hyp-nb">0</span><button onclick="depHyp(1)">+</button><span style="font-size:11px;color:#888;font-family:Arial"> jeton(s) = -<span id="dep-hyp-pts">0</span> Co</span></div>'+
+    '<button class="st-btn st-btn-vert" onclick="validerHyp()">Valider</button>';
+    window._depHyp=0;
+  } else if(nom==='NA'){
+    var carte='';
+    if(pont>-30) carte='<div class="st-mecanique" style="background:#eafaf1;border-left:3px solid #1e8449"><div class="st-mecanique-titre">CARTE NORMALE</div><div class="st-mecanique-val" style="color:#1e8449">Pont fluide</div><div class="st-mecanique-sub">Circuit dopaminergique en équilibre. Cortex PF accessible.</div></div>';
+    else if(pont>-50) carte='<div class="st-mecanique" style="background:#fef9e7;border-left:3px solid #d68910"><div class="st-mecanique-titre">CARTE VIGILANCE</div><div class="st-mecanique-val" style="color:#d68910">Pont sous tension</div><div class="st-mecanique-sub">Le circuit s’entrouvre. Mobilise une ressource DA naturelle.</div></div>';
+    else carte='<div class="st-mecanique" style="background:#fdedec;border-left:3px solid #c0392b"><div class="st-mecanique-titre">CARTE ALERTE</div><div class="st-mecanique-val" style="color:#c0392b">Pont forcé</div><div class="st-mecanique-sub">Circuit limbique dominant. Mobilise tes ressources.</div></div>';
+    html='<div class="st-popup-titre"><div class="st-popup-dot" style="background:#f39c12"></div><strong class="st-popup-nom">Noyau Accumbens — Pont DA</strong><button class="st-popup-close" onclick="fermerStation()">x</button></div>'+
+    '<div class="st-mecanique" style="background:'+niv.bg+';border-left:3px solid '+niv.col+'"><div class="st-mecanique-titre">PONT DA ACTUEL</div><div class="st-mecanique-val" style="color:'+niv.col+'">'+niv.lbl+' ('+(pont>0?'+':'')+pont+')</div></div>'+carte;
+  } else if(nom==='Hippocampe'){
+    var jetons=0; var msg='Pont DA en régulation. Pas de jeton accordé.';
+    if(pont<=-70){ jetons=Math.floor((-pont-70)/10); j.jetons=(j.jetons||0)+jetons; msg='+'+jetons+' jeton(s) de réparation accordé(s).'; }
+    html='<div class="st-popup-titre"><div class="st-popup-dot" style="background:#8e44ad"></div><strong class="st-popup-nom">Hippocampe — Réparation</strong><button class="st-popup-close" onclick="fermerStation()">x</button></div>'+
+    '<div class="st-mecanique" style="background:'+niv.bg+';border-left:3px solid '+niv.col+'"><div class="st-mecanique-titre">PONT DA</div><div class="st-mecanique-val" style="color:'+niv.col+'">'+(pont>0?'+':'')+pont+'</div><div class="st-mecanique-sub">DA='+j.totalDA+' Co='+j.totalCo+'</div></div>'+
+    (jetons>0?'<div class="st-mecanique" style="background:#fef9e7;border-left:3px solid #d68910"><div class="st-mecanique-titre">JETONS DE RÉPARATION</div><div class="st-mecanique-val" style="color:#d68910">+'+jetons+' jeton(s) — Total : '+(j.jetons)+'</div></div>':
+    '<div class="st-mecanique" style="background:#f5f0e8;border-left:3px solid #888"><div class="st-mecanique-sub">'+msg+'</div></div>')+
+    '<div class="st-mecanique" style="background:#f5f0e8;border-left:3px solid #8e44ad"><div class="st-mecanique-titre">QUESTION ANIMATEUR</div><div class="st-mecanique-sub" style="font-style:italic">Qu’est-ce que tu retiens de ce que ton cerveau vient de traverser ?</div></div>';
+    rendreScores();
+  } else if(nom==='Amygdale'){
+    var jetons=j.jetons||0;
+    if(pont>-200){
+      html='<div class="st-popup-titre"><div class="st-popup-dot" style="background:#e74c3c"></div><strong class="st-popup-nom">Amygdale — Douane</strong><button class="st-popup-close" onclick="fermerStation()">x</button></div>'+
+      '<div class="st-mecanique" style="background:#eafaf1;border-left:3px solid #1e8449"><div class="st-mecanique-titre">PASSAGE LIBRE</div><div class="st-mecanique-val" style="color:#1e8449">✓ Pont DA acceptable</div><div class="st-mecanique-sub">Seuil −200. Ton Pont : '+(pont>0?'+':'')+pont+'</div></div>';
+    } else {
+      var cout=Math.ceil((-pont-200)/10);
+      if(jetons>=cout){
+        html='<div class="st-popup-titre"><div class="st-popup-dot" style="background:#e74c3c"></div><strong class="st-popup-nom">Amygdale — Douane</strong><button class="st-popup-close" onclick="fermerStation()">x</button></div>'+
+        '<div class="st-mecanique" style="background:#fef9e7;border-left:3px solid #d68910"><div class="st-mecanique-titre">PAIEMENT REQUIS — '+cout+' jeton(s)</div><div class="st-mecanique-val" style="color:#d68910">Jetons disponibles : '+jetons+'</div></div>'+
+        '<button class="st-btn st-btn-or" onclick="payerAmygdale('+cout+')">Payer '+cout+' jeton(s)</button>';
+      } else {
+        html='<div class="st-popup-titre"><div class="st-popup-dot" style="background:#e74c3c"></div><strong class="st-popup-nom">Amygdale — Douane</strong><button class="st-popup-close" onclick="fermerStation()">x</button></div>'+
+        '<div class="st-mecanique" style="background:#fdedec;border-left:3px solid #c0392b"><div class="st-mecanique-titre">BLOQUÉ — Jetons insuffisants</div><div class="st-mecanique-val" style="color:#c0392b">Besoin : '+cout+' — Dispo : '+jetons+'</div><div class="st-mecanique-sub">Ton cerveau a besoin de 2 tours de récupération.</div></div>'+
+        '<button class="st-btn st-btn-rouge" onclick="recupererAmygdale()">2 tours de récupération</button>';
+      }
+    }
+  } else if(nom==='CortexPF'){
+    var ratio=j.totalCo>0?(j.totalDA/j.totalCo).toFixed(2):'--';
+    var profil=j.totalDA>j.totalCo*1.5?'Dominante dopaminergique':j.totalCo>j.totalDA*1.5?'Dominante cortisolique':'Profil équilibré';
+    html='<div class="st-popup-titre"><div class="st-popup-dot" style="background:#1a1a2e"></div><strong class="st-popup-nom">Cortex PF — Analyse</strong><button class="st-popup-close" onclick="fermerStation()">x</button></div>'+
+    '<div class="st-mecanique" style="background:#d6eaf8;border-left:3px solid #2471a3"><div class="st-mecanique-titre">DENSITÉ DA</div><div class="st-mecanique-val" style="color:#2471a3">'+j.totalDA+' pts</div></div>'+
+    '<div class="st-mecanique" style="background:#fadbd8;border-left:3px solid #c0392b"><div class="st-mecanique-titre">DENSITÉ Co</div><div class="st-mecanique-val" style="color:#c0392b">'+j.totalCo+' pts</div></div>'+
+    '<div class="st-mecanique" style="background:'+niv.bg+';border-left:3px solid '+niv.col+'"><div class="st-mecanique-titre">PONT DA FINAL</div><div class="st-mecanique-val" style="color:'+niv.col+'">'+(pont>0?'+':'')+pont+' — Ratio : '+ratio+'</div></div>'+
+    '<div class="st-mecanique" style="background:#f5f0e8;border-left:3px solid #1a1a2e"><div class="st-mecanique-titre">PROFIL</div><div class="st-mecanique-sub">'+profil+'</div></div>'+
+    '<div class="st-mecanique" style="background:#f5f0e8;border-left:3px solid #8e44ad"><div class="st-mecanique-titre">QUESTION ANIMATEUR</div><div class="st-mecanique-sub" style="font-style:italic">Qu’est-ce que ce parcours t’a appris sur ton cerveau ?</div></div>';
+  }
+
+  popup.innerHTML=html+footer;
+  popup.style.display='block';
+  POPUP_ST=nom;
 }
 
 function ptsPont(co){ return co<40?20:co<=70?10:-20; }
@@ -824,33 +868,9 @@ var hypPassages={};
 
 function toggleStation(nom){
   if(POPUP_ST===nom){ fermerStation(); return; }
-  if(nom==='NA'){ stationNA(); return; }
-  if(nom==='Hippocampe'){ stationHippocampe(); return; }
-  if(nom==='Amygdale'){ stationAmygdale(); return; }
-  if(nom==='Cortex PF'){ stationCortexPF(); return; }
-  if(nom==='Hypothalamus'){
-    var k=jA+'_hyp';
-    var p=hypPassages[k]||0;
-    if(p<=1) stationHypothalamus1(); else stationHypothalamus2();
-    return;
-  }
-  stationATV();
-}
-
-function stationATV(){
-  var j=joueurs[jA];
-  var popup=document.getElementById('st-popup');
-  if(!popup) return;
-  popup.style.display='block';
-  popup.innerHTML=
-    '<div class="st-popup-titre"><div class="st-popup-dot" style="background:#2471a3"></div>'+
-    '<strong class="st-popup-nom">Aire Tegmentale Ventrale</strong>'+
-    '<button class="st-popup-close" onclick="fermerStation()">x</button></div>'+
-    '<div class="st-popup-desc">Point de depart du circuit dopaminergique. Source de la dopamine et de la motivation.</div>'+
-    '<div class="st-mecanique" style="background:#d6eaf8;border-left:3px solid #2471a3">'+
-    '<div class="st-mecanique-titre">ETAT DE DEPART</div>'+
-    '<div class="st-mecanique-val" style="color:#2471a3">DA='+j.totalDA+' Co='+j.totalCo+'</div></div>';
-  POPUP_ST='ATV';
+  var snom=nom==='Hypothalamus'?((hypPassages[jA+'_hyp']||0)<=1?'Hypothalamus':'Hypothalamus2'):
+           nom==='Cortex PF'?'CortexPF':nom;
+  ouvrirStationPopup(snom,false,function(){});
 }
 
 function getPos(de,a,n){
