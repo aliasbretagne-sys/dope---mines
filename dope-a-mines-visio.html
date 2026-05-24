@@ -641,15 +641,19 @@ function declencherStations(avant, apres){
     if(p===TOTAL-1) liste.push({p:p,n:'CortexPF'});
   }
   if(!liste.length) return;
-  var i=0;
-  function suivante(){
-    if(i>=liste.length) return;
-    var s=liste[i]; i++;
+  // Afficher la première station après 400ms
+  // (laisser le temps à la carte de s'afficher d'abord si il y en a une)
+  var idx=0;
+  function afficherStation(){
+    if(idx>=liste.length) return;
+    var nom=liste[idx].n;
+    var hasNext=(idx<liste.length-1);
+    idx++;
     setTimeout(function(){
-      ouvrirStationPopup(s.n, i<liste.length, suivante);
-    },350);
+      ouvrirStationPopup(nom, hasNext, afficherStation);
+    }, 600);
   }
-  suivante();
+  afficherStation();
 }
 
 function ouvrirStationPopup(nom, hasNext, cb){
@@ -778,6 +782,7 @@ function choisirEnnui(choix){
   var btns=document.querySelectorAll('.ennui-btn');
   for(var i=0;i<btns.length;i++) btns[i].disabled=true;
   carteEnnui=null;
+  fermerCarte();
   rendreScores(); rendrePlateau();
 }
 
