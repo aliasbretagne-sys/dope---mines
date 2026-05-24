@@ -337,7 +337,7 @@ footer span{color:rgba(255,255,255,0.5)}
       <p>Dope à Mines est un outil pédagogique conçu par AliaSkill Formation (SIREN 888963238). Il ne se substitue à aucun accompagnement médical, psychologique ou thérapeutique. Si une situation évoquée pendant le jeu nécessite un suivi, l'animateur orientera vers les ressources adaptées. — Marque INPI n°5238107 · e-Soleau DSO2026012538</p>
     </div>
 
-    <a href="#" onclick="document.getElementById('presentation').style.display='none';document.getElementById('app').style.display='flex'" class="btn-demarrer">Commencer la session →</a>
+    <a href="#" onclick="ouvrirAccueil()" class="btn-demarrer">Commencer la session →</a>
     <div class="btn-sous">En cliquant, vous acceptez l'espace de bienveillance ci-dessus</div>
   </div>
 </section>
@@ -1113,7 +1113,7 @@ function ouvrirRoue(){
 // ═══ ACCUEIL ═══════════════════════════════
 var NB=0;
 
-window.onload=function(){
+function ouvrirAccueil(){
   // Créer l'écran d'accueil dynamiquement
   var ac=document.createElement('div');
   ac.id='ac';
@@ -1170,10 +1170,12 @@ window.onload=function(){
       noms.push(val||('Joueur '+(i+1)));
     }
     document.body.removeChild(ac);
+    document.getElementById('presentation').style.display='none';
+    document.getElementById('app').style.display='flex';
     initJeu(NB, noms);
     ouvrirRoue();
   });
-};
+}
 </script>
 </div></body>
 </html>
