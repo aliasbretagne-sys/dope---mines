@@ -98,7 +98,7 @@ html,body{height:100%;font-family:Arial,sans-serif;background:#f5f0e8}
 
 
 <!-- PRÉSENTATION -->
-<div id="pres" style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:99999;overflow-y:auto;background:#1a1a2e;font-family:Georgia,serif">
+<div id="pres" style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:99999;overflow-y:auto;background:#1a1a2e;font-family:Georgia,serif;isolation:isolate">
 
 <style>
 #pres nav{position:sticky;top:0;left:0;width:100%;background:rgba(26,26,46,0.97);padding:12px 40px;display:flex;align-items:center;justify-content:space-between;z-index:100;box-sizing:border-box}
@@ -182,7 +182,7 @@ html,body{height:100%;font-family:Arial,sans-serif;background:#f5f0e8}
 </div>
 
 <!-- LE JEU -->
-<div class="psec" id="pjeu" style="background:#f5f0e8">
+<div class="psec" id="pjeu" style="background:#f5f0e8;position:relative;z-index:1">
   <div class="pcont">
     <div class="plabel">Le jeu</div>
     <h2 class="ptitle">Comment ça marche ?</h2>
@@ -204,7 +204,7 @@ html,body{height:100%;font-family:Arial,sans-serif;background:#f5f0e8}
 </div>
 
 <!-- MANIFESTE -->
-<div class="psec" id="pmanifeste" style="background:#fdfcf8">
+<div class="psec" id="pmanifeste" style="background:#fdfcf8;position:relative;z-index:1">
   <div class="pcont">
     <div class="plabel">Manifeste fondateur</div>
     <h2 class="ptitle" style="color:#1a1a2e">Autrement.<br>Toujours autrement.</h2>
@@ -235,7 +235,7 @@ html,body{height:100%;font-family:Arial,sans-serif;background:#f5f0e8}
       <div class="pbvitem"><div class="pbvicon" style="background:rgba(231,76,60,0.15)">👁</div><div class="pbvtxt"><strong>Aucun vécu n'est jugé, comparé ou hiérarchisé.</strong> Ce que chacun exprime appartient à son parcours.</div></div>
     </div>
     <div class="pavert"><p>Dope à Mines est un outil pédagogique conçu par AliaSkill Formation (SIREN 888963238). Il ne se substitue à aucun accompagnement médical, psychologique ou thérapeutique. — Marque INPI n°5238107 · e-Soleau DSO2026012538</p></div>
-    <button onclick="document.getElementById('pres').style.display='none'" class="btn-start">Commencer la session →</button>
+    <button onclick="document.getElementById('pres').style.display='none';document.getElementById('bar').style.visibility='visible';document.getElementById('wrap').style.visibility='visible'" class="btn-start">Commencer la session →</button>
     <p style="text-align:center;margin-top:12px;font-family:Arial,sans-serif;font-size:11px;color:rgba(255,255,255,0.35)">En cliquant, vous acceptez l'espace de bienveillance ci-dessus</p>
   </div>
 </div>
@@ -247,7 +247,7 @@ html,body{height:100%;font-family:Arial,sans-serif;background:#f5f0e8}
 </div>
 <!-- FIN PRÉSENTATION -->
 
-<div id="bar">
+<div id="bar" style="visibility:hidden">
   <h1>DOPE À MINES · ADULTES · VISIO</h1>
   <span id="turn">Tour 1 · J1</span>
   <button class="btn btn-red" id="btn-die" onclick="lancerDe()">🎲 Dé</button>
@@ -257,7 +257,7 @@ html,body{height:100%;font-family:Arial,sans-serif;background:#f5f0e8}
   <button class="btn" onclick="resetJeu()">↺</button>
 </div>
 
-<div id="wrap">
+<div id="wrap" style="visibility:hidden">
   <div id="plateau-area">
     <div id="circuit"></div>
   </div>
