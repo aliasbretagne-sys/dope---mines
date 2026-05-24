@@ -94,7 +94,7 @@ html,body{height:100%;font-family:Arial,sans-serif;background:#f5f0e8}
 .rbtn-ok:disabled{opacity:0.4;cursor:not-allowed}
 
 /* POPUPS STATIONS */
-.st-popup{position:absolute;top:10px;left:10px;width:280px;background:#fff;border-radius:12px;padding:16px;box-shadow:0 6px 24px rgba(0,0,0,0.18);z-index:50;border:1px solid #ddd}
+.st-popup{position:fixed;top:80px;left:50%;transform:translateX(-50%);width:320px;background:#fff;border-radius:12px;padding:16px;box-shadow:0 8px 32px rgba(0,0,0,0.25);z-index:9000;border:1px solid #ddd;display:none;max-height:80vh;overflow-y:auto}
 .st-popup-titre{display:flex;align-items:center;gap:8px;margin-bottom:10px}
 .st-popup-dot{width:14px;height:14px;border-radius:50%;flex-shrink:0}
 .st-popup-nom{font-size:13px;font-weight:bold;color:#1a1a2e;font-family:Georgia,serif}
@@ -177,7 +177,7 @@ html,body{height:100%;font-family:Arial,sans-serif;background:#f5f0e8}
 #pres .pill-vis{background:rgba(231,76,60,0.15);color:#e74c3c;border:1px solid rgba(231,76,60,0.3)}
 
 /* POPUPS STATIONS */
-.st-popup{position:absolute;top:10px;left:10px;width:280px;background:#fff;border-radius:12px;padding:16px;box-shadow:0 6px 24px rgba(0,0,0,0.18);z-index:50;border:1px solid #ddd}
+.st-popup{position:fixed;top:80px;left:50%;transform:translateX(-50%);width:320px;background:#fff;border-radius:12px;padding:16px;box-shadow:0 8px 32px rgba(0,0,0,0.25);z-index:9000;border:1px solid #ddd;display:none;max-height:80vh;overflow-y:auto}
 .st-popup-titre{display:flex;align-items:center;gap:8px;margin-bottom:10px}
 .st-popup-dot{width:14px;height:14px;border-radius:50%;flex-shrink:0}
 .st-popup-nom{font-size:13px;font-weight:bold;color:#1a1a2e;font-family:Georgia,serif}
@@ -357,6 +357,9 @@ html,body{height:100%;font-family:Arial,sans-serif;background:#f5f0e8}
     </div>
   </div>
 </div>
+
+<!-- POPUP STATION -->
+<div id="st-popup" class="st-popup"></div>
 <!-- OVERLAY CARTE -->
 <div id="overlay-carte">
   <div id="overlay-inner">
@@ -547,7 +550,9 @@ function initJeu(nb, noms){
   jA=0; tour=1; dest=-1; carte=null; carteEnnui=null; hypPassages={};
   derniereGrise={};
   for(var i=0;i<N;i++) derniereGrise[i]=false;
-  Object.keys(CARTES).forEach(function(k){ decks[k]=CARTES[k].slice().sort(function(){return Math.random()-.5;}); });
+  Object.keys(CARTES).forEach(function(k){ var arr=CARTES[k].slice();
+      for(var xi=arr.length-1;xi>0;xi--){var xj=Math.floor(Math.random()*(xi+1));var xt=arr[xi];arr[xi]=arr[xj];arr[xj]=xt;}
+      decks[k]=arr; });
   document.getElementById('turn').textContent='Tour 1 · '+joueurs[0].nom;
   document.getElementById('btn-die').disabled=false;
   document.getElementById('btn-draw').disabled=true;
@@ -557,7 +562,9 @@ function initJeu(nb, noms){
 }
 
 function tirer(k){
-  if(!decks[k]||!decks[k].length) decks[k]=CARTES[k].slice().sort(function(){return Math.random()-.5;});
+  if(!decks[k]||!decks[k].length) var arr=CARTES[k].slice();
+      for(var xi=arr.length-1;xi>0;xi--){var xj=Math.floor(Math.random()*(xi+1));var xt=arr[xi];arr[xi]=arr[xj];arr[xj]=xt;}
+      decks[k]=arr;
   return decks[k].pop();
 }
 
@@ -673,6 +680,21 @@ function choisirEnnui(choix){
 }
 
 function tourSuivant(){
+  // Gérer les tours de récupération à l'Amygdale
+  if(joueurs[jA].toursRecup && joueurs[jA].toursRecup>0){
+    joueurs[jA].toursRecup--;
+    document.getElementById('card-content').innerHTML=
+      '<div style="text-align:center;padding:12px;background:#fdedec;border-radius:8px;color:#c0392b;font-family:Arial,sans-serif;font-size:12px">'+
+      '<div style="font-size:20px;margin-bottom:6px">⏳</div>'+
+      '<strong>Récupération à l\'Amygdale</strong><br>'+
+      (joueurs[jA].toursRecup>0?'Encore '+joueurs[jA].toursRecup+' tour(s)...':'Récupération terminée ! Tu peux continuer.')+
+      '</div>';
+    document.getElementById('btn-die').disabled=true;
+    document.getElementById('btn-draw').disabled=true;
+    document.getElementById('btn-next').disabled=false;
+    rendreScores();
+    return;
+  }
   jA=(jA+1)%N;
   if(jA===0) tour++;
   document.getElementById('turn').textContent='Tour '+tour+' · '+joueurs[jA].nom;
