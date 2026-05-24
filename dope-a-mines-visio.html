@@ -562,9 +562,14 @@ function initJeu(nb, noms){
 }
 
 function tirer(k){
-  if(!decks[k]||!decks[k].length) var arr=CARTES[k].slice();
-      for(var xi=arr.length-1;xi>0;xi--){var xj=Math.floor(Math.random()*(xi+1));var xt=arr[xi];arr[xi]=arr[xj];arr[xj]=xt;}
-      decks[k]=arr;
+  if(!decks[k]||!decks[k].length){
+    var arr=CARTES[k].slice();
+    for(var xi=arr.length-1;xi>0;xi--){
+      var xj=Math.floor(Math.random()*(xi+1));
+      var xt=arr[xi]; arr[xi]=arr[xj]; arr[xj]=xt;
+    }
+    decks[k]=arr;
+  }
   return decks[k].pop();
 }
 
