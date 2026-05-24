@@ -95,6 +95,7 @@ html,body{height:100%;font-family:Arial,sans-serif;background:#f5f0e8}
 
 /* POPUPS STATIONS */
 .st-popup{position:fixed;top:80px;left:50%;transform:translateX(-50%);width:320px;background:#fff;border-radius:12px;padding:16px;box-shadow:0 8px 32px rgba(0,0,0,0.25);z-index:9000;border:1px solid #ddd;display:none;max-height:80vh;overflow-y:auto}
+.st-info{position:fixed;top:80px;left:20px;width:260px;background:#fff;border-radius:12px;padding:14px;box-shadow:0 4px 20px rgba(0,0,0,0.18);z-index:8500;border:1px solid #ddd;display:none}
 .st-popup-titre{display:flex;align-items:center;gap:8px;margin-bottom:10px}
 .st-popup-dot{width:14px;height:14px;border-radius:50%;flex-shrink:0}
 .st-popup-nom{font-size:13px;font-weight:bold;color:#1a1a2e;font-family:Georgia,serif}
@@ -178,6 +179,7 @@ html,body{height:100%;font-family:Arial,sans-serif;background:#f5f0e8}
 
 /* POPUPS STATIONS */
 .st-popup{position:fixed;top:80px;left:50%;transform:translateX(-50%);width:320px;background:#fff;border-radius:12px;padding:16px;box-shadow:0 8px 32px rgba(0,0,0,0.25);z-index:9000;border:1px solid #ddd;display:none;max-height:80vh;overflow-y:auto}
+.st-info{position:fixed;top:80px;left:20px;width:260px;background:#fff;border-radius:12px;padding:14px;box-shadow:0 4px 20px rgba(0,0,0,0.18);z-index:8500;border:1px solid #ddd;display:none}
 .st-popup-titre{display:flex;align-items:center;gap:8px;margin-bottom:10px}
 .st-popup-dot{width:14px;height:14px;border-radius:50%;flex-shrink:0}
 .st-popup-nom{font-size:13px;font-weight:bold;color:#1a1a2e;font-family:Georgia,serif}
@@ -360,6 +362,7 @@ html,body{height:100%;font-family:Arial,sans-serif;background:#f5f0e8}
 
 <!-- POPUP STATION -->
 <div id="st-popup" class="st-popup"></div>
+<div id="st-info" class="st-info"></div>
 <!-- OVERLAY CARTE -->
 <div id="overlay-carte">
   <div id="overlay-inner">
@@ -889,15 +892,38 @@ var POPUP_ST=null;
 // Compteur de passages Hypothalamus
 var hypPassages={};
 
+var ST_DESC={
+  ATV:"Aire Tegmentale Ventrale. Source de la dopamine. Point de depart du circuit. Naissance de la motivation et de l'anticipation du plaisir.",
+  Hypothalamus:"Carrefour neuroendocrinien. Regule la faim, la soif, le sommeil, la libido et la reponse au stress via l'axe HPA. Traverse deux fois dans le parcours.",
+  NA:"Noyau Accumbens. Coeur du circuit de la recompense. Ici se joue le Pont DA : acces libre, conditionne ou bloque vers le Cortex PF.",
+  Hippocampe:"Siege de la memoire et de l'apprentissage. Encode les souvenirs lies aux recompenses et aux experiences stressantes.",
+  Amygdale:"Sentinelle emotionnelle. Detecte les menaces et declenche la peur. Quand le cortisol est eleve, elle bloque l'acces au Cortex PF.",
+  "Cortex PF":"Siege de la regulation consciente. Destination finale. Quand il reprend le controle sur le circuit limbique, la regulation devient possible."
+};
+
+function fermerInfo(){
+  var el=document.getElementById('st-info');
+  if(el){ el.style.display='none'; el.dataset.nom=''; }
+}
+
 function toggleStation(nom){
-  // Fermer d'abord si une fiche est déjà ouverte
-  if(POPUP_ST){
-    fermerStation();
-    if(POPUP_ST===nom) return;
+  var el=document.getElementById('st-info');
+  if(!el) return;
+  if(el.style.display==='block' && el.dataset.nom===nom){
+    fermerInfo(); return;
   }
-  var snom=nom==='Hypothalamus'?((hypPassages[jA+'_hyp']||0)<=1?'Hypothalamus':'Hypothalamus2'):
-           nom==='Cortex PF'?'CortexPF':nom;
-  ouvrirStationPopup(snom,false,function(){});
+  var st=STATIONS[nom];
+  var col=st?st.col:'#888';
+  var desc=ST_DESC[nom]||'';
+  el.innerHTML=
+    '<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">'+
+    '<div style="width:12px;height:12px;border-radius:50%;background:'+col+'"></div>'+
+    '<strong style="font-size:12px;color:#1a1a2e;font-family:Georgia,serif">'+nom+'</strong>'+
+    '<button onclick="fermerInfo()" style="margin-left:auto;background:none;border:none;font-size:16px;cursor:pointer;color:#888">x</button>'+
+    '</div>'+
+    '<div style="font-size:11px;color:#444;line-height:1.6;font-family:Arial,sans-serif">'+desc+'</div>';
+  el.dataset.nom=nom;
+  el.style.display='block';
 }
 
 function getPos(de,a,n){
