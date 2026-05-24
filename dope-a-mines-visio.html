@@ -656,6 +656,17 @@ function declencherStations(avant, apres){
   afficherStation();
 }
 
+// ═══ FONCTIONS NEUROBIOLOGIQUES ══════════
+function getPont(j){
+  return (j.totalDA||0) - (j.totalCo||0);
+}
+
+function niveauPont(pont){
+  if(pont > -40) return {lbl:'Pont FERME', col:'#1e8449', bg:'#eafaf1'};
+  if(pont > -70) return {lbl:'Pont ENTROUVERT', col:'#d68910', bg:'#fef9e7'};
+  return {lbl:'Pont FORCE', col:'#c0392b', bg:'#fdedec'};
+}
+
 function ouvrirStationPopup(nom, hasNext, cb){
   var j=joueurs[jA];
   var pont=getPont(j);
