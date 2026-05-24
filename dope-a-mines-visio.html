@@ -539,6 +539,28 @@ G:[
   {n:28,t:'Cravate en ceinture',s:'Tu mets ta cravate en ceinture.',o1:'Dire que c\'est du stylisme (+40/-10)',o2:'Tenter de la nouer (-10/+30)',bon:1,gain:'+3 jetons',debrief:'C\'est quoi pour toi le moment o\u00f9 l\'improvisation devient une ressource ?'},
   {n:29,t:'Toi aussi au serveur',s:'Le serveur dit Bon appétit, tu réponds Toi aussi.',o1:'L\'inviter à s\'asseoir (+30/+10)',o2:'Rougir violemment (-20/+40)',bon:1,gain:'+3 cases',debrief:'Qu\'est-ce que le cerveau fait pour \u00e9viter la g\u00eane sociale ?'},
   {n:30,t:'Chercher son tel avec la lampe torche',s:'Tu cherches ton téléphone... en utilisant sa lampe torche.',o1:'Éclairer sous le canapé (+10/+20)',o2:'Rire de toi-même (+20/-20)',bon:2,gain:'+2 jetons/joueur',debrief:'Qu\'est-ce qui se passe quand ton cerveau utilise le mauvais outil pour r\u00e9soudre un probl\u00e8me ?'},
+],
+Vi:[
+  {t:'V1 · Sens',s:'Une tâche longue et rébarbative bloque votre progression. L\'Amygdale pousse à l\'abandon.',c:'Le Cortex relie cet effort à votre objectif de vie global.',da:30,co:-20,pts:20,e:'Avancer de 2 cases'},
+  {t:'V2 · Motivation',s:'Face à un défi complexe, la peur de l\'échec vous paralyse.',c:'Vous voyez la situation comme un terrain d\'apprentissage, sans enjeu de résultat.',da:40,co:-10,pts:20,e:'+2 jetons de réparation'},
+  {t:'V3 · Relation',s:'Un conflit éclate. La méfiance et le repli défensif s\'installent.',c:'Vous écoutez activement et reformulez les besoins de l\'autre.',da:20,co:-30,pts:20,e:'+2 jetons (Joueur + Allié)'},
+  {t:'V4 · Auto-Observation',s:'Accumulation de micro-agressions. L\'Amygdale s\'emballe.',c:'Vous coupez l\'action, observez vos signaux physiques et nommez l\'émotion.',da:10,co:-40,pts:20,e:'Immunité prochaine case Cortisol'},
+  {t:'V5 · Relation',s:'Votre énergie est au plus bas, l\'action individuelle semble vaine.',c:'Vous menez une action dont le bénéfice est entièrement pour un autre joueur.',da:30,co:-20,pts:20,e:'Le joueur aidé avance de 2 cases'},
+  {t:'V6 · Sens',s:'Vous subissez un échec cuisant. L\'Amygdale crie à l\'incompétence.',c:'Le Cortex analyse l\'échec comme un feedback et liste deux leçons.',da:20,co:-30,pts:20,e:'+2 jetons de réparation'},
+  {t:'V7 · Sens',s:'On vous propose un raccourci qui contredit vos règles éthiques.',c:'Vous refusez pour rester aligné avec vos valeurs profondes.',da:30,co:0,pts:20,e:'Avancer de 3 cases'},
+  {t:'V8 · Motivation',s:'Le chemin vers le Cortex est encore long. Vous ressentez de l\'impatience.',c:'Vous fêtez activement le tout petit pas accompli ce tour-ci.',da:30,co:-10,pts:20,e:'+1 jeton de réparation'},
+  {t:'V9 · Relation',s:'L\'ambiance est lourde, les joueurs ruminent leurs cartes Cortisol.',c:'Vous exprimez à voix haute une belle action partagée avec l\'équipe.',da:20,co:-20,pts:20,e:'+1 jeton pour tous les joueurs'},
+  {t:'V10 · Motivation',s:'Une surcharge d\'informations vous submerge.',c:'Vous isolez une seule action, coupez les distractions et vous y plongez.',da:40,co:-20,pts:20,e:'Avancer de 2 cases (ignore Grise)'},
+  {t:'V11 · Relation',s:'Un joueur commet une erreur qui pénalise temporairement le groupe.',c:'Au lieu de blâmer, vous proposez une solution collaborative de secours.',da:20,co:-20,pts:20,e:'Le groupe avance de 1 case'},
+  {t:'V12 · Auto-Observation',s:'Le rythme s\'accélère, la tension monte d\'un cran.',c:'Vous imposez 30 secondes de pause pour une respiration rythmée.',da:0,co:-40,pts:20,e:'+2 jetons de réparation'},
+  {t:'V13 · Relation',s:'Vous venez de décrocher une récompense majeure.',c:'Vous attribuez publiquement une partie de votre réussite à un partenaire.',da:30,co:-10,pts:20,e:'Le partenaire choisi gagne 1 jeton'},
+  {t:'V14 · Auto-Observation',s:'Les dés et les cartes s\'acharnent. Vous ne pouvez rien y faire.',c:'Vous stoppez la lutte mentale et acceptez factuellement la situation.',da:10,co:-30,pts:20,e:'Avancer de 2 cases'},
+  {t:'V15 · Relation',s:'Vous devez prêter un jeton à un joueur sans garantie.',c:'Vous décidez de faire confiance et de valider ce partenariat risqué.',da:30,co:-10,pts:20,e:'Avancer de 3 cases si succès'},
+  {t:'V16 · Auto-Observation',s:'Vous êtes obsdé par le score des autres, ce qui génère de l\'anxiété.',c:'Vous vous concentrez sur votre propre stratégie.',da:20,co:-20,pts:20,e:'+2 jetons de réparation'},
+  {t:'V17 · Motivation',s:'Vous commettez une erreur ridicule qui ruine votre plan du tour.',c:'Vous choisissez d\'en rire plutôt que de vous justifier.',da:40,co:-20,pts:20,e:'Avancer de 2 cases'},
+  {t:'V18 · Motivation',s:'Le plateau présente un obstacle colossal qui semble insurmontable.',c:'Le Cortex transforme la menace en défi de résilience personnelle.',da:40,co:10,pts:20,e:'Avancer de 3 cases'},
+  {t:'V19 · Relation',s:'Deux joueurs s\'affrontent, menaçant l\'équilibre du plateau.',c:'Vous proposez un arbitrage neutre et juste, basé sur des faits.',da:20,co:-20,pts:20,e:'Chaque joueur gagne 1 jeton'},
+  {t:'V20 · Auto-Observation',s:'Votre esprit divague sur les coups futurs, vous perdez le fil.',c:'Vous ramenez toute votre attention sur l\'action du joueur en cours.',da:20,co:-10,pts:20,e:'+1 jeton de réparation'}
 ]
 };
 
@@ -616,7 +638,16 @@ function piocher(){
 
   if(cc.c==='Vi'){
     derniereGrise[jA]=false;
-    document.getElementById('card-content').innerHTML='<div style="color:#16a085;font-size:12px;text-align:center;padding:12px"><div style="font-size:20px">🧬</div><div style="margin-top:6px;font-weight:bold">Plasticité Cérébrale</div><div style="margin-top:4px;color:#888">Cartes Vi à venir.</div></div>';
+    var c=tirer('Vi');
+    carte=Object.assign({},c,{fam:'Vi'});
+    joueurs[jA].score+=c.pts;
+    joueurs[jA].totalDA+=(c.da||0);
+    joueurs[jA].totalCo+=(c.co||0);
+    joueurs[jA].passages++;
+    majPontDA(c.co);
+    var html=buildCarte(carte);
+    document.getElementById('card-content').innerHTML=html+'<div style="margin-top:8px"><button onclick="ouvrirCarte(buildCarte(carte))" style="font-size:11px;padding:4px 10px;border-radius:4px;border:1px solid #ddd;background:#f5f0e8;cursor:pointer">🔍 Voir en grand</button></div>';
+    ouvrirCarte(html);
     rendrePlateau(); rendreScores(); return;
   }
 
