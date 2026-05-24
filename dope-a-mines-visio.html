@@ -347,7 +347,7 @@ html,body{height:100%;font-family:Arial,sans-serif;background:#f5f0e8}
     <div id="roue-titre">Roue Casineuronale</div>
     <div id="roue-sous">Mon cerveau · Ici &amp; Maintenant</div>
     <div id="roue-jnom"></div>
-    <canvas id="roue-canvas2" width="440" height="440" style="width:440px;height:440px;display:block"></canvas>
+    <canvas id="roue-canvas2" width="440" height="440" style="width:440px!important;height:440px!important;display:block;max-width:440px"></canvas>
     <div id="roue-result">
       <div id="roue-cnom">Lance la roue pour découvrir ton état de départ</div>
       <div id="roue-cquad"></div>
@@ -689,8 +689,7 @@ function ouvrirStationPopup(nom, hasNext, cb){
     var k=jA+'_hyp'; hypPassages[k]=(hypPassages[k]||0)+1;
     html='<div class="st-popup-titre"><div class="st-popup-dot" style="background:#27ae60"></div><strong class="st-popup-nom">Hypothalamus — Point de situation</strong><button class="st-popup-close" onclick="fermerStation()">x</button></div>'+
     '<div class="st-popup-desc">Carrefour neuroendocrinien. Faim, soif, sommeil, libido. Ton corps parle ici.</div>'+
-    '<div class="st-mecanique" style="background:'+niv.bg+';border-left:3px solid '+niv.col+'"><div class="st-mecanique-titre">PONT DA</div><div class="st-mecanique-val" style="color:'+niv.col+'">'+niv.lbl+' ('+(pont>0?'+':'')+pont+')</div><div class="st-mecanique-sub">DA='+j.totalDA+' Co='+j.totalCo+'</div></div>'+
-    '<div class="st-mecanique" style="background:#f5f0e8;border-left:3px solid #888"><div class="st-mecanique-titre">QUESTION ANIMATEUR</div><div class="st-mecanique-sub" style="font-style:italic">Qu’est-ce que ton corps te demande en ce moment ?</div></div>';
+    '<div class="st-mecanique" style="background:'+niv.bg+';border-left:3px solid '+niv.col+'"><div class="st-mecanique-titre">PONT DA</div><div class="st-mecanique-val" style="color:'+niv.col+'">'+niv.lbl+' ('+(pont>0?'+':'')+pont+')</div><div class="st-mecanique-sub">DA='+j.totalDA+' Co='+j.totalCo+'</div></div>';
   } else if(nom==='Hypothalamus2'){
     var k=jA+'_hyp'; hypPassages[k]=(hypPassages[k]||0)+1;
     var jetons=j.jetons||0;
@@ -713,8 +712,7 @@ function ouvrirStationPopup(nom, hasNext, cb){
     html='<div class="st-popup-titre"><div class="st-popup-dot" style="background:#8e44ad"></div><strong class="st-popup-nom">Hippocampe — Réparation</strong><button class="st-popup-close" onclick="fermerStation()">x</button></div>'+
     '<div class="st-mecanique" style="background:'+niv.bg+';border-left:3px solid '+niv.col+'"><div class="st-mecanique-titre">PONT DA</div><div class="st-mecanique-val" style="color:'+niv.col+'">'+(pont>0?'+':'')+pont+'</div><div class="st-mecanique-sub">DA='+j.totalDA+' Co='+j.totalCo+'</div></div>'+
     (jetons>0?'<div class="st-mecanique" style="background:#fef9e7;border-left:3px solid #d68910"><div class="st-mecanique-titre">JETONS DE RÉPARATION</div><div class="st-mecanique-val" style="color:#d68910">+'+jetons+' jeton(s) — Total : '+(j.jetons)+'</div></div>':
-    '<div class="st-mecanique" style="background:#f5f0e8;border-left:3px solid #888"><div class="st-mecanique-sub">'+msg+'</div></div>')+
-    '<div class="st-mecanique" style="background:#f5f0e8;border-left:3px solid #8e44ad"><div class="st-mecanique-titre">QUESTION ANIMATEUR</div><div class="st-mecanique-sub" style="font-style:italic">Qu’est-ce que tu retiens de ce que ton cerveau vient de traverser ?</div></div>';
+    '<div class="st-mecanique" style="background:#f5f0e8;border-left:3px solid #888"><div class="st-mecanique-sub">'+msg+'</div></div>');
     rendreScores();
   } else if(nom==='Amygdale'){
     var jetons=j.jetons||0;
