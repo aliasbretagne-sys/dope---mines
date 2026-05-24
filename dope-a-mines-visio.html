@@ -2,6 +2,9 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <title>Dope a Mines - Visio</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
@@ -147,7 +150,7 @@ html,body{height:100%;font-family:Arial,sans-serif;background:#f5f0e8}
     <div id="roue-titre">Roue Casineuronale</div>
     <div id="roue-sous">Mon cerveau · Ici &amp; Maintenant</div>
     <div id="roue-jnom"></div>
-    <canvas id="roue-cv" width="360" height="360"></canvas>
+    <canvas id="roue-cv" width="440" height="440"></canvas>
     <div id="roue-result">
       <div id="roue-cnom">Lance la roue pour découvrir ton état de départ</div>
       <div id="roue-cquad"></div>
@@ -697,8 +700,8 @@ var rJoueurIdx=0, rCasesJoueurs=[];
 
 function rDessiner(angle){
   if(!rCX) return;
-  var W=360, CX=W/2, CY=W/2;
-  var RE=165, RM=110, RI=62, RC=32;
+  var W=440, CX=W/2, CY=W/2;
+  var RE=200, RM=135, RI=78, RC=38;
   var N=36, step=Math.PI*2/N;
   rCX.clearRect(0,0,W,W);
   rCX.fillStyle='#f5f0e8';
@@ -720,7 +723,7 @@ function rDessiner(angle){
     rCX.save();
     rCX.translate(CX+((RM+RE)/2)*Math.cos(aM),CY+((RM+RE)/2)*Math.sin(aM));
     rCX.rotate(aM+Math.PI/2);
-    rCX.font='bold 8px Arial'; rCX.fillStyle=qc.txt; rCX.textAlign='center';
+    rCX.font='bold 9px Arial'; rCX.fillStyle=qc.txt; rCX.textAlign='center';
     rCX.fillText((c.co>0?'+':'')+c.co,0,3);
     rCX.restore();
     rCX.beginPath();
@@ -734,10 +737,10 @@ function rDessiner(angle){
     rCX.translate(CX+((RI+RM)/2)*Math.cos(aM),CY+((RI+RM)/2)*Math.sin(aM));
     rCX.rotate(aM+Math.PI/2);
     var sn=c.n.length>8?c.n.substring(0,7)+'.':c.n;
-    rCX.font='bold 6.5px Arial'; rCX.fillStyle='#1a1a2e'; rCX.textAlign='center';
+    rCX.font='bold 8px Arial'; rCX.fillStyle='#1a1a2e'; rCX.textAlign='center';
     rCX.fillText(sn,0,-4);
-    rCX.font='7px Arial'; rCX.fillStyle='#2471a3';
-    rCX.fillText((c.da>0?'+':'')+c.da,0,5);
+    rCX.font='8px Arial'; rCX.fillStyle='#2471a3';
+    rCX.fillText((c.da>0?'+':'')+c.da,0,6);
     rCX.restore();
   }
   [0,9,18,27].forEach(function(q){
