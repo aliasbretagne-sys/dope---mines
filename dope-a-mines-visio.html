@@ -659,6 +659,12 @@ function declencherStations(avant, apres){
   afficherStation();
 }
 
+function fermerStation(){
+  POPUP_ST=null;
+  var popup=document.getElementById('st-popup');
+  if(popup){ popup.style.display='none'; popup.innerHTML=''; }
+}
+
 // ═══ FONCTIONS NEUROBIOLOGIQUES ══════════
 function getPont(j){
   return (j.totalDA||0) - (j.totalCo||0);
