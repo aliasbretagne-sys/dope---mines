@@ -100,7 +100,7 @@ html{scroll-behavior:smooth}
 body{font-family:Georgia,serif;background:#f5f0e8;color:#1a1a2e;line-height:1.6}
 
 /* NAVIGATION */
-nav{position:fixed;top:0;left:0;width:100%;background:rgba(26,26,46,0.97);padding:12px 40px;display:flex;align-items:center;justify-content:space-between;z-index:100}
+#presentation nav{position:fixed;top:0;left:0;width:100%;background:rgba(26,26,46,0.97);padding:12px 40px;display:flex;align-items:center;justify-content:space-between;z-index:100}
 nav .logo{font-family:Georgia,serif;font-size:15px;font-weight:bold;color:#f5f0e8;letter-spacing:.06em}
 nav .logo span{color:#e74c3c}
 nav ul{list-style:none;display:flex;gap:24px}
@@ -108,14 +108,14 @@ nav ul a{color:rgba(255,255,255,0.7);text-decoration:none;font-family:Arial,sans
 nav ul a:hover{color:#fff}
 
 /* SECTIONS */
-section{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:100px 40px 60px}
-section:nth-child(odd){background:#f5f0e8}
-section:nth-child(even){background:#fdfcf8}
+#presentation section{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:100px 40px 60px}
+#presentation section:nth-child(odd){background:#f5f0e8}
+#presentation section:nth-child(even){background:#fdfcf8}
 
-.container{max-width:760px;width:100%}
+#presentation .container{max-width:760px;width:100%}
 
 /* HERO */
-#hero{background:#1a1a2e;min-height:100vh}
+#presentation #hero{background:#1a1a2e;min-height:100vh}
 #hero .container{text-align:center}
 .hero-label{font-family:Arial,sans-serif;font-size:11px;text-transform:uppercase;letter-spacing:.15em;color:rgba(255,255,255,0.5);margin-bottom:20px}
 .hero-title{font-family:Georgia,serif;font-size:52px;font-weight:bold;color:#f5f0e8;line-height:1.1;margin-bottom:16px}
@@ -160,7 +160,7 @@ section:nth-child(even){background:#fdfcf8}
 .citation-sig{margin-top:16px;font-family:Arial,sans-serif;font-size:11px;color:rgba(255,255,255,0.5)}
 
 /* BIENVEILLANCE */
-#bienveillance{background:#1a1a2e}
+#presentation #bienveillance{background:#1a1a2e}
 #bienveillance .section-label{color:#f39c12}
 #bienveillance .section-title{color:#f5f0e8}
 #bienveillance .divider{background:#f39c12}
@@ -176,12 +176,11 @@ section:nth-child(even){background:#fdfcf8}
 .btn-sous{text-align:center;margin-top:12px;font-family:Arial,sans-serif;font-size:11px;color:rgba(255,255,255,0.35)}
 
 /* FOOTER */
-footer{background:#111;padding:24px 40px;text-align:center;font-family:Arial,sans-serif;font-size:11px;color:rgba(255,255,255,0.3)}
+#presentation footer{background:#111;padding:24px 40px;text-align:center;font-family:Arial,sans-serif;font-size:11px;color:rgba(255,255,255,0.3)}
 footer span{color:rgba(255,255,255,0.5)}
 
-#presentation{display:block}
+#presentation{display:block;position:relative;z-index:1}
 #app{display:none}
-#presentation ~ #app{display:none}
 </style>
 </head>
 <body>
@@ -348,7 +347,7 @@ footer span{color:rgba(255,255,255,0.5)}
 </footer>
 
 </div>
-<div id="app" style="display:none">
+<div id="app" style="display:none;flex-direction:column;height:100vh">
 <div id="bar-inner" style="display:contents">
   <h1>DOPE À MINES · ADULTES · VISIO</h1>
   <span id="turn">Tour 1 · J1</span>
