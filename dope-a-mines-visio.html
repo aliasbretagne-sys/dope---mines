@@ -92,114 +92,82 @@ html,body{height:100%;font-family:Arial,sans-serif;background:#f5f0e8}
 .rbtn-ok{background:#c0392b;color:#fff}
 .rbtn-ok:hover{background:#a93226}
 .rbtn-ok:disabled{opacity:0.4;cursor:not-allowed}
-
-/* PAGE PRÉSENTATION */
-
-*{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth}
-body{font-family:Georgia,serif;background:#f5f0e8;color:#1a1a2e;line-height:1.6}
-
-/* NAVIGATION */
-#presentation nav{position:fixed;top:0;left:0;width:100%;background:rgba(26,26,46,0.97);padding:12px 40px;display:flex;align-items:center;justify-content:space-between;z-index:100}
-nav .logo{font-family:Georgia,serif;font-size:15px;font-weight:bold;color:#f5f0e8;letter-spacing:.06em}
-nav .logo span{color:#e74c3c}
-nav ul{list-style:none;display:flex;gap:24px}
-nav ul a{color:rgba(255,255,255,0.7);text-decoration:none;font-family:Arial,sans-serif;font-size:12px;letter-spacing:.05em;text-transform:uppercase}
-nav ul a:hover{color:#fff}
-
-/* SECTIONS */
-#presentation section{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:100px 40px 60px}
-#presentation section:nth-child(odd){background:#f5f0e8}
-#presentation section:nth-child(even){background:#fdfcf8}
-
-#presentation .container{max-width:760px;width:100%}
-
-/* HERO */
-#presentation #hero{background:#1a1a2e;min-height:100vh}
-#hero .container{text-align:center}
-.hero-label{font-family:Arial,sans-serif;font-size:11px;text-transform:uppercase;letter-spacing:.15em;color:rgba(255,255,255,0.5);margin-bottom:20px}
-.hero-title{font-family:Georgia,serif;font-size:52px;font-weight:bold;color:#f5f0e8;line-height:1.1;margin-bottom:16px}
-.hero-title span{color:#e74c3c}
-.hero-sub{font-size:18px;color:rgba(255,255,255,0.6);margin-bottom:12px;font-family:Arial,sans-serif;font-weight:300}
-.hero-desc{font-size:15px;color:rgba(255,255,255,0.5);margin-bottom:48px;font-family:Arial,sans-serif;max-width:520px;margin-left:auto;margin-right:auto;line-height:1.7}
-.brain-icon{font-size:56px;margin-bottom:24px;display:block}
-.pills-row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:48px}
-.pill-tag{padding:5px 14px;border-radius:20px;font-family:Arial,sans-serif;font-size:11px;font-weight:500;letter-spacing:.04em}
-.pill-neuro{background:rgba(46,204,113,0.15);color:#2ecc71;border:1px solid rgba(46,204,113,0.3)}
-.pill-ped{background:rgba(52,152,219,0.15);color:#5dade2;border:1px solid rgba(52,152,219,0.3)}
-.pill-vis{background:rgba(231,76,60,0.15);color:#e74c3c;border:1px solid rgba(231,76,60,0.3)}
-.btn-hero{display:inline-block;padding:16px 40px;background:#e74c3c;color:#fff;text-decoration:none;border-radius:8px;font-family:Georgia,serif;font-size:16px;font-weight:bold;letter-spacing:.04em;transition:background .2s;border:none;cursor:pointer}
-.btn-hero:hover{background:#c0392b}
-.scroll-hint{margin-top:48px;font-family:Arial,sans-serif;font-size:11px;color:rgba(255,255,255,0.3);letter-spacing:.08em;text-transform:uppercase}
-
-/* TITRES SECTION */
-.section-label{font-family:Arial,sans-serif;font-size:10px;text-transform:uppercase;letter-spacing:.15em;color:#e74c3c;margin-bottom:12px}
-.section-title{font-family:Georgia,serif;font-size:34px;color:#1a1a2e;margin-bottom:8px;line-height:1.2}
-.section-sub{font-family:Arial,sans-serif;font-size:14px;color:#888;margin-bottom:36px}
-.divider{width:48px;height:3px;background:#e74c3c;margin-bottom:36px;border-radius:2px}
-
-/* JEU */
-.etapes{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:32px}
-.etape{background:#fff;border-radius:10px;padding:16px 10px;text-align:center;border:1px solid #e8e0d4}
-.etape-num{width:28px;height:28px;border-radius:50%;background:#1a1a2e;color:#fff;font-family:Arial,sans-serif;font-size:12px;font-weight:bold;display:flex;align-items:center;justify-content:center;margin:0 auto 8px}
-.etape-icon{font-size:20px;margin-bottom:6px}
-.etape-titre{font-family:Arial,sans-serif;font-size:11px;font-weight:bold;color:#1a1a2e;margin-bottom:4px}
-.etape-desc{font-family:Arial,sans-serif;font-size:10px;color:#888;line-height:1.4}
-.infos-jeu{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
-.info-bloc{background:#fff;border-radius:10px;padding:16px;text-align:center;border:1px solid #e8e0d4}
-.info-val{font-size:26px;font-weight:bold;color:#1a1a2e;font-family:Georgia,serif}
-.info-lbl{font-family:Arial,sans-serif;font-size:11px;color:#888;margin-top:4px}
-
-/* MANIFESTE */
-.manifeste-bloc{margin-bottom:28px}
-.manifeste-titre{font-family:Arial,sans-serif;font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:#888;margin-bottom:10px}
-.manifeste-texte{font-size:15px;color:#333;line-height:1.8}
-.manifeste-texte strong{color:#1a1a2e}
-.citation-box{background:#1a1a2e;border-radius:10px;padding:24px 28px;margin:28px 0}
-.citation-txt{font-size:16px;color:#f5f0e8;font-style:italic;line-height:1.7}
-.citation-sig{margin-top:16px;font-family:Arial,sans-serif;font-size:11px;color:rgba(255,255,255,0.5)}
-
-/* BIENVEILLANCE */
-#presentation #bienveillance{background:#1a1a2e}
-#bienveillance .section-label{color:#f39c12}
-#bienveillance .section-title{color:#f5f0e8}
-#bienveillance .divider{background:#f39c12}
-.bv-items{display:flex;flex-direction:column;gap:16px;margin-bottom:40px}
-.bv-item{display:flex;gap:14px;align-items:flex-start}
-.bv-icon{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;margin-top:2px}
-.bv-text{font-size:15px;color:rgba(255,255,255,0.85);line-height:1.7}
-.bv-text strong{color:#fff}
-.avertissement{background:rgba(255,255,255,0.06);border-radius:10px;padding:18px 22px;border-left:3px solid #f39c12;margin-bottom:36px}
-.avertissement p{font-family:Arial,sans-serif;font-size:12px;color:rgba(255,255,255,0.5);line-height:1.6;font-style:italic}
-.btn-demarrer{display:block;width:100%;max-width:340px;margin:0 auto;padding:18px 40px;background:#e74c3c;color:#fff;text-decoration:none;border-radius:10px;font-family:Georgia,serif;font-size:18px;font-weight:bold;letter-spacing:.04em;text-align:center;transition:background .2s;box-shadow:0 4px 20px rgba(231,76,60,0.35)}
-.btn-demarrer:hover{background:#c0392b}
-.btn-sous{text-align:center;margin-top:12px;font-family:Arial,sans-serif;font-size:11px;color:rgba(255,255,255,0.35)}
-
-/* FOOTER */
-#presentation footer{background:#111;padding:24px 40px;text-align:center;font-family:Arial,sans-serif;font-size:11px;color:rgba(255,255,255,0.3)}
-footer span{color:rgba(255,255,255,0.5)}
-
-#presentation{display:block;position:relative;z-index:1}
-#app{display:none}
 </style>
 </head>
 <body>
 
-<div id="presentation">
+
+<!-- PRÉSENTATION -->
+<div id="pres" style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:99999;overflow-y:auto;background:#1a1a2e;font-family:Georgia,serif">
+
+<style>
+#pres nav{position:sticky;top:0;left:0;width:100%;background:rgba(26,26,46,0.97);padding:12px 40px;display:flex;align-items:center;justify-content:space-between;z-index:100;box-sizing:border-box}
+#pres .plogo{font-size:15px;font-weight:bold;color:#f5f0e8;letter-spacing:.06em}
+#pres .plogo span{color:#e74c3c}
+#pres ul{list-style:none;display:flex;gap:24px;margin:0;padding:0}
+#pres ul a{color:rgba(255,255,255,0.7);text-decoration:none;font-family:Arial,sans-serif;font-size:12px;letter-spacing:.05em;text-transform:uppercase}
+#pres .psec{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:100px 40px 60px;box-sizing:border-box}
+#pres .psec:nth-child(even){background:#fdfcf8}
+#pres .psec:nth-child(odd){background:#1a1a2e}
+#pres #pbienveillance{background:#1a1a2e}
+#pres .pcont{max-width:760px;width:100%}
+#pres .plabel{font-family:Arial,sans-serif;font-size:10px;text-transform:uppercase;letter-spacing:.15em;color:#e74c3c;margin-bottom:12px}
+#pres .ptitle{font-size:34px;color:#1a1a2e;margin-bottom:8px;line-height:1.2}
+#pres .ptitle-w{font-size:34px;color:#f5f0e8;margin-bottom:8px;line-height:1.2}
+#pres .psub{font-family:Arial,sans-serif;font-size:14px;color:#888;margin-bottom:36px}
+#pres .psub-w{font-family:Arial,sans-serif;font-size:14px;color:rgba(255,255,255,0.5);margin-bottom:36px}
+#pres .pdiv{width:48px;height:3px;background:#e74c3c;margin-bottom:36px;border-radius:2px}
+#pres .ptxt{font-size:15px;color:#333;line-height:1.8;margin-bottom:16px}
+#pres .ptxt-w{font-size:15px;color:rgba(255,255,255,0.8);line-height:1.8;margin-bottom:16px}
+#pres .pcit{background:#1a1a2e;border-radius:10px;padding:24px 28px;margin:28px 0}
+#pres .pcit p{font-size:16px;color:#f5f0e8;font-style:italic;line-height:1.7}
+#pres .pcit small{display:block;margin-top:12px;font-family:Arial,sans-serif;font-size:11px;color:rgba(255,255,255,0.5)}
+#pres .petapes{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:32px}
+#pres .petape{background:#fff;border-radius:10px;padding:16px 10px;text-align:center;border:1px solid #e8e0d4}
+#pres .petape-n{width:28px;height:28px;border-radius:50%;background:#1a1a2e;color:#fff;font-family:Arial,sans-serif;font-size:12px;font-weight:bold;display:flex;align-items:center;justify-content:center;margin:0 auto 8px}
+#pres .petape-i{font-size:20px;margin-bottom:6px}
+#pres .petape-t{font-family:Arial,sans-serif;font-size:11px;font-weight:bold;color:#1a1a2e;margin-bottom:4px}
+#pres .petape-d{font-family:Arial,sans-serif;font-size:10px;color:#888;line-height:1.4}
+#pres .pinfos{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:32px}
+#pres .pinfo{background:#fff;border-radius:10px;padding:16px;text-align:center;border:1px solid #e8e0d4}
+#pres .pinfo-v{font-size:26px;font-weight:bold;color:#1a1a2e}
+#pres .pinfo-l{font-family:Arial,sans-serif;font-size:11px;color:#888;margin-top:4px}
+#pres .pbvitems{display:flex;flex-direction:column;gap:16px;margin-bottom:36px}
+#pres .pbvitem{display:flex;gap:14px;align-items:flex-start}
+#pres .pbvicon{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;margin-top:2px}
+#pres .pbvtxt{font-size:15px;color:rgba(255,255,255,0.85);line-height:1.7}
+#pres .pavert{background:rgba(255,255,255,0.06);border-radius:10px;padding:18px 22px;border-left:3px solid #f39c12;margin-bottom:36px}
+#pres .pavert p{font-family:Arial,sans-serif;font-size:12px;color:rgba(255,255,255,0.5);line-height:1.6;font-style:italic}
+#pres .pfoot{background:#111;padding:24px 40px;text-align:center;font-family:Arial,sans-serif;font-size:11px;color:rgba(255,255,255,0.3)}
+#pres .btn-start{display:block;width:100%;max-width:340px;margin:0 auto;padding:18px 40px;background:#e74c3c;color:#fff;text-decoration:none;border-radius:10px;font-family:Georgia,serif;font-size:18px;font-weight:bold;text-align:center;box-shadow:0 4px 20px rgba(231,76,60,0.35);border:none;cursor:pointer}
+#pres .btn-start:hover{background:#c0392b}
+/* Hero */
+#pres #phero{background:#1a1a2e}
+#pres .hero-label{font-family:Arial,sans-serif;font-size:11px;text-transform:uppercase;letter-spacing:.15em;color:rgba(255,255,255,0.5);margin-bottom:20px}
+#pres .hero-title{font-size:52px;font-weight:bold;color:#f5f0e8;line-height:1.1;margin-bottom:16px}
+#pres .hero-title span{color:#e74c3c}
+#pres .hero-sub{font-size:18px;color:rgba(255,255,255,0.6);margin-bottom:12px;font-family:Arial,sans-serif;font-weight:300}
+#pres .hero-desc{font-size:15px;color:rgba(255,255,255,0.5);margin-bottom:48px;font-family:Arial,sans-serif;max-width:520px;margin-left:auto;margin-right:auto;line-height:1.7}
+#pres .pills-row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:48px}
+#pres .pill-tag{padding:5px 14px;border-radius:20px;font-family:Arial,sans-serif;font-size:11px;font-weight:500;letter-spacing:.04em}
+#pres .pill-neuro{background:rgba(46,204,113,0.15);color:#2ecc71;border:1px solid rgba(46,204,113,0.3)}
+#pres .pill-ped{background:rgba(52,152,219,0.15);color:#5dade2;border:1px solid rgba(52,152,219,0.3)}
+#pres .pill-vis{background:rgba(231,76,60,0.15);color:#e74c3c;border:1px solid rgba(231,76,60,0.3)}
+</style>
 
 <nav>
-  <div class="logo">DOPE <span>À</span> MINES</div>
+  <div class="plogo">DOPE <span>À</span> MINES</div>
   <ul>
-    <li><a href="#jeu">Le jeu</a></li>
-    <li><a href="#manifeste">Manifeste</a></li>
-    <li><a href="#bienveillance">Avant de jouer</a></li>
+    <li><a href="#pjeu">Le jeu</a></li>
+    <li><a href="#pmanifeste">Manifeste</a></li>
+    <li><a href="#pbienveillance">Avant de jouer</a></li>
   </ul>
 </nav>
 
 <!-- HERO -->
-<section id="hero">
-  <div class="container">
-    <span class="brain-icon">🧠</span>
+<div class="psec" id="phero">
+  <div class="pcont" style="text-align:center">
+    <div style="font-size:56px;margin-bottom:24px">🧠</div>
     <div class="hero-label">AliaSkill Formation · Session Visio · 2026</div>
     <h1 class="hero-title">Dope <span>à</span> Mines</h1>
     <p class="hero-sub">Un voyage dans ton circuit dopaminergique</p>
@@ -209,146 +177,76 @@ footer span{color:rgba(255,255,255,0.5)}
       <span class="pill-tag pill-ped">Outil pédagogique</span>
       <span class="pill-tag pill-vis">Format visio</span>
     </div>
-    <a href="#jeu" class="btn-hero">Découvrir le jeu ↓</a>
-    <div class="scroll-hint">Parcours la page avant de commencer</div>
+    <a href="#pjeu" class="btn-start" style="display:inline-block;width:auto;padding:14px 32px;font-size:16px;margin-bottom:0">Découvrir le jeu ↓</a>
   </div>
-</section>
+</div>
 
 <!-- LE JEU -->
-<section id="jeu">
-  <div class="container">
-    <div class="section-label">Le jeu</div>
-    <h2 class="section-title">Comment ça marche ?</h2>
-    <p class="section-sub">Un plateau, des cartes, un circuit cérébral. Simple à jouer, profond à vivre.</p>
-    <div class="divider"></div>
-
-    <div class="etapes">
-      <div class="etape">
-        <div class="etape-num">1</div>
-        <div class="etape-icon">🎲</div>
-        <div class="etape-titre">Lancer le dé</div>
-        <div class="etape-desc">Tu avances sur le circuit dopaminergique</div>
-      </div>
-      <div class="etape">
-        <div class="etape-num">2</div>
-        <div class="etape-icon">🃏</div>
-        <div class="etape-titre">Piocher une carte</div>
-        <div class="etape-desc">Selon la couleur de ta case</div>
-      </div>
-      <div class="etape">
-        <div class="etape-num">3</div>
-        <div class="etape-icon">💬</div>
-        <div class="etape-titre">La situation</div>
-        <div class="etape-desc">Réelle, concrète, parfois dérangeante</div>
-      </div>
-      <div class="etape">
-        <div class="etape-num">4</div>
-        <div class="etape-icon">⚡</div>
-        <div class="etape-titre">Le Pont DA</div>
-        <div class="etape-desc">Ton niveau de cortisol décide de l'accès au Cortex</div>
-      </div>
-      <div class="etape">
-        <div class="etape-num">5</div>
-        <div class="etape-icon">📊</div>
-        <div class="etape-titre">L'analyse</div>
-        <div class="etape-desc">Ton profil DA / Co / Pont en fin de parcours</div>
-      </div>
+<div class="psec" id="pjeu">
+  <div class="pcont">
+    <div class="plabel">Le jeu</div>
+    <h2 class="ptitle">Comment ça marche ?</h2>
+    <p class="psub">Un plateau, des cartes, un circuit cérébral. Simple à jouer, profond à vivre.</p>
+    <div class="pdiv"></div>
+    <div class="petapes">
+      <div class="petape"><div class="petape-n">1</div><div class="petape-i">🎲</div><div class="petape-t">Lancer le dé</div><div class="petape-d">Tu avances sur le circuit dopaminergique</div></div>
+      <div class="petape"><div class="petape-n">2</div><div class="petape-i">🃏</div><div class="petape-t">Piocher une carte</div><div class="petape-d">Selon la couleur de ta case</div></div>
+      <div class="petape"><div class="petape-n">3</div><div class="petape-i">💬</div><div class="petape-t">La situation</div><div class="petape-d">Réelle, concrète, parfois dérangeante</div></div>
+      <div class="petape"><div class="petape-n">4</div><div class="petape-i">⚡</div><div class="petape-t">Le Pont DA</div><div class="petape-d">Le cortisol décide de l'accès au Cortex</div></div>
+      <div class="petape"><div class="petape-n">5</div><div class="petape-i">📊</div><div class="petape-t">L'analyse</div><div class="petape-d">Profil DA / Co / Pont en fin de parcours</div></div>
     </div>
-
-    <div class="infos-jeu">
-      <div class="info-bloc">
-        <div class="info-val">2 – 6</div>
-        <div class="info-lbl">Joueurs</div>
-      </div>
-      <div class="info-bloc">
-        <div class="info-val">60 – 90'</div>
-        <div class="info-lbl">Durée estimée</div>
-      </div>
-      <div class="info-bloc">
-        <div class="info-val">Adultes</div>
-        <div class="info-lbl">Public</div>
-      </div>
+    <div class="pinfos">
+      <div class="pinfo"><div class="pinfo-v">2 – 6</div><div class="pinfo-l">Joueurs</div></div>
+      <div class="pinfo"><div class="pinfo-v">60 – 90'</div><div class="pinfo-l">Durée estimée</div></div>
+      <div class="pinfo"><div class="pinfo-v">Adultes</div><div class="pinfo-l">Public</div></div>
     </div>
   </div>
-</section>
+</div>
 
 <!-- MANIFESTE -->
-<section id="manifeste">
-  <div class="container">
-    <div class="section-label">Manifeste fondateur</div>
-    <h2 class="section-title">Autrement.<br>Toujours autrement.</h2>
-    <p class="section-sub">À l'origine de tout ce que nous faisons</p>
-    <div class="divider"></div>
-
-    <div class="manifeste-bloc">
-      <div class="manifeste-titre">Le constat</div>
-      <div class="manifeste-texte">
-        Il existe des personnes que les systèmes ne savent pas accueillir.<br><br>
-        Le professionnel épuisé que la médecine du travail observe sans comprendre. La personne en conduites addictives que l'on traite par produit, par case, par protocole — rarement par humanité et par science à la fois.<br><br>
-        Ces personnes ne sont pas défaillantes. <strong>Elles répondent neurobiologiquement à des systèmes qui ne leur conviennent pas.</strong> C'est une différence fondamentale. Elle change tout dans la façon d'intervenir.
-      </div>
+<div class="psec" id="pmanifeste">
+  <div class="pcont">
+    <div class="plabel">Manifeste fondateur</div>
+    <h2 class="ptitle">Autrement.<br>Toujours autrement.</h2>
+    <p class="psub">À l'origine de tout ce que nous faisons</p>
+    <div class="pdiv"></div>
+    <p class="ptxt">Il existe des personnes que les systèmes ne savent pas accueillir. Le professionnel épuisé que la médecine du travail observe sans comprendre. La personne en conduites addictives que l'on traite par produit, par case, par protocole — rarement par humanité et par science à la fois.</p>
+    <p class="ptxt">Ces personnes ne sont pas défaillantes. <strong>Elles répondent neurobiologiquement à des systèmes qui ne leur conviennent pas.</strong></p>
+    <div class="pcit">
+      <p>« Ce n'est pas la personne qui est inadaptée. C'est l'espace entre la personne et le système qui n'a jamais été vraiment pensé. »</p>
+      <small>Xavier Gautron — Fondateur AliaSkill Formation</small>
     </div>
-
-    <div class="citation-box">
-      <div class="citation-txt">« Ce n'est pas la personne qui est inadaptée. C'est l'espace entre la personne et le système qui n'a jamais été vraiment pensé. »</div>
-      <div class="citation-sig">Xavier Gautron — Fondateur AliaSkill Formation</div>
-    </div>
-
-    <div class="manifeste-bloc">
-      <div class="manifeste-titre">Notre réponse</div>
-      <div class="manifeste-texte">
-        AliaSkill ne travaille pas dans les cases. Nous travaillons dans les <strong>angles morts</strong> — ces espaces entre l'éducation et le soin, entre la prévention et la formation, entre le travail et la vie.<br><br>
-        Ce langage, c'est celui des <strong>neurosciences appliquées</strong>. Pas comme une discipline académique réservée aux experts. Comme un territoire commun, accessible à tous, qui permet enfin de comprendre pourquoi on fait ce qu'on fait — et comment on peut faire autrement.<br><br>
-        AliaSkill est née d'une conviction simple : <strong>on peut faire autrement</strong>. Pas mieux que les autres — autrement. Avec des outils que personne n'avait encore pensé à croiser.
-      </div>
-    </div>
+    <p class="ptxt">AliaSkill ne travaille pas dans les cases. Nous travaillons dans les <strong>angles morts</strong>. Ce langage, c'est celui des <strong>neurosciences appliquées</strong> — accessible à tous, qui permet enfin de comprendre pourquoi on fait ce qu'on fait.</p>
   </div>
-</section>
+</div>
 
 <!-- BIENVEILLANCE -->
-<section id="bienveillance">
-  <div class="container">
-    <div class="section-label">Avant de jouer</div>
-    <h2 class="section-title">Espace de bienveillance</h2>
-    <p class="section-sub" style="color:rgba(255,255,255,0.5)">À lire ensemble avant de commencer</p>
-    <div class="divider"></div>
-
-    <div class="bv-items">
-      <div class="bv-item">
-        <div class="bv-icon" style="background:rgba(46,204,113,0.15)">🤝</div>
-        <div class="bv-text"><strong>Ce qui se dit ici reste ici.</strong> Ce jeu explore des situations réelles, parfois intenses. La confidentialité est le premier engagement de chaque joueur.</div>
-      </div>
-      <div class="bv-item">
-        <div class="bv-icon" style="background:rgba(52,152,219,0.15)">🎯</div>
-        <div class="bv-text"><strong>Chaque joueur joue à son tour.</strong> Il peut choisir de se retirer de la partie à tout moment, sans justification et sans jugement.</div>
-      </div>
-      <div class="bv-item">
-        <div class="bv-icon" style="background:rgba(243,156,18,0.15)">🧠</div>
-        <div class="bv-text"><strong>Le jeu raconte ce que le cerveau traverse — pas ce que la personne vaut.</strong> Aucun score ne mesure une valeur humaine. Chaque résultat est une information, pas un verdict.</div>
-      </div>
-      <div class="bv-item">
-        <div class="bv-icon" style="background:rgba(231,76,60,0.15)">👁</div>
-        <div class="bv-text"><strong>Aucun vécu n'est jugé, comparé ou hiérarchisé.</strong> Ce que chacun exprime appartient à son parcours. Le groupe écoute, l'animateur accompagne.</div>
-      </div>
+<div class="psec" id="pbienveillance">
+  <div class="pcont">
+    <div class="plabel" style="color:#f39c12">Avant de jouer</div>
+    <h2 class="ptitle-w">Espace de bienveillance</h2>
+    <p class="psub-w">À lire ensemble avant de commencer</p>
+    <div class="pdiv" style="background:#f39c12"></div>
+    <div class="pbvitems">
+      <div class="pbvitem"><div class="pbvicon" style="background:rgba(46,204,113,0.15)">🤝</div><div class="pbvtxt"><strong>Ce qui se dit ici reste ici.</strong> Ce jeu explore des situations réelles, parfois intenses. La confidentialité est le premier engagement de chaque joueur.</div></div>
+      <div class="pbvitem"><div class="pbvicon" style="background:rgba(52,152,219,0.15)">🎯</div><div class="pbvtxt"><strong>Chaque joueur joue à son tour.</strong> Il peut choisir de se retirer de la partie à tout moment, sans justification et sans jugement.</div></div>
+      <div class="pbvitem"><div class="pbvicon" style="background:rgba(243,156,18,0.15)">🧠</div><div class="pbvtxt"><strong>Le jeu raconte ce que le cerveau traverse — pas ce que la personne vaut.</strong> Aucun score ne mesure une valeur humaine.</div></div>
+      <div class="pbvitem"><div class="pbvicon" style="background:rgba(231,76,60,0.15)">👁</div><div class="pbvtxt"><strong>Aucun vécu n'est jugé, comparé ou hiérarchisé.</strong> Ce que chacun exprime appartient à son parcours.</div></div>
     </div>
-
-    <div class="avertissement">
-      <p>Dope à Mines est un outil pédagogique conçu par AliaSkill Formation (SIREN 888963238). Il ne se substitue à aucun accompagnement médical, psychologique ou thérapeutique. Si une situation évoquée pendant le jeu nécessite un suivi, l'animateur orientera vers les ressources adaptées. — Marque INPI n°5238107 · e-Soleau DSO2026012538</p>
-    </div>
-
-    <a href="#" onclick="ouvrirAccueil()" class="btn-demarrer">Commencer la session →</a>
-    <div class="btn-sous">En cliquant, vous acceptez l'espace de bienveillance ci-dessus</div>
+    <div class="pavert"><p>Dope à Mines est un outil pédagogique conçu par AliaSkill Formation (SIREN 888963238). Il ne se substitue à aucun accompagnement médical, psychologique ou thérapeutique. — Marque INPI n°5238107 · e-Soleau DSO2026012538</p></div>
+    <button onclick="document.getElementById('pres').style.display='none'" class="btn-start">Commencer la session →</button>
+    <p style="text-align:center;margin-top:12px;font-family:Arial,sans-serif;font-size:11px;color:rgba(255,255,255,0.35)">En cliquant, vous acceptez l'espace de bienveillance ci-dessus</p>
   </div>
-</section>
+</div>
 
-<footer>
-  <p><span>Dope à Mines</span> · AliaSkill Formation · La Guerche-de-Bretagne, Bretagne · 2026<br>
-  Marque INPI n°5238107 · Tous droits réservés</p>
-</footer>
+<div class="pfoot">
+  <p><span style="color:rgba(255,255,255,0.5)">Dope à Mines</span> · AliaSkill Formation · La Guerche-de-Bretagne · 2026<br>Marque INPI n°5238107 · Tous droits réservés</p>
+</div>
 
 </div>
-<div id="app" style="display:none;flex-direction:column;height:100vh">
-<div id="bar-inner" style="display:contents">
+<!-- FIN PRÉSENTATION -->
+
+<div id="bar">
   <h1>DOPE À MINES · ADULTES · VISIO</h1>
   <span id="turn">Tour 1 · J1</span>
   <button class="btn btn-red" id="btn-die" onclick="lancerDe()">🎲 Dé</button>
@@ -1112,7 +1010,7 @@ function ouvrirRoue(){
 // ═══ ACCUEIL ═══════════════════════════════
 var NB=0;
 
-function ouvrirAccueil(){
+window.onload=function(){
   // Créer l'écran d'accueil dynamiquement
   var ac=document.createElement('div');
   ac.id='ac';
@@ -1169,12 +1067,10 @@ function ouvrirAccueil(){
       noms.push(val||('Joueur '+(i+1)));
     }
     document.body.removeChild(ac);
-    document.getElementById('presentation').style.display='none';
-    document.getElementById('app').style.display='flex';
     initJeu(NB, noms);
     ouvrirRoue();
   });
-}
+};
 </script>
-</div></body>
+</body>
 </html>
