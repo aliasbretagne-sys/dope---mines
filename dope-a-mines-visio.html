@@ -83,7 +83,7 @@ html,body{height:100%;font-family:Arial,sans-serif;background:#f5f0e8}
 #roue-result{background:rgba(255,255,255,0.08);border-radius:10px;padding:14px 24px;text-align:center;min-height:70px;display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:300px}
 #roue-cnom{font-family:Georgia,serif;font-size:18px;color:rgba(255,255,255,0.4);margin-bottom:5px}
 #roue-cquad{margin-bottom:7px}
-#roue-cvals{display:flex;gap:10px;justify-content:center}
+#roue-canvas2als{display:flex;gap:10px;justify-content:center}
 #roue-btns{display:flex;gap:10px}
 .rbtn{padding:10px 26px;border:none;border-radius:7px;font-family:Georgia,serif;font-size:14px;font-weight:bold;cursor:pointer}
 .rbtn-spin{background:#f39c12;color:#1a1a2e}
@@ -301,11 +301,11 @@ html,body{height:100%;font-family:Arial,sans-serif;background:#f5f0e8}
     <div id="roue-titre">Roue Casineuronale</div>
     <div id="roue-sous">Mon cerveau · Ici &amp; Maintenant</div>
     <div id="roue-jnom"></div>
-    <canvas id="roue-cv" width="440" height="440" style="width:440px;height:440px;display:block"></canvas>
+    <canvas id="roue-canvas2" width="440" height="440" style="width:440px;height:440px;display:block"></canvas>
     <div id="roue-result">
       <div id="roue-cnom">Lance la roue pour découvrir ton état de départ</div>
       <div id="roue-cquad"></div>
-      <div id="roue-cvals"></div>
+      <div id="roue-canvas2als"></div>
     </div>
     <div id="roue-btns">
       <button class="rbtn rbtn-spin" id="rbtn-spin" onclick="roueSpin()">🎰 Tourner</button>
@@ -935,7 +935,7 @@ function roueSpin(){
   document.getElementById('roue-cnom').style.color='rgba(255,255,255,0.4)';
   document.getElementById('roue-cnom').textContent='...';
   document.getElementById('roue-cquad').textContent='';
-  document.getElementById('roue-cvals').innerHTML='';
+  document.getElementById('roue-canvas2als').innerHTML='';
   var N=36, step=Math.PI*2/N;
   var tours=5+Math.random()*5;
   var cible=rAngle+Math.PI*2*tours+Math.random()*Math.PI*2;
@@ -959,7 +959,7 @@ function roueSpin(){
     document.getElementById('roue-cnom').style.color='#f5f0e8';
     document.getElementById('roue-cquad').innerHTML=
       '<span style="background:'+qc.bg+';color:'+qc.txt+';padding:2px 10px;border-radius:20px;font-size:11px;font-family:Arial;font-weight:bold">'+rCaseActuelle.q+'</span>';
-    document.getElementById('roue-cvals').innerHTML=
+    document.getElementById('roue-canvas2als').innerHTML=
       '<span style="background:#d6eaf8;color:#1a5276;padding:3px 12px;border-radius:20px;font-size:13px;font-weight:bold;font-family:Arial">DA '+(rCaseActuelle.da>0?'+':'')+rCaseActuelle.da+'</span>'+
       '<span style="background:#fadbd8;color:#c0392b;padding:3px 12px;border-radius:20px;font-size:13px;font-weight:bold;font-family:Arial">Co '+(rCaseActuelle.co>0?'+':'')+rCaseActuelle.co+'</span>';
     document.getElementById('rbtn-ok').disabled=false;
@@ -983,7 +983,7 @@ function roueValider(){
     document.getElementById('roue-cnom').style.color='rgba(255,255,255,0.4)';
     document.getElementById('roue-cnom').textContent='Lance la roue pour decouvrir ton etat de depart';
     document.getElementById('roue-cquad').textContent='';
-    document.getElementById('roue-cvals').innerHTML='';
+    document.getElementById('roue-canvas2als').innerHTML='';
     rDessiner(0); rAngle=0;
   } else {
     document.getElementById('roue-overlay').classList.remove('on');
@@ -995,7 +995,7 @@ function roueValider(){
 function ouvrirRoue(){
   rJoueurIdx=0; rCasesJoueurs=[];
   rCaseActuelle=null; rCaseIdx=-1; rAngle=0;
-  rCV=document.getElementById('roue-cv');
+  rCV=document.getElementById('roue-canvas2');
   rCX=rCV.getContext('2d');
   document.getElementById('roue-jnom').textContent=joueurs[0].nom+' — Lance ta roue !';
   document.getElementById('rbtn-ok').disabled=true;
@@ -1003,7 +1003,7 @@ function ouvrirRoue(){
   document.getElementById('roue-cnom').style.color='rgba(255,255,255,0.4)';
   document.getElementById('roue-cnom').textContent='Lance la roue pour decouvrir ton etat de depart';
   document.getElementById('roue-cquad').textContent='';
-  document.getElementById('roue-cvals').innerHTML='';
+  document.getElementById('roue-canvas2als').innerHTML='';
   document.getElementById('roue-overlay').classList.add('on');
   rDessiner(0);
 }
