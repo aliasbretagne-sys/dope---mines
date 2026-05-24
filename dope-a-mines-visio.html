@@ -348,7 +348,7 @@ html,body{height:100%;font-family:Arial,sans-serif;background:#f5f0e8}
     <div id="roue-sous">Mon cerveau · Ici &amp; Maintenant</div>
     <div id="roue-jnom"></div>
     <canvas id="roue-canvas2" width="440" height="440" style="width:440px!important;height:440px!important;display:block;max-width:440px"></canvas>
-    <div id="roue-fiche" style="display:none;background:rgba(255,255,255,0.08);border-radius:10px;padding:14px;min-width:300px;max-width:400px;text-align:left;margin-bottom:8px"></div>
+    <div id="roue-fiche" style="display:none;background:rgba(255,255,255,0.08);border-radius:10px;padding:12px 16px;width:380px;max-height:120px;overflow-y:auto;text-align:left;margin-bottom:8px"></div>
     <div id="roue-result">
       <div id="roue-cnom">Lance la roue pour découvrir ton état de départ</div>
       <div id="roue-cquad"></div>
@@ -1161,6 +1161,7 @@ function roueSpin(){
   document.getElementById('roue-cnom').textContent='...';
   document.getElementById('roue-cquad').textContent='';
   document.getElementById('roue-cvals').innerHTML='';
+  var f2=document.getElementById('roue-fiche'); if(f2) f2.style.display='none';
   var N=36, step=Math.PI*2/N;
   var tours=5+Math.random()*5;
   var cible=rAngle+Math.PI*2*tours+Math.random()*Math.PI*2;
@@ -1219,6 +1220,7 @@ function roueValider(){
     document.getElementById('roue-cnom').textContent='Lance la roue pour decouvrir ton etat de depart';
     document.getElementById('roue-cquad').textContent='';
     document.getElementById('roue-cvals').innerHTML='';
+    var f=document.getElementById('roue-fiche'); if(f) f.style.display='none';
     rDessiner(0); rAngle=0;
   } else {
     document.getElementById('roue-overlay').classList.remove('on');
