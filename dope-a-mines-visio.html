@@ -279,7 +279,7 @@ html,body{height:100%;font-family:Arial,sans-serif;background:#f5f0e8}
       <div class="pbvitem"><div class="pbvicon" style="background:rgba(231,76,60,0.15)">👁</div><div class="pbvtxt"><strong>Aucun vécu n'est jugé, comparé ou hiérarchisé.</strong> Ce que chacun exprime appartient à son parcours.</div></div>
     </div>
     <div class="pavert"><p>Dope à Mines est un outil pédagogique conçu par AliaSkill Formation (SIREN 888963238). Il ne se substitue à aucun accompagnement médical, psychologique ou thérapeutique. — Marque INPI n°5238107 · e-Soleau DSO2026012538</p></div>
-    <button onclick="document.getElementById('pres').style.display='none';document.getElementById('bar').style.visibility='visible';document.getElementById('wrap').style.visibility='visible'" class="btn-start">Commencer la session →</button>
+    <button onclick="demarrerDepuisPres()" class="btn-start">Commencer la session →</button>
     <p style="text-align:center;margin-top:12px;font-family:Arial,sans-serif;font-size:11px;color:rgba(255,255,255,0.35)">En cliquant, vous acceptez l'espace de bienveillance ci-dessus</p>
   </div>
 </div>
@@ -1177,7 +1177,12 @@ function ouvrirRoue(){
 // ═══ ACCUEIL ═══════════════════════════════
 var NB=0;
 
-window.onload=function(){
+function demarrerDepuisPres(){
+  document.getElementById('pres').style.display='none';
+  ouvrirAccueil();
+}
+
+function ouvrirAccueil(){
   // Créer l'écran d'accueil dynamiquement
   var ac=document.createElement('div');
   ac.id='ac';
@@ -1234,10 +1239,12 @@ window.onload=function(){
       noms.push(val||('Joueur '+(i+1)));
     }
     document.body.removeChild(ac);
+    document.getElementById('bar').style.visibility='visible';
+    document.getElementById('wrap').style.visibility='visible';
     initJeu(NB, noms);
     ouvrirRoue();
   });
-};
+}
 </script>
 </body>
 </html>
