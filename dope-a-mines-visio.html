@@ -890,7 +890,11 @@ var POPUP_ST=null;
 var hypPassages={};
 
 function toggleStation(nom){
-  if(POPUP_ST===nom){ fermerStation(); return; }
+  // Fermer d'abord si une fiche est déjà ouverte
+  if(POPUP_ST){
+    fermerStation();
+    if(POPUP_ST===nom) return;
+  }
   var snom=nom==='Hypothalamus'?((hypPassages[jA+'_hyp']||0)<=1?'Hypothalamus':'Hypothalamus2'):
            nom==='Cortex PF'?'CortexPF':nom;
   ouvrirStationPopup(snom,false,function(){});
