@@ -576,9 +576,8 @@ function initJeu(nb, noms){
   jA=0; tour=1; dest=-1; carte=null; carteEnnui=null; hypPassages={};
   derniereGrise={};
   for(var i=0;i<N;i++) derniereGrise[i]=false;
-  Object.keys(CARTES).forEach(function(k){ var arr=CARTES[k].slice();
-      for(var xi=arr.length-1;xi>0;xi--){var xj=Math.floor(Math.random()*(xi+1));var xt=arr[xi];arr[xi]=arr[xj];arr[xj]=xt;}
-      decks[k]=arr; });
+  Object.keys(CARTES).forEach(function(k){ decks[k]=melangerDeck(CARTES[k].slice()); });
+  derniereCarteTiree={};
   document.getElementById('turn').textContent='Tour 1 · '+joueurs[0].nom;
   document.getElementById('btn-die').disabled=false;
   document.getElementById('btn-draw').disabled=true;
@@ -587,16 +586,34 @@ function initJeu(nb, noms){
   rendreScores();
 }
 
-function tirer(k){
-  if(!decks[k]||!decks[k].length){
-    var arr=CARTES[k].slice();
+function melangerDeck(arr){
+  // Triple Fisher-Yates + coupe aléatoire
+  for(var pass=0;pass<3;pass++){
     for(var xi=arr.length-1;xi>0;xi--){
       var xj=Math.floor(Math.random()*(xi+1));
       var xt=arr[xi]; arr[xi]=arr[xj]; arr[xj]=xt;
     }
-    decks[k]=arr;
   }
-  return decks[k].pop();
+  // Coupe au milieu ± aléatoire
+  var coupe=Math.floor(arr.length/2)+Math.floor(Math.random()*arr.length/4)-Math.floor(arr.length/8);
+  return arr.slice(coupe).concat(arr.slice(0,coupe));
+}
+
+var derniereCarteTiree={};
+
+function tirer(k){
+  if(!decks[k]||!decks[k].length){
+    var arr=CARTES[k].slice();
+    // Eviter que la dernière carte tirée soit la première du nouveau deck
+    if(derniereCarteTiree[k]){
+      var lastIdx=arr.findIndex(function(c){ return c.t===derniereCarteTiree[k]; });
+      if(lastIdx>0){ var tmp=arr[0]; arr[0]=arr[lastIdx]; arr[lastIdx]=tmp; }
+    }
+    decks[k]=melangerDeck(arr);
+  }
+  var c=decks[k].pop();
+  derniereCarteTiree[k]=c.t;
+  return c;
 }
 
 function lancerDe(){
