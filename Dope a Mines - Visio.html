@@ -1,0 +1,1456 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<title>Dope a Mines - Visio</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;font-family:Arial,sans-serif;background:#f5f0e8}
+#bar{height:50px;background:#1a1a2e;display:flex;align-items:center;padding:0 12px;gap:8px}
+#bar h1{font-size:14px;font-weight:bold;flex:1;color:#f5f0e8;letter-spacing:.06em;font-family:Georgia,serif}
+.btn{padding:5px 12px;border-radius:6px;border:1px solid #555;background:#2a2a4a;color:#f5f0e8;cursor:pointer;font-size:12px}
+.btn:hover{background:#3a3a6a}
+.btn:disabled{opacity:0.3;cursor:not-allowed}
+.btn-red{background:#c0392b;border-color:#c0392b;color:#fff}
+.btn-red:hover{background:#a93226}
+.btn-green{background:#1e8449;border-color:#1e8449;color:#fff}
+#turn{font-size:11px;color:#aaa}
+#wrap{display:flex;height:calc(100vh - 50px)}
+#plateau-area{flex:1;padding:10px;overflow:auto;display:flex;align-items:flex-start;justify-content:center}
+#circuit{position:relative;width:820px;height:640px;flex-shrink:0}
+#side{width:280px;flex-shrink:0;background:#fff;border-left:2px solid #ddd;padding:10px;overflow-y:auto;display:flex;flex-direction:column;gap:8px}
+.box{background:#f9f6f0;border-radius:8px;padding:10px;border:1px solid #e0d8cc}
+.box-t{font-size:9px;text-transform:uppercase;letter-spacing:.1em;color:#888;margin-bottom:6px}
+#die-big{font-size:44px;text-align:center;line-height:1.1;color:#1a1a2e}
+#case-lbl{font-size:11px;color:#888;text-align:center;margin-top:3px}
+.zone-badge{display:inline-block;padding:2px 10px;border-radius:20px;font-size:10px;font-weight:bold;margin-bottom:6px}
+.card-title{font-size:16px;font-weight:bold;margin-bottom:4px;color:#1a1a2e;font-family:Georgia,serif}
+.card-sit{font-size:11px;color:#555;font-style:italic;margin-bottom:4px;line-height:1.4}
+.card-brain{font-size:10px;color:#888;margin-bottom:7px;line-height:1.4}
+.pills{display:flex;gap:6px;margin-bottom:4px}
+.pill{padding:3px 10px;border-radius:20px;font-size:11px;font-weight:bold}
+.da{background:#d6eaf8;color:#1a5276}
+.co{background:#fadbd8;color:#922b21}
+.score-p{font-size:11px;font-weight:bold;padding:3px 10px;border-radius:5px;display:inline-block;margin-top:3px}
+.effet-box{margin-top:6px;padding:6px;background:#fef9e7;color:#7d6608;border-radius:5px;font-size:10px;line-height:1.4;border-left:3px solid #f1c40f}
+.parole-box{margin-top:6px;padding:6px;background:#f5eef8;color:#6c3483;border-radius:5px;font-size:10px;line-height:1.4;font-style:italic;border-left:3px solid #8e44ad}
+.ennui-box{margin-top:6px;padding:8px;background:#eaf4fb;border-radius:5px;border-left:3px solid #2471a3}
+.ennui-choix{font-size:11px;margin-bottom:5px;color:#1a5276}
+.ennui-btn{padding:4px 10px;border-radius:4px;border:1px solid #2471a3;background:#d6eaf8;color:#1a5276;cursor:pointer;font-size:11px;margin-right:4px;margin-top:3px}
+.prow{display:flex;align-items:center;gap:6px;padding:3px 5px;border-radius:5px;margin-bottom:3px}
+.prow.cur{background:#f0e6d3}
+.pdot{width:12px;height:12px;border-radius:50%;flex-shrink:0}
+.pname{flex:1;font-size:11px}
+.ppos{font-size:9px;color:#aaa}
+.pscore{font-size:12px;font-weight:bold}
+#pontda{padding:6px;border-radius:5px;font-size:11px;font-weight:bold;text-align:center;background:#f0e6d3;color:#888;margin-top:4px}
+.leg{display:flex;flex-wrap:wrap;gap:5px}
+.li{display:flex;align-items:center;gap:3px;font-size:10px;color:#888}
+.ld{width:9px;height:9px;border-radius:50%}
+/* OVERLAY CARTE */
+#overlay-carte{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(26,26,46,0.85);z-index:800;align-items:center;justify-content:center}
+#overlay-carte.on{display:flex}
+#overlay-inner{background:#fff;border-radius:16px;padding:28px;max-width:480px;width:90%;max-height:88vh;overflow-y:auto;position:relative}
+#overlay-close{position:absolute;top:10px;right:14px;background:none;border:none;font-size:22px;cursor:pointer;color:#888}
+/* OVERLAY ANALYSE */
+#overlay-analyse{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(26,26,46,0.92);z-index:900;align-items:center;justify-content:center;padding:20px}
+#overlay-analyse.on{display:flex}
+#analyse-inner{background:#f5f0e8;border-radius:16px;padding:28px;max-width:720px;width:95%;max-height:90vh;overflow-y:auto}
+.ja{background:#fff;border-radius:10px;padding:14px;margin-bottom:12px;border-left:4px solid #ddd}
+.ja-head{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.ja-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:10px}
+.ja-m{background:#f9f6f0;border-radius:8px;padding:8px;text-align:center}
+.ja-v{font-size:22px;font-weight:bold;font-family:Georgia,serif}
+.ja-l{font-size:9px;text-transform:uppercase;letter-spacing:.06em;color:#888;margin-top:2px}
+.ja-bar{margin-bottom:6px}
+.ja-bar-lbl{font-size:10px;color:#555;display:flex;justify-content:space-between;margin-bottom:2px}
+.ja-track{height:10px;background:#e8e0d4;border-radius:5px;overflow:hidden}
+.ja-fill{height:100%;border-radius:5px}
+.ja-syn{margin-top:10px;padding:10px;border-radius:8px;font-size:11px;line-height:1.5;font-style:italic;border-left:3px solid #ddd}
+/* POPUP STATION */
+#station-info{display:none;position:absolute;top:10px;left:10px;width:260px;background:#fff;border-radius:10px;padding:14px;box-shadow:0 4px 20px rgba(0,0,0,0.2);z-index:100;border:1px solid #ddd}
+
+/* ROUE CASINEURONALE */
+#roue-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:#1a1a2e;display:none;align-items:center;justify-content:center;z-index:8000;flex-direction:column}
+#roue-overlay.on{display:flex}
+#roue-wrap{display:flex;flex-direction:column;align-items:center;gap:14px;padding:20px}
+#roue-titre{font-family:Georgia,serif;font-size:20px;color:#f5f0e8;text-align:center}
+#roue-sous{font-family:Arial,sans-serif;font-size:12px;color:rgba(255,255,255,0.5);text-align:center}
+#roue-jnom{font-family:Georgia,serif;font-size:17px;color:#f39c12;text-align:center;font-weight:bold}
+#roue-result{background:rgba(255,255,255,0.08);border-radius:10px;padding:14px 24px;text-align:center;min-height:70px;display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:300px}
+#roue-cnom{font-family:Georgia,serif;font-size:18px;color:rgba(255,255,255,0.4);margin-bottom:5px}
+#roue-cquad{margin-bottom:7px}
+#roue-cvals{display:flex;gap:10px;justify-content:center}
+#roue-btns{display:flex;gap:10px}
+.rbtn{padding:10px 26px;border:none;border-radius:7px;font-family:Georgia,serif;font-size:14px;font-weight:bold;cursor:pointer}
+.rbtn-spin{background:#f39c12;color:#1a1a2e}
+.rbtn-spin:hover{background:#d68910}
+.rbtn-spin:disabled{opacity:0.4;cursor:not-allowed}
+.rbtn-ok{background:#c0392b;color:#fff}
+.rbtn-ok:hover{background:#a93226}
+.rbtn-ok:disabled{opacity:0.4;cursor:not-allowed}
+
+/* POPUPS STATIONS */
+.st-popup{position:fixed;top:80px;left:50%;transform:translateX(-50%);width:320px;background:#fff;border-radius:12px;padding:16px;box-shadow:0 8px 32px rgba(0,0,0,0.25);z-index:9000;border:1px solid #ddd;display:none;max-height:80vh;overflow-y:auto}
+.st-info{position:fixed;top:80px;left:20px;width:260px;background:#fff;border-radius:12px;padding:14px;box-shadow:0 4px 20px rgba(0,0,0,0.18);z-index:8500;border:1px solid #ddd;display:none}
+.st-popup-titre{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.st-popup-dot{width:14px;height:14px;border-radius:50%;flex-shrink:0}
+.st-popup-nom{font-size:13px;font-weight:bold;color:#1a1a2e;font-family:Georgia,serif}
+.st-popup-close{margin-left:auto;background:none;border:none;font-size:18px;cursor:pointer;color:#888;line-height:1}
+.st-popup-desc{font-size:11px;color:#444;line-height:1.6;font-family:Arial,sans-serif;margin-bottom:10px}
+.st-mecanique{padding:10px;border-radius:8px;margin-bottom:8px;font-family:Arial,sans-serif}
+.st-mecanique-titre{font-size:9px;text-transform:uppercase;letter-spacing:.08em;color:#888;margin-bottom:5px}
+.st-mecanique-val{font-size:14px;font-weight:bold;color:#1a1a2e}
+.st-mecanique-sub{font-size:10px;color:#666;margin-top:3px;line-height:1.4}
+.st-btn{width:100%;padding:8px;border:none;border-radius:7px;font-family:Georgia,serif;font-size:12px;font-weight:bold;cursor:pointer;margin-top:5px}
+.st-btn-vert{background:#1e8449;color:#fff}
+.st-btn-rouge{background:#c0392b;color:#fff}
+.st-btn-bleu{background:#2471a3;color:#fff}
+.st-btn-or{background:#d68910;color:#fff}
+.st-jeton-ctrl{display:flex;align-items:center;gap:8px;margin-top:8px;justify-content:center}
+.st-jeton-ctrl button{width:28px;height:28px;border-radius:50%;border:1px solid #ddd;background:#f5f0e8;font-size:16px;cursor:pointer;font-weight:bold;line-height:1}
+.st-jeton-ctrl span{font-size:14px;font-weight:bold;color:#1a1a2e;min-width:20px;text-align:center;font-family:Arial,sans-serif}
+/* Badge jetons dans scores */
+.jeton-badge{display:inline-block;background:#d68910;color:#fff;border-radius:10px;font-size:9px;padding:1px 6px;font-family:Arial,sans-serif;font-weight:bold;margin-left:4px}
+</style>
+</head>
+<body>
+
+
+<!-- PRÉSENTATION -->
+<div id="pres" style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:99999;overflow-y:auto;background:#1a1a2e;font-family:Georgia,serif;isolation:isolate">
+
+<style>
+#pres nav{position:sticky;top:0;left:0;width:100%;background:rgba(26,26,46,0.97);padding:12px 40px;display:flex;align-items:center;justify-content:space-between;z-index:100;box-sizing:border-box}
+#pres .plogo{font-size:15px;font-weight:bold;color:#f5f0e8;letter-spacing:.06em}
+#pres .plogo span{color:#e74c3c}
+#pres ul{list-style:none;display:flex;gap:24px;margin:0;padding:0}
+#pres ul a{color:rgba(255,255,255,0.7);text-decoration:none;font-family:Arial,sans-serif;font-size:12px;letter-spacing:.05em;text-transform:uppercase}
+#pres .psec{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:100px 40px 60px;box-sizing:border-box}
+#pres .psec:nth-child(even){background:#fdfcf8}
+#pres .psec:nth-child(odd){background:#1a1a2e}
+#pres #pbienveillance{background:#1a1a2e}
+#pres .pcont{max-width:760px;width:100%}
+#pres .plabel{font-family:Arial,sans-serif;font-size:10px;text-transform:uppercase;letter-spacing:.15em;color:#e74c3c;margin-bottom:12px}
+#pres .ptitle{font-size:34px;color:#1a1a2e;margin-bottom:8px;line-height:1.2}
+#pres .ptitle-w{font-size:34px;color:#f5f0e8;margin-bottom:8px;line-height:1.2}
+#pres .psub{font-family:Arial,sans-serif;font-size:14px;color:#888;margin-bottom:36px}
+#pres .psub-w{font-family:Arial,sans-serif;font-size:14px;color:rgba(255,255,255,0.5);margin-bottom:36px}
+#pres .pdiv{width:48px;height:3px;background:#e74c3c;margin-bottom:36px;border-radius:2px}
+#pres .ptxt{font-size:15px;color:#333;line-height:1.8;margin-bottom:16px}
+#pres .ptxt-w{font-size:15px;color:rgba(255,255,255,0.8);line-height:1.8;margin-bottom:16px}
+#pres .pcit{background:#1a1a2e;border-radius:10px;padding:24px 28px;margin:28px 0}
+#pres .pcit p{font-size:16px;color:#f5f0e8;font-style:italic;line-height:1.7}
+#pres .pcit small{display:block;margin-top:12px;font-family:Arial,sans-serif;font-size:11px;color:rgba(255,255,255,0.5)}
+#pres .petapes{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:32px}
+#pres .petape{background:#fff;border-radius:10px;padding:16px 10px;text-align:center;border:1px solid #e8e0d4}
+#pres .petape-n{width:28px;height:28px;border-radius:50%;background:#1a1a2e;color:#fff;font-family:Arial,sans-serif;font-size:12px;font-weight:bold;display:flex;align-items:center;justify-content:center;margin:0 auto 8px}
+#pres .petape-i{font-size:20px;margin-bottom:6px}
+#pres .petape-t{font-family:Arial,sans-serif;font-size:11px;font-weight:bold;color:#1a1a2e;margin-bottom:4px}
+#pres .petape-d{font-family:Arial,sans-serif;font-size:10px;color:#888;line-height:1.4}
+#pres .pinfos{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:32px}
+#pres .pinfo{background:#fff;border-radius:10px;padding:16px;text-align:center;border:1px solid #e8e0d4}
+#pres .pinfo-v{font-size:26px;font-weight:bold;color:#1a1a2e}
+#pres .pinfo-l{font-family:Arial,sans-serif;font-size:11px;color:#888;margin-top:4px}
+#pres .pbvitems{display:flex;flex-direction:column;gap:16px;margin-bottom:36px}
+#pres .pbvitem{display:flex;gap:14px;align-items:flex-start}
+#pres .pbvicon{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;margin-top:2px}
+#pres .pbvtxt{font-size:15px;color:rgba(255,255,255,0.85);line-height:1.7}
+#pres .pavert{background:rgba(255,255,255,0.06);border-radius:10px;padding:18px 22px;border-left:3px solid #f39c12;margin-bottom:36px}
+#pres .pavert p{font-family:Arial,sans-serif;font-size:12px;color:rgba(255,255,255,0.5);line-height:1.6;font-style:italic}
+#pres .pfoot{background:#111;padding:24px 40px;text-align:center;font-family:Arial,sans-serif;font-size:11px;color:rgba(255,255,255,0.3)}
+#pres .btn-start{display:block;width:100%;max-width:340px;margin:0 auto;padding:18px 40px;background:#e74c3c;color:#fff;text-decoration:none;border-radius:10px;font-family:Georgia,serif;font-size:18px;font-weight:bold;text-align:center;box-shadow:0 4px 20px rgba(231,76,60,0.35);border:none;cursor:pointer}
+#pres .btn-start:hover{background:#c0392b}
+/* Hero */
+#pres #phero{background:#1a1a2e}
+#pres .hero-label{font-family:Arial,sans-serif;font-size:11px;text-transform:uppercase;letter-spacing:.15em;color:rgba(255,255,255,0.5);margin-bottom:20px}
+#pres .hero-title{font-size:52px;font-weight:bold;color:#f5f0e8;line-height:1.1;margin-bottom:16px}
+#pres .hero-title span{color:#e74c3c}
+#pres .hero-sub{font-size:18px;color:rgba(255,255,255,0.6);margin-bottom:12px;font-family:Arial,sans-serif;font-weight:300}
+#pres .hero-desc{font-size:15px;color:rgba(255,255,255,0.5);margin-bottom:48px;font-family:Arial,sans-serif;max-width:520px;margin-left:auto;margin-right:auto;line-height:1.7}
+#pres .pills-row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:48px}
+#pres .pill-tag{padding:5px 14px;border-radius:20px;font-family:Arial,sans-serif;font-size:11px;font-weight:500;letter-spacing:.04em}
+#pres .pill-neuro{background:rgba(46,204,113,0.15);color:#2ecc71;border:1px solid rgba(46,204,113,0.3)}
+#pres .pill-ped{background:rgba(52,152,219,0.15);color:#5dade2;border:1px solid rgba(52,152,219,0.3)}
+#pres .pill-vis{background:rgba(231,76,60,0.15);color:#e74c3c;border:1px solid rgba(231,76,60,0.3)}
+
+/* POPUPS STATIONS */
+.st-popup{position:fixed;top:80px;left:50%;transform:translateX(-50%);width:320px;background:#fff;border-radius:12px;padding:16px;box-shadow:0 8px 32px rgba(0,0,0,0.25);z-index:9000;border:1px solid #ddd;display:none;max-height:80vh;overflow-y:auto}
+.st-info{position:fixed;top:80px;left:20px;width:260px;background:#fff;border-radius:12px;padding:14px;box-shadow:0 4px 20px rgba(0,0,0,0.18);z-index:8500;border:1px solid #ddd;display:none}
+.st-popup-titre{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.st-popup-dot{width:14px;height:14px;border-radius:50%;flex-shrink:0}
+.st-popup-nom{font-size:13px;font-weight:bold;color:#1a1a2e;font-family:Georgia,serif}
+.st-popup-close{margin-left:auto;background:none;border:none;font-size:18px;cursor:pointer;color:#888;line-height:1}
+.st-popup-desc{font-size:11px;color:#444;line-height:1.6;font-family:Arial,sans-serif;margin-bottom:10px}
+.st-mecanique{padding:10px;border-radius:8px;margin-bottom:8px;font-family:Arial,sans-serif}
+.st-mecanique-titre{font-size:9px;text-transform:uppercase;letter-spacing:.08em;color:#888;margin-bottom:5px}
+.st-mecanique-val{font-size:14px;font-weight:bold;color:#1a1a2e}
+.st-mecanique-sub{font-size:10px;color:#666;margin-top:3px;line-height:1.4}
+.st-btn{width:100%;padding:8px;border:none;border-radius:7px;font-family:Georgia,serif;font-size:12px;font-weight:bold;cursor:pointer;margin-top:5px}
+.st-btn-vert{background:#1e8449;color:#fff}
+.st-btn-rouge{background:#c0392b;color:#fff}
+.st-btn-bleu{background:#2471a3;color:#fff}
+.st-btn-or{background:#d68910;color:#fff}
+.st-jeton-ctrl{display:flex;align-items:center;gap:8px;margin-top:8px;justify-content:center}
+.st-jeton-ctrl button{width:28px;height:28px;border-radius:50%;border:1px solid #ddd;background:#f5f0e8;font-size:16px;cursor:pointer;font-weight:bold;line-height:1}
+.st-jeton-ctrl span{font-size:14px;font-weight:bold;color:#1a1a2e;min-width:20px;text-align:center;font-family:Arial,sans-serif}
+/* Badge jetons dans scores */
+.jeton-badge{display:inline-block;background:#d68910;color:#fff;border-radius:10px;font-size:9px;padding:1px 6px;font-family:Arial,sans-serif;font-weight:bold;margin-left:4px}
+</style>
+
+<nav>
+  <div class="plogo">DOPE <span>À</span> MINES</div>
+  <ul>
+    <li><a href="#pjeu">Le jeu</a></li>
+    <li><a href="#pmanifeste">Manifeste</a></li>
+    <li><a href="#pbienveillance">Avant de jouer</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<div class="psec" id="phero">
+  <div class="pcont" style="text-align:center">
+    <div style="font-size:56px;margin-bottom:24px">🧠</div>
+    <div class="hero-label">AliaSkill Formation · Session Visio · 2026</div>
+    <h1 class="hero-title">Dope <span>à</span> Mines</h1>
+    <p class="hero-sub">Un voyage dans ton circuit dopaminergique</p>
+    <p class="hero-desc">Comprendre ce que ton cerveau traverse — sans jugement, avec la certitude que ce que tu vis a un nom, une explication, et une voie.</p>
+    <div class="pills-row">
+      <span class="pill-tag pill-neuro">Neurobiologie appliquée</span>
+      <span class="pill-tag pill-ped">Outil pédagogique</span>
+      <span class="pill-tag pill-vis">Format visio</span>
+    </div>
+    <a href="#pjeu" class="btn-start" style="display:inline-block;width:auto;padding:14px 32px;font-size:16px;margin-bottom:0">Découvrir le jeu ↓</a>
+  </div>
+</div>
+
+<!-- LE JEU -->
+<div class="psec" id="pjeu" style="background:#f5f0e8;position:relative;z-index:1">
+  <div class="pcont">
+    <div class="plabel">Le jeu</div>
+    <h2 class="ptitle">Comment ça marche ?</h2>
+    <p class="psub">Un plateau, des cartes, un circuit cérébral. Simple à jouer, profond à vivre.</p>
+    <div class="pdiv"></div>
+    <div class="petapes">
+      <div class="petape"><div class="petape-n">1</div><div class="petape-i">🎲</div><div class="petape-t">Lancer le dé</div><div class="petape-d">Tu avances sur le circuit dopaminergique</div></div>
+      <div class="petape"><div class="petape-n">2</div><div class="petape-i">🃏</div><div class="petape-t">Piocher une carte</div><div class="petape-d">Selon la couleur de ta case</div></div>
+      <div class="petape"><div class="petape-n">3</div><div class="petape-i">💬</div><div class="petape-t">La situation</div><div class="petape-d">Réelle, concrète, parfois dérangeante</div></div>
+      <div class="petape"><div class="petape-n">4</div><div class="petape-i">⚡</div><div class="petape-t">Le Pont DA</div><div class="petape-d">Le cortisol décide de l'accès au Cortex</div></div>
+      <div class="petape"><div class="petape-n">5</div><div class="petape-i">📊</div><div class="petape-t">L'analyse</div><div class="petape-d">Profil DA / Co / Pont en fin de parcours</div></div>
+    </div>
+    <div class="pinfos">
+      <div class="pinfo"><div class="pinfo-v">2 – 6</div><div class="pinfo-l">Joueurs</div></div>
+      <div class="pinfo"><div class="pinfo-v">60 – 90'</div><div class="pinfo-l">Durée estimée</div></div>
+      <div class="pinfo"><div class="pinfo-v">Adultes</div><div class="pinfo-l">Public</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- MANIFESTE -->
+<div class="psec" id="pmanifeste" style="background:#fdfcf8;position:relative;z-index:1">
+  <div class="pcont">
+    <div class="plabel">Manifeste fondateur</div>
+    <h2 class="ptitle" style="color:#1a1a2e">Autrement.<br>Toujours autrement.</h2>
+    <p class="psub" style="color:#888">À l'origine de tout ce que nous faisons</p>
+    <div class="pdiv"></div>
+    <p class="ptxt" style="color:#333">Il existe des personnes que les systèmes ne savent pas accueillir. Ces personnes ne sont pas défaillantes.</p>
+    <div class="pcit">
+      <p style="color:#f5f0e8">« Ce n'est pas la personne qui est inadaptée. C'est l'espace entre la personne et le système qui n'a jamais été vraiment pensé. »</p>
+      <small style="color:rgba(255,255,255,0.5)">Xavier Gautron — Fondateur AliaSkill Formation</small>
+    </div>
+    <p class="ptxt" style="color:#333">AliaSkill ne travaille pas dans les cases. Nous travaillons dans les <strong style="color:#1a1a2e">angles morts</strong> — ces espaces entre l'éducation et le soin, entre la prévention et la formation, entre le travail et la vie.</p>
+    <p class="ptxt" style="color:#333">Ce langage, c'est celui des <strong style="color:#1a1a2e">neurosciences appliquées</strong>. Pas comme une discipline académique réservée aux experts. Comme un territoire commun, accessible à tous, qui permet enfin de comprendre pourquoi on fait ce qu'on fait — et comment on peut faire autrement.</p>
+    <p class="ptxt" style="color:#333">AliaSkill est née d'une conviction simple : <strong style="color:#1a1a2e">on peut faire autrement</strong>. Pas mieux que les autres — autrement. Avec des outils que personne n'avait encore pensé à croiser.</p>
+  </div>
+</div>
+
+<!-- BIENVEILLANCE -->
+<div class="psec" id="pbienveillance">
+  <div class="pcont">
+    <div class="plabel" style="color:#f39c12">Avant de jouer</div>
+    <h2 class="ptitle-w">Espace de bienveillance</h2>
+    <p class="psub-w">À lire ensemble avant de commencer</p>
+    <div class="pdiv" style="background:#f39c12"></div>
+    <div class="pbvitems">
+      <div class="pbvitem"><div class="pbvicon" style="background:rgba(46,204,113,0.15)">🤝</div><div class="pbvtxt"><strong>Ce qui se dit ici reste ici.</strong> Ce jeu explore des situations réelles, parfois intenses. La confidentialité est le premier engagement de chaque joueur.</div></div>
+      <div class="pbvitem"><div class="pbvicon" style="background:rgba(52,152,219,0.15)">🎯</div><div class="pbvtxt"><strong>Chaque joueur joue à son tour.</strong> Il peut choisir de se retirer de la partie à tout moment, sans justification et sans jugement.</div></div>
+      <div class="pbvitem"><div class="pbvicon" style="background:rgba(243,156,18,0.15)">🧠</div><div class="pbvtxt"><strong>Le jeu raconte ce que le cerveau traverse — pas ce que la personne vaut.</strong> Aucun score ne mesure une valeur humaine.</div></div>
+      <div class="pbvitem"><div class="pbvicon" style="background:rgba(231,76,60,0.15)">👁</div><div class="pbvtxt"><strong>Aucun vécu n'est jugé, comparé ou hiérarchisé.</strong> Ce que chacun exprime appartient à son parcours.</div></div>
+    </div>
+    <div class="pavert"><p>Dope à Mines est un outil pédagogique conçu par AliaSkill Formation (SIREN 888963238). Il ne se substitue à aucun accompagnement médical, psychologique ou thérapeutique. — Marque INPI n°5238107 · e-Soleau DSO2026012538</p></div>
+    <button onclick="demarrerDepuisPres()" class="btn-start">Commencer la session →</button>
+    <p style="text-align:center;margin-top:12px;font-family:Arial,sans-serif;font-size:11px;color:rgba(255,255,255,0.35)">En cliquant, vous acceptez l'espace de bienveillance ci-dessus</p>
+  </div>
+</div>
+
+<div class="pfoot">
+  <p><span style="color:rgba(255,255,255,0.5)">Dope à Mines</span> · AliaSkill Formation · La Guerche-de-Bretagne · 2026<br>Marque INPI n°5238107 · Tous droits réservés</p>
+</div>
+
+</div>
+<!-- FIN PRÉSENTATION -->
+
+<div id="bar" style="visibility:hidden">
+  <h1>DOPE À MINES · ADULTES · VISIO</h1>
+  <span id="turn">Tour 1 · J1</span>
+  <button class="btn btn-red" id="btn-die" onclick="lancerDe()">🎲 Dé</button>
+  <button class="btn" id="btn-draw" onclick="piocher()" disabled>Piocher</button>
+  <button class="btn" id="btn-next" onclick="tourSuivant()" disabled>Suivant</button>
+  <button class="btn btn-green" onclick="ouvrirAnalyse()">📊 Analyse</button>
+  <button class="btn" onclick="resetJeu()">↺</button>
+</div>
+
+<div id="wrap" style="visibility:hidden">
+  <div id="plateau-area">
+    <div id="circuit"></div>
+  </div>
+  <div id="side">
+    <div class="box">
+      <div class="box-t">Dé</div>
+      <div id="die-big">—</div>
+      <div id="case-lbl">Lance le dé</div>
+    </div>
+    <div class="box">
+      <div class="box-t">Carte</div>
+      <div id="card-content"><div style="color:#aaa;text-align:center;padding:10px;font-size:12px">Lance le dé puis pioche</div></div>
+    </div>
+    <div class="box">
+      <div class="box-t">Pont DA</div>
+      <div id="pontda">— en attente —</div>
+    </div>
+    <div class="box">
+      <div class="box-t">Scores</div>
+      <div id="scores"></div>
+    </div>
+    <div class="box">
+      <div class="box-t">Légende</div>
+      <div class="leg">
+        <div class="li"><div class="ld" style="background:#e74c3c"></div>Rouge</div>
+        <div class="li"><div class="ld" style="background:#2471a3"></div>Bleu</div>
+        <div class="li"><div class="ld" style="background:#1e8449"></div>Vert</div>
+        <div class="li"><div class="ld" style="background:#d68910"></div>Ressources</div>
+        <div class="li"><div class="ld" style="background:#7d3c98"></div>Consultation</div>
+        <div class="li"><div class="ld" style="background:#bdc3c7"></div>Grise</div>
+        <div class="li"><div class="ld" style="background:#16a085"></div>Plasticité</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ROUE CASINEURONALE -->
+<div id="roue-overlay">
+  <div id="roue-wrap">
+    <div id="roue-titre">Roue Casineuronale</div>
+    <div id="roue-sous">Mon cerveau · Ici &amp; Maintenant</div>
+    <div id="roue-jnom"></div>
+    <canvas id="roue-canvas2" width="440" height="440" style="width:440px!important;height:440px!important;display:block;max-width:440px"></canvas>
+    <div id="roue-fiche" style="display:none;background:rgba(255,255,255,0.08);border-radius:10px;padding:12px 16px;width:380px;max-height:120px;overflow-y:auto;text-align:left;margin-bottom:8px"></div>
+    <div id="roue-result" style="display:none">
+      <div id="roue-cnom">Lance la roue pour découvrir ton état de départ</div>
+      <div id="roue-cquad"></div>
+      <div id="roue-cvals"></div>
+    </div>
+    <div id="roue-btns">
+      <button class="rbtn rbtn-spin" id="rbtn-spin" onclick="roueSpin()">🎰 Tourner</button>
+      <button class="rbtn rbtn-ok" id="rbtn-ok" onclick="roueValider()" disabled>Valider →</button>
+    </div>
+  </div>
+</div>
+
+<!-- POPUP STATION -->
+<div id="st-popup" class="st-popup"></div>
+<div id="st-info" class="st-info"></div>
+<!-- OVERLAY CARTE -->
+<div id="overlay-carte">
+  <div id="overlay-inner">
+    <button id="overlay-close" onclick="fermerCarte()">✕</button>
+    <div id="overlay-carte-content"></div>
+  </div>
+</div>
+
+<!-- OVERLAY ANALYSE -->
+<div id="overlay-analyse">
+  <div id="analyse-inner">
+    <h2 style="font-family:Georgia,serif;font-size:20px;text-align:center;margin-bottom:4px;color:#1a1a2e">🧠 Analyse du Parcours</h2>
+    <p style="text-align:center;font-size:11px;color:#888;margin-bottom:20px">Densité neurochimique · AliaSkill Formation</p>
+    <div id="analyse-contenu"></div>
+    <button onclick="fermerAnalyse()" style="display:block;margin:16px auto 0;padding:10px 28px;background:#1a1a2e;color:#fff;border:none;border-radius:8px;font-size:13px;cursor:pointer;font-family:Georgia,serif">Fermer</button>
+  </div>
+</div>
+
+<script>
+// ═══ DONNÉES ═══════════════════════════════
+var PC_ALL=['#e74c3c','#3498db','#27ae60','#f39c12','#9b59b6','#1abc9c'];
+var PN_ALL=['Joueur 1','Joueur 2','Joueur 3','Joueur 4','Joueur 5','Joueur 6'];
+var N=6, PC=PC_ALL.slice(), PN=PN_ALL.slice();
+
+var SEGS=[
+  {de:'ATV',a:'Hypothalamus',seq:['G','R','G','B','R','G','V','R','B','G']},
+  {de:'Hypothalamus',a:'NA',seq:['G','R','G','B','R','G','B','R','G','V']},
+  {de:'NA',a:'Hippocampe',seq:['G','R','B','R','B','R','G','G','R','B']},
+  {de:'Hippocampe',a:'Hypothalamus',seq:['G','B','R','G','B','V','R','B','G','G']},
+  {de:'Hypothalamus',a:'Amygdale',seq:['R','B','V','G','B','V','G','B','V','G']},
+  {de:'Amygdale',a:'Cortex PF',seq:['G','J','Vi','G','V','J','G','Vi','G','V','G','Vi','G','V','Vi','J','G','G','G']},
+];
+var PARC=[];
+SEGS.forEach(function(s){s.seq.forEach(function(c){PARC.push({c:c,a:s.a});});});
+PARC.push({c:'FIN',a:'Cortex PF'});
+var TOTAL=PARC.length;
+
+var CCOL={R:'#e74c3c',B:'#2471a3',V:'#1e8449',J:'#d68910',C:'#7d3c98',G:'#bdc3c7',Vi:'#16a085',FIN:'#1a1a2e'};
+var CNOM={R:'Zone Rouge',B:'Zone Bleue',V:'Zone Verte',J:'Ressources',C:'Consultation',G:'Grise',Vi:'Plasticité',FIN:'Arrivée'};
+var ZS={R:{bg:'#e74c3c',col:'#fff',n:'ZONE ROUGE'},B:{bg:'#2471a3',col:'#fff',n:'ZONE BLEUE'},V:{bg:'#1e8449',col:'#fff',n:'ZONE VERTE'},J:{bg:'#d68910',col:'#fff',n:'RESSOURCES'},C:{bg:'#7d3c98',col:'#fff',n:'CONSULTATION'},G:{bg:'#bdc3c7',col:'#555',n:"L'ENNUI"},Vi:{bg:'#16a085',col:'#fff',n:'CONSCIENCE EN ACTION · ACTE LIBRE'}};
+var SC={20:'#1e8449',10:'#2471a3',0:'#888','-10':'#d68910','-20':'#c0392b'};
+var SN={20:'Régulation active',10:'Régulation fragile',0:'Tension neutre','-10':'Tension modérée','-20':'Zone de danger'};
+
+var STATIONS={
+  ATV:{x:90,y:310,col:'#2471a3',label:'ATV',desc:'Aire Tegmentale Ventrale. Point de départ du circuit dopaminergique. Produit la dopamine et l\'envoie vers le Noyau Accumbens et le Cortex Préfrontal. Source de la motivation et de l\'anticipation du plaisir.'},
+  Hypothalamus:{x:340,y:310,col:'#27ae60',label:'Hypoth.',desc:'Carrefour neuroendocrinien. Régule les besoins fondamentaux et orchestre la réponse au stress via l\'axe HPA. Traversé deux fois dans le parcours : en montée vers la récompense, puis en descente vers la régulation.'},
+  NA:{x:555,y:310,col:'#f39c12',label:'NA',desc:'Noyau Accumbens. Cœur du circuit de la récompense. Intègre les signaux dopaminergiques. Ici se joue le Pont DA : selon le cortisol, l\'accès au Cortex Préfrontal est libre, conditionné ou bloqué.'},
+  Hippocampe:{x:450,y:95,col:'#8e44ad',label:'Hippoc.',desc:'Siège de la mémoire et du contexte. Encode les souvenirs liés aux récompenses et aux expériences stressantes. Rôle clé dans la dépendance : relie lieux, personnes et émotions aux comportements addictifs.'},
+  Amygdale:{x:450,y:530,col:'#e74c3c',label:'Amygdale',desc:'Sentinelle émotionnelle. Détecte les menaces et déclenche la peur. Quand le cortisol est élevé, elle court-circuite le raisonnement préfrontal. Zone critique dans les comportements impulsifs et addictifs.'},
+  'Cortex PF':{x:640,y:95,col:'#1a1a2e',label:'Cortex PF',desc:'Siège de la régulation et de la décision consciente. Destination finale du parcours. Quand il reprend le contrôle sur le circuit limbique, la régulation devient possible. Objectif neurobiologique du jeu.'}
+};
+
+var CARTES={
+R:[
+  {t:'Le Buzz Social',s:'Une publication devient virale. Tu vérifies les notifs toutes les minutes.',c:'Récompense aléatoire intermittente. Le cerveau devient accro au signal.',da:10,co:40,pts:-20},
+  {t:'Le Sucre de 16h',s:'Coup de barre. Un soda ou un gâteau pour repartir.',c:'Pic glycémique couplé à une décharge de dopamine sensorielle rapide.',da:10,co:30,pts:-20},
+  {t:'Le Feedback Acide',s:'Un commentaire sec d\'un client. Ton sang ne fait qu\'un tour.',c:'Menace sociale perçue. Alerte neurochimique majeure.',da:10,co:50,pts:-20},
+  {t:'La Commande Reçue',s:'Le colis est là ! Tu l\'ouvres avec frénésie.',c:'Dopamine d\'anticipation et plaisir de la nouveauté.',da:20,co:20,pts:0},
+  {t:'L\'Idée Géniale',s:'Tu viens de trouver LA solution. Ton cerveau s\'illumine.',c:'Décharge massive de dopamine créative (Eurêka).',da:40,co:10,pts:20},
+  {t:'Le Scandale Info',s:'Tu lis un article qui t\'indigne. Tu veux commenter immédiatement.',c:'Dopamine de colère/indignation. Très addictif.',da:10,co:40,pts:-20},
+  {t:'Le Multitâche',s:'Tu écris un mail, écoutes un podcast, surveilles le feu.',c:'Fragmentation de l\'attention. Surcharge synaptique constante.',da:10,co:50,pts:-20},
+  {t:'Le Pari Risqué',s:'Tu tentes un coup de bluff ou une décision osée en réunion.',c:'Prise de risque. Adrénaline couplée à la DA de résultat.',da:20,co:50,pts:-20},
+  {t:'Le Plaisir Coupable',s:'Un fast-food ou un gros gâteau. C\'est trop bon.',c:'Stimulation brutale des centres du plaisir sensoriel.',da:20,co:30,pts:-10},
+  {t:'L\'Appel de l\'Ancien',s:'Un ami perdu de vue te contacte. Nostalgie et joie.',c:'Reconnaissance sociale. Ocytocine + Dopamine.',da:40,co:10,pts:20},
+  {t:'La Notification Rouge',s:'Cette petite pastille rouge sur ton icône d\'appli.',c:'Conditionnement pavlovien. Le cerveau réclame son gain.',da:10,co:20,pts:-10},
+  {t:'La Deadline Hier',s:'Tu as oublié un truc important. Ton sang se glace.',c:'Panique du Cortex. Choc DA pour mobiliser les ressources.',da:10,co:60,pts:-20},
+  {t:'L\'Ego Trip',s:'On te demande ton avis comme expert. Tu te sens fier.',c:'Validation du statut social. Le circuit de récompense s\'emballe.',da:40,co:20,pts:20},
+  {t:'Le Verre de Trop',s:'Pour décompresser. Le premier soulage, le troisième embrume.',c:'Alcool : stimulation GABA puis rebond dopaminergique artificiel.',da:10,co:50,pts:-20},
+  {t:'L\'Achat Revanche',s:'Journée pourrie. Tu t\'offres ce gadget cher pour compenser.',c:'Compensation émotionnelle. Le striatum cherche une récompense rapide.',da:10,co:50,pts:-20},
+  {t:'La Pilule Sommeil',s:'Impossible de couper le cerveau. Tu prends une aide chimique.',c:'Forçage des récepteurs. Le circuit de récupération naturelle est court-circuité.',da:10,co:30,pts:-20},
+  {t:'Le Pari Sportif',s:'Une mise sur ton équipe. Chaque action du match devient électrique.',c:'Addiction aux jeux. Dopamine de l\'incertitude très puissante.',da:10,co:50,pts:-20},
+  {t:'Le Grignotage Nuit',s:'Minuit. Le frigo s\'ouvre. Tu cherches du gras et du sucre sans faim.',c:'Système de récompense dérégulé par la fatigue. Perte de contrôle frontal.',da:10,co:30,pts:-20},
+  {t:'Colère Routière',s:'Quelqu\'un te coupe. Tu exploses, tu klaxonnes.',c:'Réaction amygdalienne brute. La DA de combat sature le système.',da:10,co:40,pts:-20},
+  {t:'Le Swipe Infini',s:'Réseaux ou applis de rencontre. Tu cherches le prochain visage.',c:'Mécanisme de la récompense aléatoire. Hyperexcitation visuelle.',da:10,co:50,pts:-20},
+  {t:'Cigarette / Vape',s:'La pause nécessaire. La nicotine fouette le cerveau.',c:'Stimulation cholinergique. Décharge flash de dopamine.',da:10,co:50,pts:-20},
+  {t:'Le Conflit de Couple',s:'Mots qui dépassent la pensée. Le cœur bat à 120.',c:'Inondation émotionnelle. Le circuit de la menace sociale au maximum.',da:10,co:60,pts:-20},
+  {t:'Le PowerPoint Nul',s:'Peaufiner les détails jusqu\'à l\'obsession. Perfectionnisme toxique.',c:'Dopamine d\'évitement de l\'échec. Épuisement des réserves de glycogène.',da:10,co:60,pts:-20},
+  {t:'Le Poker de Bureau',s:'Dissimuler une erreur, bluffer devant le patron.',c:'Vigilance hyper-activée. Le système de stress alimente la dopamine.',da:10,co:60,pts:-20},
+  {t:'L\'Excès de Sport',s:'Courir jusqu\'à la douleur. Tu ne peux plus t\'en passer, même blessé.',c:'Bigorexie. Addiction aux endorphines et à la DA d\'effort extrême.',da:10,co:60,pts:-20},
+  {t:'Shopping de Luxe',s:'Entrer dans une boutique prestigieuse. On te traite comme un roi.',c:'Validation de statut social. Dopamine liée à l\'image de soi.',da:10,co:50,pts:-20},
+  {t:'Workaholisme',s:'Répondre aux mails pendant le dîner. Tu te sens indispensable.',c:'Identification totale au travail. Perte de la capacité d\'inhibition.',da:10,co:50,pts:-20},
+  {t:'Le Médicament Boost',s:'Un stimulant pour rester concentré sur ce dossier interminable.',c:'Augmentation artificielle des niveaux de DA synaptique.',da:10,co:70,pts:-20},
+  {t:'Le Grattage / Loto',s:'Juste un dernier ticket. Cette fois c\'est la bonne.',c:'Espérance de gain incertaine. Le circuit de la récompense s\'hypnotise.',da:10,co:50,pts:-20},
+  {t:'La Réunion Vide',s:'Trois heures à écouter sans agir. Tu satures nerveusement.',c:'Baisse du glucose cérébral par ennui forcé et irritation.',da:10,co:40,pts:-20},
+  {t:'Obsession Santé',s:'Vérifier ses symptômes sur le web. Tu es convaincu du pire.',c:'Dopamine d\'alerte (anxiété). Recherche compulsive de réassurance.',da:10,co:40,pts:-20},
+  {t:'L\'Écran de Nuit',s:'La lumière bleue pique les yeux, mais tu ne peux pas lâcher ce feed.',c:'Inhibition de la mélatonine. Le cerveau reste en mode Chasse.',da:10,co:40,pts:-20},
+  {t:'Le Flash-Back',s:'Un souvenir d\'échec remonte brutalement. Ton cœur s\'emballe.',c:'Réactivation de la trace mnésique traumatique par l\'amygdale.',da:10,co:60,pts:-20},
+  {t:'La Ligne de Poudre',s:'Un boost foudroyant. Tu te sens invincible, maître du monde.',c:'Blocage massif de la recapture de dopamine. Le cerveau brûle ses réserves.',da:80,co:40,pts:-20,sub:true},
+  {t:'L\'Extase Chimique',s:'Une vague d\'empathie forcée. Tout est beau, tout le monde est ami.',c:'Inondation massive de sérotonine et dopamine. Déséquilibre des récepteurs.',da:70,co:40,pts:-20,sub:true},
+  {t:'L\'Herbe de l\'Oubli',s:'Le temps ralentit, les problèmes s\'effacent dans une brume cotonneuse.',c:'Perturbation des récepteurs cannabinoïdes. Altération de la mémoire de travail.',da:40,co:20,pts:-20,sub:true},
+  {t:'Le Trip Acide',s:'Les couleurs vibrent, les sons se touchent. La réalité se fragmente.',c:'Désorganisation totale du filtrage sensoriel thalamique.',da:60,co:60,pts:-20,sub:true},
+  {t:'Le Flash Héroïque',s:'Une déferlante de coton tiède. Plus rien n\'a d\'importance.',c:'Saturation des récepteurs opioïdes. Arrêt du circuit de la motivation.',da:90,co:30,pts:-20,sub:true},
+  {t:'Cristal Euphorie',s:'Une énergie électrique qui ne s\'arrête jamais. Tu ne dors plus.',c:'Libération massive de noradrénaline et dopamine. Neurotoxicité directe.',da:80,co:50,pts:-20,sub:true},
+  {t:'Le Shoot d\'Adrénaline',s:'Chercher la limite, frôler le danger pour se sentir vivant.',c:'Addiction aux catécholamines de survie. Épuisement des surrénales.',da:60,co:60,pts:-20,sub:true},
+  {t:'Produits de Coupe',s:'Le boost est là, mais un goût métallique et une paranoïa s\'installent.',c:'Effets secondaires imprévisibles sur le système nerveux autonome.',da:50,co:60,pts:-20,sub:true},
+  {t:'Descente Brutale',s:'Le pic est passé. Le monde est gris, froid. Ton cerveau réclame.',c:'Hypodopaminergie de sevrage. Crash du système de récompense.',da:10,co:60,pts:-20,sub:true},
+  {t:'Dépendance Invisible',s:'Ce n\'est plus pour le plaisir, c\'est juste pour se sentir normal.',c:'Down-régulation des récepteurs : le circuit est anesthésié.',da:20,co:60,pts:-20,sub:true},
+],
+B:[
+  {t:'État de Flow',s:'Tu ne sens plus le temps passer. Ton action est fluide et précise.',c:'Harmonie entre le cortex et le striatum. Dopamine stable et durable.',da:30,co:10,pts:20},
+  {t:'Mentorat',s:'Tu transmets ton savoir à un junior. Sa réussite te rend fier.',c:'Ocytocine + Dopamine sociale. Renforce le sentiment d\'utilité.',da:40,co:10,pts:20},
+  {t:'Eurêka !',s:'La pièce du puzzle s\'emboîte. Tu as enfin compris le problème.',c:'Libération brutale de dopamine suite à un effort cognitif intense.',da:40,co:10,pts:20},
+  {t:'Brainstorming Sincère',s:'Les idées rebondissent. Personne ne juge, tout le monde contribue.',c:'Récompense par la collaboration. Sécurisation de l\'amygdale.',da:30,co:10,pts:20},
+  {t:'Apprentissage Actif',s:'Tu maîtrises enfin ce nouvel outil. Ton potentiel s\'élargit.',c:'Plasticité neuronale. La compétence devient une récompense.',da:30,co:10,pts:20},
+  {t:'Pires Partagés',s:'Un fou rire au bureau. La tension s\'évapore d\'un coup.',c:'Choc endorphinique. Réinitialisation du neuro-thermostat.',da:30,co:10,pts:20},
+  {t:'La Done List',s:'Relier tout ce que tu as accompli aujourd\'hui avec satisfaction.',c:'Renforcement de l\'auto-efficacité. Clôture de boucle dopaminergique.',da:30,co:10,pts:20},
+  {t:'Créativité Manuelle',s:'Dessiner, sculpter, coder pour le plaisir. Créer sans pression.',c:'Activation des aires motrices et sensorielles. Plaisir intrinsèque.',da:30,co:10,pts:20},
+  {t:'Gratitude Client',s:'Un Merci sincère qui reconnaît la valeur de ton travail.',c:'Validation externe saine. Augmente la sérotonine.',da:30,co:10,pts:20},
+  {t:'Le Silence Choisi',s:'S\'isoler pour réfléchir en profondeur sur un sujet complexe.',c:'Repos des circuits d\'attention sélective. Économie d\'énergie.',da:30,co:10,pts:20},
+  {t:'Le Feedback Constructif',s:'Ton responsable souligne tes points forts avec précision.',c:'Récompense sociale authentique. Renforce l\'aire tegmentale ventrale.',da:30,co:10,pts:20},
+  {t:'L\'Heure de Génie',s:'Une heure de travail sans aucune distraction. Efficacité pure.',c:'Concentration exécutive maximale. Libération de dopamine tonique.',da:40,co:10,pts:20},
+  {t:'La Transmission',s:'Expliquer un concept complexe et voir l\'étincelle chez l\'autre.',c:'Neurones miroirs et satisfaction altruiste. Sérotonine + Dopamine.',da:40,co:10,pts:20},
+  {t:'Le Projet Passion',s:'Travailler sur ce dossier qui te tient vraiment à cœur.',c:'Motivation intrinsèque. Le circuit mésolimbique est auto-alimenté.',da:40,co:10,pts:20},
+  {t:'Réussite Collective',s:'L\'équipe atteint l\'objectif ensemble. On fête ça.',c:'Ocytocine massive. La récompense est partagée et amplifiée.',da:40,co:10,pts:20},
+  {t:'Auto-Discipline',s:'Tu as résisté à une distraction pour finir ta tâche.',c:'Victoire du cortex préfrontal sur le striatum. Fierté exécutive.',da:30,co:10,pts:20},
+  {t:'Lecture Inspirante',s:'Un livre qui change ta vision du monde ou de ton métier.',c:'Stimulation intellectuelle lente. Dopamine de curiosité profonde.',da:30,co:10,pts:20},
+  {t:'Le Clean Desk',s:'Ranger son espace avant de commencer. Clarté mentale.',c:'Réduction de la charge cognitive visuelle. Préparation au Flow.',da:20,co:10,pts:10},
+  {t:'Compliment Inattendu',s:'Un collègue te remercie pour ton aide précieuse.',c:'Reconnaissance par les pairs. Sécurisation du statut social.',da:30,co:10,pts:20},
+  {t:'Mise à Jour Compétences',s:'Tu viens de valider une certification ou un nouvel acquis.',c:'Sentiment de compétence (Self-Efficacy). Plasticité neuronale.',da:30,co:10,pts:20},
+  {t:'Synchronicité',s:'Deux idées sans rapport se rejoignent enfin. Tout s\'éclaire.',c:'Créativité associative. Décharge d\'acétylcholine et dopamine.',da:30,co:10,pts:20},
+  {t:'Le Grand Nettoyage',s:'Supprimer les applis inutiles et trier ses dossiers numériques.',c:'Allègement du système d\'alerte. Libération d\'espace mental.',da:20,co:10,pts:10},
+  {t:'Préparation de Voyage',s:'Imaginer le futur itinéraire. Le plaisir commence maintenant.',c:'Dopamine d\'anticipation saine (prospection).',da:30,co:10,pts:20},
+  {t:'Écoute Active',s:'Une conversation profonde où tu te sens vraiment écouté.',c:'Validation émotionnelle. Baisse immédiate du cortisol résiduel.',da:30,co:10,pts:20},
+  {t:'Le Petit Succès',s:'Réparer ce bug agaçant en deux minutes.',c:'Micro-récompense. Entretien de la motivation basale.',da:20,co:10,pts:10},
+  {t:'Délégation Réussie',s:'Tu as confié cette tâche et elle est bien faite. Soulagement.',c:'Allègement de la charge préfrontale. Dopamine de confiance.',da:30,co:10,pts:20},
+  {t:'Lecture Papier',s:'Plonger dans un livre passionnant, loin de la lumière bleue.',c:'Focalisation lente. Dopamine de curiosité profonde.',da:30,co:10,pts:20},
+  {t:'Célébration d\'Étape',s:'Un bon repas pour marquer la fin d\'un gros dossier.',c:'Marquage temporel de la récompense. Clôture de boucle.',da:40,co:10,pts:20},
+  {t:'Insight Créatif',s:'Une idée surgit sous la douche. Tout devient cohérent.',c:'État par défaut du cerveau (DMN) favorisant l\'association.',da:40,co:10,pts:20},
+  {t:'Le Non Stratégique',s:'Refuser une réunion inutile pour avancer sur ton vrai sujet.',c:'Affirmation du contrôle exécutif. Baisse de l\'anxiété.',da:30,co:10,pts:20},
+  {t:'Feedback Client +',s:'Un client t\'envoie un mail de remerciement spontané.',c:'Validation externe saine du statut social.',da:30,co:10,pts:20},
+  {t:'Musique de Flow',s:'Une playlist spécifique qui t\'isole du bruit ambiant.',c:'Conditionnement auditif. Synchronisation neuronale.',da:20,co:10,pts:10},
+  {t:'Micro-Challenge',s:'Se donner 20 min pour finir un truc. Le jeu rend la tâche facile.',c:'Gamification intrinsèque. Dopamine de défi.',da:30,co:10,pts:20},
+  {t:'Réunion de Cœur',s:'Déjeuner avec ce collègue devenu un véritable ami.',c:'Ocytocine + Dopamine de sécurité.',da:30,co:10,pts:20},
+  {t:'Tableau Blanc',s:'Poser ses idées visuellement. Voir le plan d\'ensemble.',c:'Externalisation de la mémoire de travail.',da:30,co:10,pts:20},
+  {t:'Le Silence Propre',s:'Le bureau est vide, tu es seul. Une paix immense.',c:'Absence de sollicitation. Repos des circuits d\'alerte.',da:30,co:10,pts:20},
+  {t:'Optimisation Outil',s:'Prendre 10 min pour automatiser une tâche répétitive.',c:'Dopamine d\'efficacité future. Investissement cognitif.',da:30,co:10,pts:20},
+  {t:'Compliment de Pair',s:'Un expert de ton domaine valide ton approche.',c:'Renforcement de l\'identité pro. Sérotonine haute.',da:30,co:10,pts:20},
+  {t:'Sentiment d\'Utilité',s:'Aider quelqu\'un sans rien attendre en retour.',c:'Circuit de la récompense sociale et altruiste.',da:30,co:10,pts:20},
+  {t:'Le Vide (Apathie)',s:'Plus rien ne t\'amuse, même ton activité préférée.',c:'Désensibilisation. Les récepteurs saturés ne répondent plus.',da:10,co:50,pts:-20},
+  {t:'Brouillard Mental',s:'Tu lis 10 fois la même ligne sans comprendre. Le cortex est en panne.',c:'Hypo-frontalité. Le cortex préfrontal manque d\'énergie.',da:10,co:50,pts:-20},
+],
+V:[
+  {t:'Mode Avion',s:'Couper le monde numérique 2 heures. Ton cerveau respire enfin.',c:'Repos des récepteurs dopaminergiques. Récupération sans stimulation artificielle.',da:30,co:10,pts:20},
+  {t:'Marche en Forêt',s:'Le vert, le silence, l\'odeur de l\'humus. Tes épaules retombent.',c:'Réduction du cortisol et activation du système parasympathique.',da:40,co:10,pts:20},
+  {t:'Méditation / Cohérence',s:'10 minutes à respirer consciemment. Ton rythme cardiaque se calme.',c:'Stimulation du nerf vague. Le cortex préfrontal reprend le contrôle.',da:30,co:10,pts:20},
+  {t:'Micro-Sieste',s:'20 min de sommeil flash. Tu te réveilles l\'esprit clair.',c:'Nettoyage de l\'adénosine résiduelle. Les réserves DA se rechargent.',da:40,co:10,pts:20},
+  {t:'Sport Cardiaque',s:'Transpirer, essouffler le mental par l\'effort physique.',c:'Libération d\'endorphines et régulation des catécholamines.',da:40,co:10,pts:20},
+  {t:'Silence de 10 Minutes',s:'S\'asseoir, fermer les yeux, ne rien faire. Juste être là.',c:'Repos des circuits de l\'attention sélective. L\'amygdale se détend.',da:30,co:10,pts:20},
+  {t:'Le Cordonnier',s:'Réparer ce petit objet, bricoler sans but précis.',c:'Transfert du cortex vers les aires motrices. Décompression.',da:30,co:10,pts:20},
+  {t:'Hydratation Profonde',s:'Un grand verre d\'eau fraîche. Ton cerveau respire enfin.',c:'La déshydratation légère augmente le cortisol de 20%. Un verre suffit.',da:20,co:10,pts:10},
+  {t:'Cuisiner de Saison',s:'Prendre le temps de couper, sentir, goûter. Un rituel lent.',c:'Stimulation sensorielle non addictive. Le cortex se pose vraiment.',da:30,co:10,pts:20},
+  {t:'Discussion de Comptoir',s:'Un échange léger avec un inconnu. Pas d\'enjeux, juste de l\'humain.',c:'Micro-dose d\'ocytocine sans pression de performance.',da:30,co:10,pts:20},
+  {t:'Jardinage / Plantes',s:'Les mains dans la terre. Le temps du vivant est plus lent.',c:'Contact avec les bactéries du sol dopant la sérotonine naturelle.',da:40,co:10,pts:20},
+  {t:'Douche Froide',s:'Le choc thermique qui calme instantanément l\'orage mental.',c:'Vasoconstriction puis libération d\'endorphines de régulation.',da:30,co:10,pts:20},
+  {t:'Stretching / Yoga',s:'Étendre son corps, libérer les tensions musculaires accumulées.',c:'Réduction de la rétroaction proprioceptive du stress.',da:30,co:10,pts:20},
+  {t:'Musique Ambiante',s:'Un son de pluie ou des ondes alpha. Ta tête s\'allège.',c:'Synchronisation des ondes cérébrales vers un état de repos.',da:30,co:10,pts:20},
+  {t:'Écriture Journal',s:'Poser ses pensées sur le papier pour les sortir du crâne.',c:'Externalisation de la charge mentale émotionnelle. L\'amygdale se calme.',da:30,co:10,pts:20},
+  {t:'Ciel Étoilé / Horizon',s:'Regarder au loin, très loin. Tes problèmes rétrécissent.',c:'L\'effet Overview : recalibrage de l\'importance des stimuli.',da:30,co:10,pts:20},
+  {t:'Rangement par le Vide',s:'Jeter, donner, épurer. Ton environnement respire, toi aussi.',c:'Corrélation entre l\'ordre externe et la régulation interne.',da:30,co:10,pts:20},
+  {t:'Câlin / Contact Physique',s:'20 secondes d\'étreinte sincère. La tension fond.',c:'Libération massive d\'ocytocine, antagoniste naturel du cortisol.',da:40,co:10,pts:20},
+  {t:'Temps de Trajet À Pied',s:'Rentrer du travail en marchant. Faire le sas entre deux mondes.',c:'Activation du système glymphatique (nettoyage cérébral).',da:30,co:10,pts:20},
+  {t:'Observation de la Nature',s:'Se concentrer sur le vivant non-humain. Pas de notifications.',c:'Restauration de l\'attention fascinée (Attention Restoration Theory).',da:30,co:10,pts:20},
+  {t:'Tisane Apaisante',s:'Un rituel chaud, sans théine, sans sucre. Juste la chaleur.',c:'Confort thermique et sensoriel. Signal de sécurité au cerveau.',da:20,co:10,pts:10},
+  {t:'Appel à un Sage',s:'Appeler cette personne qui a toujours les bons mots.',c:'Co-régulation émotionnelle par une figure d\'attachement.',da:40,co:10,pts:20},
+  {t:'Lumière Naturelle',s:'Prendre 20 min de soleil le matin. Ton horloge biologique se cale.',c:'Calibrage du cycle circadien via les cellules ganglionnaires.',da:30,co:10,pts:20},
+  {t:'Bricolage Lourd',s:'Poncer, peindre, porter. La fatigue physique saine.',c:'Épuisement du glycogène musculaire. Meilleur sommeil garanti.',da:40,co:10,pts:20},
+  {t:'Méditation de Bienveillance',s:'Souhaiter du bien à quelqu\'un que tu n\'aimes pas.',c:'Désactivation des circuits de l\'hostilité et de la défense.',da:30,co:10,pts:20},
+  {t:'Déconnecter les Alertes',s:'Plus de vibrations, plus de lumière rouge. Ton attention est à toi.',c:'Repos des circuits de vigilance thalamiques. Sortie du mode alerte.',da:40,co:10,pts:20},
+  {t:'Musique Classique / Lo-Fi',s:'Un fond sonore stable, prévisible et apaisant pour le cerveau.',c:'Synchronisation alpha des ondes cérébrales.',da:30,co:10,pts:20},
+  {t:'Le Grand Vide',s:'Une heure à regarder par la fenêtre, sans but, sans culpabilité.',c:'Activation du réseau par défaut (DMN). Repos exécutif vrai.',da:40,co:10,pts:20},
+  {t:'Lecture Fiction Papier',s:'S\'évader dans une histoire qui n\'est pas la tienne.',c:'Immersion narrative non numérique. Baisse de la charge cognitive.',da:30,co:10,pts:20},
+  {t:'Massage / Auto-massage',s:'Dénouer les nœuds dans le cou. Ton corps lâche enfin prise.',c:'Baisse du cortisol salivaire et libération d\'endorphines.',da:40,co:10,pts:20},
+  {t:'Ranger son Bureau',s:'Vider les papiers, classer les dossiers. Voir l\'espace s\'épurer.',c:'Réduction des distractions visuelles. Le cortex préfrontal est soulagé.',da:30,co:10,pts:20},
+  {t:'Coucher de Soleil',s:'Prendre 10 min pour voir la lumière changer. Fin de cycle.',c:'Signal visuel de passage en mode parasympathique.',da:30,co:10,pts:20},
+  {t:'Repas en Conscience',s:'Manger sans écran, en sentant chaque texture et saveur.',c:'Régulation de la ghréline et de la leptine. La satiété revient.',da:30,co:10,pts:20},
+  {t:'Bain Chaud aux Sels',s:'La chaleur enveloppante. Tes muscles et tes pensées flottent.',c:'Thermorégulation favorisant la détente musculaire profonde.',da:40,co:10,pts:20},
+  {t:'Discussion Philo',s:'Parler du sens de la vie plutôt que de la météo ou du travail.',c:'Dopamine de sens (Eudaimonia) vs dopamine de plaisir.',da:30,co:10,pts:20},
+  {t:'Micro-Sieste Power',s:'Fermer les yeux 10 min au bureau. Un reboot flash.',c:'Nettoyage de l\'adénosine. Efficacité +30% prouvée.',da:30,co:10,pts:20},
+  {t:'Pas d\'Écran à Table',s:'Un repas partagé avec de vrais regards et de vrais mots.',c:'Ocytocine et engagement social sécurisant. Le Co redescend.',da:40,co:10,pts:20},
+  {t:'Pétanque / Jeu Lent',s:'Un jeu simple qui demande adresse et calme. Pas de score vital.',c:'Plaisir ludique sans enjeux de survie ou de performance.',da:30,co:10,pts:20},
+  {t:'État de Flow (Vert)',s:'Tu ne sens plus le temps passer. Ton action est fluide et précise.',c:'Harmonie entre le cortex et le striatum. Dopamine stable et durable.',da:40,co:10,pts:20},
+  {t:'Sommeil de 9 Heures',s:'Une nuit complète, sans réveil. Le grand nettoyage cérébral.',c:'Cycle REM complet. Consolidation mnésique et purge toxique.',da:40,co:10,pts:20},
+],
+J:[
+  {t:'Le Mentor',s:'Une figure inspirante qui te guide dans tes choix sans juger.',c:'Externalisation de la décision. Le cortex préfrontal se déleste.',da:40,co:10,pts:20,e:'Toutes tes cartes Rouges coûtent -10 DA ce tour.'},
+  {t:'Kit de Méditation',s:'Un espace et un temps dédiés au retour à soi. Chaque jour.',c:'Conditionnement environnemental à la détente.',da:40,co:10,pts:20,e:'Tes cartes Vertes rapportent +10 pts supplémentaires ce tour.'},
+  {t:'Sommeil de Qualité',s:'Chambre fraîche, sans écran. Une nuit réparatrice complète.',c:'Optimisation du système glymphatique.',da:40,co:10,pts:20,e:'Annule le prochain malus de type Crash ou Descente.'},
+  {t:'Binôme de Confiance',s:'Ce collègue à qui tu peux tout dire sans être jugé.',c:'Sécurisation sociale. Un allié fait baisser le Co immédiatement.',da:40,co:10,pts:20,e:'Divise par 2 le Co d\'une carte Rouge de ton choix.'},
+  {t:'Le Sportif Régulier',s:'Ton corps est ton allié — il encaisse mieux les pics de stress.',c:'Augmentation de la densité des récepteurs dopaminergiques.',da:40,co:10,pts:20,e:'Tu peux jouer 2 cartes Bleues par tour au lieu d\'une.'},
+  {t:'Logiciel de Focus',s:'Un bloqueur de distractions pour sanctuariser ton temps de travail.',c:'Réduction de la charge attentionnelle.',da:30,co:10,pts:20,e:'Annule l\'effet de toutes les cartes Notifications ce tour.'},
+  {t:'Agenda Partagé',s:'Mieux s\'organiser pour ne plus subir l\'urgence au quotidien.',c:'Externalisation de la planification. Le cortex préfrontal respire.',da:30,co:10,pts:20,e:'Regarde les 3 prochaines cartes de la pioche avant de jouer.'},
+  {t:'Micro-Habitude',s:'Commencer par 10 min de sport par jour, sans forcer. Juste ça.',c:'Création de nouveaux sentiers neuronaux par la répétition douce.',da:30,co:10,pts:20,e:'Chaque carte Verte jouée te donne +10 pts de Stabilité.'},
+  {t:'Expertise Technique',s:'Tu maîtrises ton sujet — l\'effort devient un plaisir naturel.',c:'Économie d\'énergie cognitive par l\'automatisme. La DA est stable.',da:40,co:10,pts:20,e:'Les cartes Bleues ne coûtent aucun Jeton ce tour.'},
+  {t:'Délégation Active',s:'Savoir dire : je ne peux pas le faire seul, aide-moi.',c:'Réduction de la surcharge préfrontale.',da:30,co:10,pts:20,e:'Donne une carte Rouge de ta main à un autre joueur.'},
+  {t:'Alimentation Cerveau',s:'Oméga-3 et antioxydants — le carburant noble pour tes neurones.',c:'Protection de la gaine de myéline et des membranes cellulaires.',da:30,co:10,pts:20,e:'Gagne 1 Jeton Énergie à chaque début de tour pendant 3 tours.'},
+  {t:'Cohérence Cardiaque',s:'5 min à respirer au rythme de ton cœur. L\'orage s\'éloigne.',c:'Stimulation du nerf vague. Commande directe pour calmer l\'amygdale.',da:40,co:10,pts:20,e:'Réduis ton Co actuel de 20 pts immédiatement.'},
+  {t:'Mode Avion Ressource',s:'Le monde peut attendre. Tu poses ton téléphone. Quel calme !',c:'Repos attentionnel. Le cortex se libère de l\'alerte constante.',da:30,co:10,pts:20,e:'Immunisé contre toutes les cartes Notifications pendant 2 tours.'},
+  {t:'Sport Intensif',s:'Tu as transpiré fort. Tes idées sont enfin claires après.',c:'Brûleur de stress. Évacue le surplus de cortisol accumulé.',da:40,co:10,pts:20,e:'Défausse toutes tes cartes Rouges actives ce tour.'},
+  {t:'Vrai Fou Rire',s:'Une blague avec un ami. Ton corps entier se relâche d\'un coup.',c:'Chute du cortisol. L\'amygdale s\'apaise instantanément.',da:40,co:10,pts:20,e:'Annule l\'effet d\'une carte Rouge de ton choix.'},
+  {t:'Repas en Famille',s:'On discute, on partage. Tu te sens entouré et en sécurité.',c:'Pic d\'ocytocine. Renforce la stabilité sociale et émotionnelle.',da:40,co:10,pts:20,e:'Tous les joueurs autour de toi gagnent +10 pts ce tour.'},
+  {t:'Sieste Flash',s:'20 min de pause totale. Ton système redémarre proprement.',c:'Reset neurologique. Recharge les batteries du cortex préfrontal.',da:30,co:10,pts:20,e:'Rejoue immédiatement une carte Verte de ta main.'},
+  {t:'Méditation Focus',s:'Tu observes tes pensées sans les suivre. Tu es enfin libre.',c:'Renfort préfrontal. Muscle la capacité à ne pas réagir à chaud.',da:40,co:10,pts:20,e:'Ta prochaine carte Rouge ne dépasse pas -10 pts.'},
+  {t:'Câlin / Affection',s:'Un moment de tendresse sincère. Le stress fond en 20 secondes.',c:'Inhibiteur de l\'amygdale. Le lien physique bloque physiquement la peur.',da:40,co:10,pts:20,e:'Gagne 2 Jetons Ressource immédiatement.'},
+  {t:'Pardon / Lâcher',s:'Tu décides de ne plus être en colère. Pas pour l\'autre — pour toi.',c:'Désengagement de l\'amygdale. Fin de la vigilance de défense chronique.',da:40,co:10,pts:20,e:'Retire une carte Rouge permanente de ton plateau définitivement.'},
+],
+C:[
+  {t:'Bilan de Santé',s:'Ton corps envoie des signaux. Fatigue, tension, insomnie. Tu t\'arrêtes enfin.',c:'Évaluation objective des constantes biologiques.',da:30,co:20,pts:20,p:'S\'arrêter n\'est pas renoncer. C\'est le premier acte de soin.'},
+  {t:'Coaching Stratégique',s:'Analyser tes priorités avec un regard externe pour ne plus subir l\'agenda.',c:'Réengagement du cortex préfrontal par la verbalisation.',da:30,co:20,pts:20,p:'Un regard extérieur voit ce que l\'intérieur ne peut plus voir seul.'},
+  {t:'Thérapie Brève',s:'Comprendre pourquoi tu cherches toujours la validation par le stress.',c:'Désensibilisation des traces mnésiques de l\'amygdale.',da:40,co:20,pts:20,p:'Comprendre n\'est pas excuser. C\'est se libérer.'},
+  {t:'Cure de Silence',s:'S\'extraire du monde pendant 48h. Pas de mots, pas d\'écrans.',c:'Repos total des neurotransmetteurs. Les récepteurs se resensibilisent.',da:40,co:20,pts:20,p:'Le silence n\'est pas un vide. C\'est là que le cerveau se répare.'},
+  {t:'Cercle de Parole',s:'Partager ton vécu avec tes pairs. Tu n\'es pas seul dans ce tunnel.',c:'Libération d\'ocytocine et baisse de l\'isolement social.',da:40,co:20,pts:20,p:'Être entendu par ses pairs est neurobiologiquement différent d\'être entendu seul.'},
+  {t:'Analyse de Routine',s:'Identifier le geste ou l\'habitude qui déclenche systématiquement le pic.',c:'Observation métacognitive. Se regarder fonctionner permet de choisir autrement.',da:30,co:20,pts:20,p:'On ne change pas ce qu\'on ne voit pas. Voir, c\'est déjà changer.'},
+  {t:'Le Grand Stop',s:'Burn-out évité de justesse. Tu déposes les armes pour te reconstruire.',c:'Mise en sécurité du système nerveux central.',da:30,co:20,pts:20,p:'S\'arrêter quand ça brûle, c\'est choisir de revenir plus fort.'},
+  {t:'Décodage Émotionnel',s:'Mettre des mots sur l\'émotion brute pour qu\'elle cesse de piloter.',c:'Le langage (aire de Broca) calme l\'amygdale par rétroaction directe.',da:40,co:20,pts:20,p:'Nommer une émotion, c\'est reprendre 30% du contrôle. Immédiatement.'},
+  {t:'Refus du Dopage',s:'Décider d\'arrêter les béquilles chimiques — caféine, sucre, pilules.',c:'Retour à une homéostasie naturelle.',da:30,co:20,pts:20,p:'Ce n\'est pas une privation. C\'est laisser le cerveau retrouver sa puissance.'},
+  {t:'Le Choix des Valeurs',s:'Redéfinir ce qui est vraiment important. Le reste n\'est que bruit.',c:'Réalignement des circuits de motivation vers le sens.',da:40,co:20,pts:20,p:'Quand le sens revient, le stress change de nature.'},
+  {t:'Bilan de Burn-out',s:'Ton corps dit stop. Tu n\'as plus de jus, plus d\'envie.',c:'Épuisement total des catécholamines.',da:30,co:20,pts:20,p:'Le burn-out n\'est pas une faiblesse. C\'est un signal que le système a trop donné.'},
+  {t:'Stage de Déconnexion',s:'Une semaine sans aucun signal numérique. Tu réapprends à voir le monde réel.',c:'Resensibilisation des récepteurs dopaminergiques D2.',da:40,co:20,pts:20,p:'Ce que tu retrouves sans écran, c\'est toi.'},
+  {t:'Coaching de Carrière',s:'Retrouver du sens là où il n\'y avait plus que de la tâche.',c:'Réalignement du circuit de la récompense sur des valeurs réelles.',da:40,co:20,pts:20,p:'Le sens est le meilleur antidote au stress chronique.'},
+  {t:'Retraite de Silence',s:'Arrêter le bruit pour entendre ce que ton cerveau veut te dire.',c:'Repos des circuits thalamiques de filtrage sensoriel.',da:40,co:20,pts:20,p:'Le cerveau ne parle pas fort. Il faut faire silence pour l\'entendre.'},
+  {t:'Thérapie Cognitive',s:'Identifier tes biais de pensée qui te poussent systématiquement vers le stress.',c:'Restructuration des schémas cognitifs.',da:40,co:20,pts:20,p:'Ce n\'est pas la situation qui stresse. C\'est ce qu\'on en pense.'},
+  {t:'Détox Digitale',s:'Supprimer les réseaux sociaux pour un mois. Le calme revient.',c:'Suppression des stimuli de récompense aléatoire constante.',da:30,co:20,pts:20,p:'Le cerveau ne peut pas se reposer d\'une stimulation s\'il y reste exposé.'},
+  {t:'Analyse du Sommeil',s:'Comprendre pourquoi ces nuits ne te reposent plus.',c:'Identification des phases REM et de la qualité du sommeil profond.',da:40,co:20,pts:20,p:'La quantité de sommeil ne suffit pas. C\'est la qualité qui répare.'},
+  {t:'Médiation de Conflit',s:'Vider l\'abcès avec ton entourage. La tension baisse dès que les mots circulent.',c:'Baisse de l\'alerte de menace sociale.',da:40,co:20,pts:20,p:'Un conflit non dit est un conflit qui continue à coûter de l\'énergie.'},
+  {t:'Recherche de Passion',s:'Qu\'est-ce qui te faisait vibrer avant d\'être trop occupé ?',c:'Réactivation des circuits de motivation intrinsèque oubliés.',da:40,co:20,pts:20,p:'La passion n\'est pas un luxe. C\'est le carburant naturel du cerveau.'},
+  {t:'Consultation Addiction',s:'Admettre que le comportement ou le produit a pris le dessus.',c:'Reconnaissance de la perte de contrôle frontale.',da:40,co:20,pts:20,p:'Demander de l\'aide n\'est pas perdre. C\'est reprendre le contrôle autrement.'},
+],
+G:[
+  {n:1,t:'Chaussettes dans le frigo',s:'Tu trouves tes chaussettes dans le frigo.',o1:'Les mettre (+10/+20)',o2:'Chercher le beurre dans la penderie (-10/+10)',bon:1,gain:'+2 jetons',debrief:'Qu\'est-ce que ton cerveau cherchait \u00e0 faire \u00e0 ce moment-l\u00e0 ?'},
+  {n:2,t:'Douche avec son pull',s:'Tu te retrouves sous la douche avec ton pull.',o1:'Lessive express (+20/-10)',o2:'Sortir en splosh (+10/0)',bon:2,gain:'+3 cases',debrief:'C\'est quoi pour toi le signal que le cerveau a d\u00e9croch\u00e9 ?'},
+  {n:3,t:'Appel avec la télécommande',s:'Tu essaies d\'appeler avec la télécommande.',o1:'Changer les piles (-10/+20)',o2:'Parler au chat (0/-20)',bon:2,gain:'+1 jeton/joueur',debrief:'Quand tu fonctionnes en automatique, qu\'est-ce qui te ram\u00e8ne \u00e0 toi ?'},
+  {n:4,t:'Litière dans le café',s:'Tu verses de la litière dans ton café.',o1:'Touiller (-20/+30)',o2:'Concept Café Minéral (+40/-10)',bon:2,gain:'+2 cases',debrief:'Qu\'est-ce qui se passe dans ta t\u00eate quand tu choisis l\'inattendu ?'},
+  {n:5,t:'Poubelle en laisse',s:'Tu promènes ta poubelle en laisse.',o1:'Lancer la balle au sac (+40/-10)',o2:'Attendre ses besoins (-40/+40)',bon:1,gain:'+3 jetons',debrief:'C\'est quoi pour toi le signe que tu es vraiment \u00e9puis\u00e9 ?'},
+  {n:6,t:'Arroser l\'ordinateur',s:'Tu arroser ton ordinateur comme une plante.',o1:'Fond d\'écran cascade (+20/+10)',o2:'Signaux de fumée (+50/-20)',bon:2,gain:'+2 jetons/joueur',debrief:'Qu\'est-ce que ton cerveau invente quand il n\'a plus d\'\u00e9nergie ?'},
+  {n:7,t:'Sandwich à l\'éponge',s:'Tu prépares un sandwich à l\'éponge.',o1:'Faire une bulle (+30/-10)',o2:'Ajouter de la moutarde (-20/+40)',bon:1,gain:'+2 cases',debrief:'C\'est quoi pour toi le moment o\u00f9 tu t\'adaptes plut\u00f4t que tu r\u00e9sous ?'},
+  {n:8,t:'Pyjama en réunion',s:'Tu arrives en réunion en pyjama.',o1:'Prétendre dress-code (+40/-20)',o2:'Se cacher sous la table (-30/+50)',bon:1,gain:'+3 jetons',debrief:'Qu\'est-ce qui te permet de garder la face quand \u00e7a d\u00e9raille ?'},
+  {n:9,t:'Dormir dans le bus au dépôt',s:'Tu t\'endors dans le bus qui rejoint le dépôt.',o1:'Sortir par la fenêtre (-10/+50)',o2:'Prétendre que c\'est ta chambre (+20/-20)',bon:2,gain:'+3 jetons',debrief:'Qu\'est-ce que tu fais quand ton cerveau te joue un tour en public ?'},
+  {n:10,t:'Dégeler le gigot au sèche-cheveux',s:'Tu utilises le sèche-cheveux pour dégeler le gigot.',o1:'Lui faire un brushing (+30/0)',o2:'Abandonner (-20/-20)',bon:1,gain:'+2 cases',debrief:'C\'est quoi pour toi le signe que tu as besoin de l\u00e2cher prise ?'},
+  {n:11,t:'Écrire avec une carotte',s:'Tu essaies d\'écrire avec une carotte.',o1:'Tailler la carotte (+20/+10)',o2:'Chercher l\'encre dans le potage (+30/-10)',bon:2,gain:'+2 jetons',debrief:'Qu\'est-ce que le cerveau invente quand il n\'a plus de solution logique ?'},
+  {n:12,t:'Sel dans le yaourt',s:'Tu mets du sel dans ton yaourt.',o1:'Dire que c\'est du tzatziki (+20/-10)',o2:'Pleurer dedans (-30/+30)',bon:1,gain:'+2 cases',debrief:'Quand tu te trompes, qu\'est-ce que ton cerveau fait pour prot\u00e9ger ton ego ?'},
+  {n:13,t:'Lunettes sur le nez',s:'Tu cherches tes lunettes... sur ton nez.',o1:'Accuser un fantôme (+10/+20)',o2:'Regarder dans le miroir (0/-20)',bon:2,gain:'+1 jeton/joueur',debrief:'C\'est quoi pour toi le signal que tu fonctionnes en mode \u00e9conomie d\'\u00e9nergie ?'},
+  {n:14,t:'CB à la porte',s:'Tu essaies d\'ouvrir ta porte avec ta carte bancaire.',o1:'Taper le code sur la porte (-10/+30)',o2:'Attendre le sans-contact (+20/0)',bon:2,gain:'+2 cases',debrief:'Qu\'est-ce qui se passe quand ton cerveau attend une r\u00e9compense qui ne vient pas ?'},
+  {n:15,t:'Chat dans le lave-vaisselle',s:'Tu mets le chat dans le lave-vaisselle éteint.',o1:'Lui donner une pastille (-50/+50)',o2:'Réaliser le quiproquo (0/-30)',bon:2,gain:'+3 jetons',debrief:'Qu\'est-ce que le cerveau fait quand il est d\u00e9bord\u00e9 par une situation impr\u00e9vue ?'},
+  {n:16,t:'Saluer un inconnu',s:'Tu salues chaleureusement un inconnu.',o1:'Continuer la discussion (+30/+20)',o2:'Partir en courant (-20/+40)',bon:1,gain:'+3 cases',debrief:'Qu\'est-ce qui t\'a d\u00e9j\u00e0 pouss\u00e9 \u00e0 continuer une conversation qui ne menait nulle part ?'},
+  {n:17,t:'Sucrier de riz',s:'Tu remplis le sucrier de riz.',o1:'Dire que c\'est anti-humidité (+20/-10)',o2:'Trier grain à grain (-40/+50)',bon:1,gain:'+2 jetons',debrief:'Qu\'est-ce que ton cerveau cherche \u00e0 r\u00e9organiser quand il classe n\'importe comment ?'},
+  {n:18,t:'Deux chaussures différentes',s:'Tu portes deux chaussures différentes.',o1:'Lancer une mode (+40/-10)',o2:'Boiter pour compenser (-10/+30)',bon:1,gain:'+2 cases',debrief:'C\'est quoi pour toi le moment o\u00f9 tu choisis le confort plut\u00f4t que la logique ?'},
+  {n:19,t:'Parler au GPS',s:'Tu parles au GPS comme à un ami.',o1:'Lui raconter ta vie (+20/0)',o2:'T\'excuser du mauvais virage (+10/+10)',bon:1,gain:'+2 jetons',debrief:'Qu\'est-ce qui te fait continuer \u00e0 parler m\u00eame quand personne ne r\u00e9pond ?'},
+  {n:20,t:'Clé dans le yaourt',s:'Tu mets ta clé dans le pot de yaourt.',o1:'La lécher (0/+30)',o2:'Espérer qu\'elle démarre (+20/+10)',bon:2,gain:'+3 cases',debrief:'Qu\'est-ce que le cerveau cherche quand il confond deux objets familiers ?'},
+  {n:21,t:'Clavier éteint',s:'Tu tapes sur ton clavier éteint.',o1:'Apprécier le silence (+20/-20)',o2:'Appeler un dépanneur (-20/+40)',bon:1,gain:'+3 jetons',debrief:'C\'est quoi pour toi le signe que tu es en mode survie cognitive ?'},
+  {n:22,t:'Dentifrice vs crème pied',s:'Tu confonds le dentifrice et la crème pour les pieds.',o1:'Sourire mentholé des pieds (+30/-10)',o2:'Te rincer 20 fois (-20/+30)',bon:1,gain:'+2 cases',debrief:'Qu\'est-ce que ton cerveau fait pour \u00e9viter de reconna\u00eetre une erreur ?'},
+  {n:23,t:'Scroller un livre papier',s:'Tu essaies de scroller sur un livre papier.',o1:'Vérifier la batterie du livre (-10/+20)',o2:'Tourner la page enfin (0/-10)',bon:2,gain:'+1 jeton/joueur',debrief:'Quand tu cherches une solution l\u00e0 o\u00f9 elle n\'est pas, qu\'est-ce que \u00e7a dit de toi ?'},
+  {n:24,t:'Lait dans le placard à balais',s:'Tu ranges le lait dans le placard à balais.',o1:'Ranger les céréales avec (+20/+10)',o2:'Le chercher partout (-20/+40)',bon:1,gain:'+2 jetons',debrief:'Qu\'est-ce que le cerveau cherche quand il range au mauvais endroit ?'},
+  {n:25,t:'Entrer et oublier pourquoi',s:'Tu entres dans une pièce et tu oublies pourquoi.',o1:'Faire une danse d\'invocation (+30/-10)',o2:'Ressortir/Rerentrer (-10/+10)',bon:1,gain:'+3 cases',debrief:'C\'est quoi pour toi le signal que tu es entr\u00e9 dans une pi\u00e8ce de trop ?'},
+  {n:26,t:'Burger à la pharmacie',s:'Tu commandes un burger à la pharmacie.',o1:'Demander sans gluten (+20/+10)',o2:'Acheter des pansements (-10/+10)',bon:1,gain:'+2 jetons',debrief:'Qu\'est-ce qui t\'a d\u00e9j\u00e0 pouss\u00e9 \u00e0 chercher ailleurs ce qui \u00e9tait devant toi ?'},
+  {n:27,t:'Déverrouiller la porte avec la clé voiture',s:'Tu appuies sur déverrouiller devant ta porte.',o1:'Attendre le bip-bip (+10/+20)',o2:'Toquer à ta propre porte (0/0)',bon:2,gain:'+2 cases',debrief:'Qu\'est-ce que ton cerveau attend quand il reproduit un geste familier au mauvais endroit ?'},
+  {n:28,t:'Cravate en ceinture',s:'Tu mets ta cravate en ceinture.',o1:'Dire que c\'est du stylisme (+40/-10)',o2:'Tenter de la nouer (-10/+30)',bon:1,gain:'+3 jetons',debrief:'C\'est quoi pour toi le moment o\u00f9 l\'improvisation devient une ressource ?'},
+  {n:29,t:'Toi aussi au serveur',s:'Le serveur dit Bon appétit, tu réponds Toi aussi.',o1:'L\'inviter à s\'asseoir (+30/+10)',o2:'Rougir violemment (-20/+40)',bon:1,gain:'+3 cases',debrief:'Qu\'est-ce que le cerveau fait pour \u00e9viter la g\u00eane sociale ?'},
+  {n:30,t:'Chercher son tel avec la lampe torche',s:'Tu cherches ton téléphone... en utilisant sa lampe torche.',o1:'Éclairer sous le canapé (+10/+20)',o2:'Rire de toi-même (+20/-20)',bon:2,gain:'+2 jetons/joueur',debrief:'Qu\'est-ce qui se passe quand ton cerveau utilise le mauvais outil pour r\u00e9soudre un probl\u00e8me ?'},
+],
+Vi:[
+  {t:'V1 · Sens',s:'Une tâche longue et rébarbative bloque votre progression. L\'Amygdale pousse à l\'abandon.',c:'Le Cortex relie cet effort à votre objectif de vie global.',da:30,co:-20,pts:20,e:'Avancer de 2 cases'},
+  {t:'V2 · Motivation',s:'Face à un défi complexe, la peur de l\'échec vous paralyse.',c:'Vous voyez la situation comme un terrain d\'apprentissage, sans enjeu de résultat.',da:40,co:-10,pts:20,e:'+2 jetons de réparation'},
+  {t:'V3 · Relation',s:'Un conflit éclate. La méfiance et le repli défensif s\'installent.',c:'Vous écoutez activement et reformulez les besoins de l\'autre.',da:20,co:-30,pts:20,e:'+2 jetons (Joueur + Allié)'},
+  {t:'V4 · Auto-Observation',s:'Accumulation de micro-agressions. L\'Amygdale s\'emballe.',c:'Vous coupez l\'action, observez vos signaux physiques et nommez l\'émotion.',da:10,co:-40,pts:20,e:'Immunité prochaine case Cortisol'},
+  {t:'V5 · Relation',s:'Votre énergie est au plus bas, l\'action individuelle semble vaine.',c:'Vous menez une action dont le bénéfice est entièrement pour un autre joueur.',da:30,co:-20,pts:20,e:'Le joueur aidé avance de 2 cases'},
+  {t:'V6 · Sens',s:'Vous subissez un échec cuisant. L\'Amygdale crie à l\'incompétence.',c:'Le Cortex analyse l\'échec comme un feedback et liste deux leçons.',da:20,co:-30,pts:20,e:'+2 jetons de réparation'},
+  {t:'V7 · Sens',s:'On vous propose un raccourci qui contredit vos règles éthiques.',c:'Vous refusez pour rester aligné avec vos valeurs profondes.',da:30,co:0,pts:20,e:'Avancer de 3 cases'},
+  {t:'V8 · Motivation',s:'Le chemin vers le Cortex est encore long. Vous ressentez de l\'impatience.',c:'Vous fêtez activement le tout petit pas accompli ce tour-ci.',da:30,co:-10,pts:20,e:'+1 jeton de réparation'},
+  {t:'V9 · Relation',s:'L\'ambiance est lourde, les joueurs ruminent leurs cartes Cortisol.',c:'Vous exprimez à voix haute une belle action partagée avec l\'équipe.',da:20,co:-20,pts:20,e:'+1 jeton pour tous les joueurs'},
+  {t:'V10 · Motivation',s:'Une surcharge d\'informations vous submerge.',c:'Vous isolez une seule action, coupez les distractions et vous y plongez.',da:40,co:-20,pts:20,e:'Avancer de 2 cases (ignore Grise)'},
+  {t:'V11 · Relation',s:'Un joueur commet une erreur qui pénalise temporairement le groupe.',c:'Au lieu de blâmer, vous proposez une solution collaborative de secours.',da:20,co:-20,pts:20,e:'Le groupe avance de 1 case'},
+  {t:'V12 · Auto-Observation',s:'Le rythme s\'accélère, la tension monte d\'un cran.',c:'Vous imposez 30 secondes de pause pour une respiration rythmée.',da:0,co:-40,pts:20,e:'+2 jetons de réparation'},
+  {t:'V13 · Relation',s:'Vous venez de décrocher une récompense majeure.',c:'Vous attribuez publiquement une partie de votre réussite à un partenaire.',da:30,co:-10,pts:20,e:'Le partenaire choisi gagne 1 jeton'},
+  {t:'V14 · Auto-Observation',s:'Les dés et les cartes s\'acharnent. Vous ne pouvez rien y faire.',c:'Vous stoppez la lutte mentale et acceptez factuellement la situation.',da:10,co:-30,pts:20,e:'Avancer de 2 cases'},
+  {t:'V15 · Relation',s:'Vous devez prêter un jeton à un joueur sans garantie.',c:'Vous décidez de faire confiance et de valider ce partenariat risqué.',da:30,co:-10,pts:20,e:'Avancer de 3 cases si succès'},
+  {t:'V16 · Auto-Observation',s:'Vous êtes obsdé par le score des autres, ce qui génère de l\'anxiété.',c:'Vous vous concentrez sur votre propre stratégie.',da:20,co:-20,pts:20,e:'+2 jetons de réparation'},
+  {t:'V17 · Motivation',s:'Vous commettez une erreur ridicule qui ruine votre plan du tour.',c:'Vous choisissez d\'en rire plutôt que de vous justifier.',da:40,co:-20,pts:20,e:'Avancer de 2 cases'},
+  {t:'V18 · Motivation',s:'Le plateau présente un obstacle colossal qui semble insurmontable.',c:'Le Cortex transforme la menace en défi de résilience personnelle.',da:40,co:10,pts:20,e:'Avancer de 3 cases'},
+  {t:'V19 · Relation',s:'Deux joueurs s\'affrontent, menaçant l\'équilibre du plateau.',c:'Vous proposez un arbitrage neutre et juste, basé sur des faits.',da:20,co:-20,pts:20,e:'Chaque joueur gagne 1 jeton'},
+  {t:'V20 · Auto-Observation',s:'Votre esprit divague sur les coups futurs, vous perdez le fil.',c:'Vous ramenez toute votre attention sur l\'action du joueur en cours.',da:20,co:-10,pts:20,e:'+1 jeton de réparation'}
+]
+};
+
+// ═══ ÉTAT ══════════════════════════════════
+var joueurs=[], jA=0, tour=1, dest=-1, carte=null, decks={};
+var derniereGrise={}, carteEnnui=null;
+
+function initJeu(nb, noms){
+  N=nb; PC=PC_ALL.slice(0,N);
+  PN=noms||PN_ALL.slice(0,N);
+  joueurs=[];
+  for(var i=0;i<N;i++) joueurs.push({nom:PN[i],col:PC[i],score:0,pos:0,totalDA:0,totalCo:0,ptsPont:0,passages:0,jetons:0,toursRecup:0});
+  jA=0; tour=1; dest=-1; carte=null; carteEnnui=null; hypPassages={};
+  derniereGrise={};
+  for(var i=0;i<N;i++) derniereGrise[i]=false;
+  Object.keys(CARTES).forEach(function(k){ decks[k]=melangerDeck(CARTES[k].slice()); });
+  derniereCarteTiree={};
+  document.getElementById('turn').textContent='Tour 1 · '+joueurs[0].nom;
+  document.getElementById('btn-die').disabled=false;
+  document.getElementById('btn-draw').disabled=true;
+  document.getElementById('btn-next').disabled=true;
+  rendrePlateau();
+  rendreScores();
+}
+
+function melangerDeck(arr){
+  // Triple Fisher-Yates + coupe aléatoire
+  for(var pass=0;pass<3;pass++){
+    for(var xi=arr.length-1;xi>0;xi--){
+      var xj=Math.floor(Math.random()*(xi+1));
+      var xt=arr[xi]; arr[xi]=arr[xj]; arr[xj]=xt;
+    }
+  }
+  // Coupe au milieu ± aléatoire
+  var coupe=Math.floor(arr.length/2)+Math.floor(Math.random()*arr.length/4)-Math.floor(arr.length/8);
+  return arr.slice(coupe).concat(arr.slice(0,coupe));
+}
+
+var derniereCarteTiree={};
+
+function tirer(k){
+  if(!decks[k]||!decks[k].length){
+    var arr=CARTES[k].slice();
+    // Eviter que la dernière carte tirée soit la première du nouveau deck
+    if(derniereCarteTiree[k]){
+      var lastIdx=arr.findIndex(function(c){ return c.t===derniereCarteTiree[k]; });
+      if(lastIdx>0){ var tmp=arr[0]; arr[0]=arr[lastIdx]; arr[lastIdx]=tmp; }
+    }
+    decks[k]=melangerDeck(arr);
+  }
+  var c=decks[k].pop();
+  derniereCarteTiree[k]=c.t;
+  return c;
+}
+
+function lancerDe(){
+  var d=Math.floor(Math.random()*6)+1;
+  dest=Math.min(joueurs[jA].pos+d, TOTAL-1);
+  document.getElementById('die-big').textContent=d;
+  document.getElementById('case-lbl').textContent='Case '+(dest+1)+' · '+(CNOM[PARC[dest].c]||'');
+  document.getElementById('btn-die').disabled=true;
+  document.getElementById('btn-draw').disabled=false;
+  rendrePlateau();
+}
+
+function piocher(){
+  var posAvant=joueurs[jA].pos;
+  joueurs[jA].pos=dest;
+  var cc=PARC[dest];
+  document.getElementById('btn-draw').disabled=true;
+  document.getElementById('btn-next').disabled=false;
+
+  // Déclencher les stations traversées dans TOUS les cas
+  declencherStations(posAvant, dest);
+
+  if(cc.c==='FIN'){
+    document.getElementById('card-content').innerHTML='<div style="text-align:center;padding:16px"><div style="font-size:28px">🧠</div><div style="font-size:16px;font-weight:bold;margin-top:8px;color:#1a1a2e">Cortex PF atteint !</div><button onclick="ouvrirAnalyse()" style="margin-top:10px;padding:8px 18px;background:#1a1a2e;color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:12px">📊 Voir l\'analyse</button></div>';
+    rendrePlateau(); rendreScores(); return;
+  }
+
+  if(cc.c==='G'){
+    if(derniereGrise[jA]){
+      var c=tirer('G'); carteEnnui=c;
+      afficherEnnui(c); ouvrirCarte(buildEnnui(c));
+    } else {
+      derniereGrise[jA]=true;
+      document.getElementById('card-content').innerHTML='<div style="color:#888;font-size:12px;text-align:center;padding:12px"><div style="font-size:20px">💤</div><div style="margin-top:6px">Case grise — pas d\'action.<br>2e passage consécutif → carte L\'Ennui.</div></div>';
+      majPontDA(30);
+    }
+    rendrePlateau(); rendreScores(); return;
+  }
+
+  if(cc.c==='Vi'){
+    derniereGrise[jA]=false;
+    var c=tirer('Vi');
+    carte=Object.assign({},c,{fam:'Vi'});
+    joueurs[jA].score+=c.pts;
+    joueurs[jA].totalDA+=(c.da||0);
+    joueurs[jA].totalCo+=(c.co||0);
+    joueurs[jA].passages++;
+    majPontDA(c.co);
+    var html=buildCarte(carte);
+    document.getElementById('card-content').innerHTML=html+'<div style="margin-top:8px"><button onclick="ouvrirCarte(buildCarte(carte))" style="font-size:11px;padding:4px 10px;border-radius:4px;border:1px solid #ddd;background:#f5f0e8;cursor:pointer">🔍 Voir en grand</button></div>';
+    ouvrirCarte(html);
+    rendrePlateau(); rendreScores(); return;
+  }
+
+  derniereGrise[jA]=false;
+  var c=tirer(cc.c);
+  carte=Object.assign({},c,{fam:cc.c});
+  joueurs[jA].score+=c.pts;
+  joueurs[jA].totalDA+=(c.da||0);
+  joueurs[jA].totalCo+=(c.co||0);
+  joueurs[jA].passages++;
+  var pp=ptsPont(c.co);
+  joueurs[jA].ptsPont+=pp;
+  majPontDA(c.co);
+  var html=buildCarte(carte);
+  document.getElementById('card-content').innerHTML=html+'<div style="margin-top:8px"><button onclick="ouvrirCarte(buildCarte(carte))" style="font-size:11px;padding:4px 10px;border-radius:4px;border:1px solid #ddd;background:#f5f0e8;cursor:pointer">🔍 Voir en grand</button></div>';
+  ouvrirCarte(html);
+  rendrePlateau(); rendreScores();
+}
+
+var SPOS={9:'Hypothalamus',19:'NA',29:'Hippocampe',39:'Hypothalamus2',49:'Amygdale'};
+
+function declencherStations(avant, apres){
+  var liste=[];
+  for(var p=avant+1;p<=apres;p++){
+    if(SPOS[p]) liste.push({p:p,n:SPOS[p]});
+    if(p===TOTAL-1) liste.push({p:p,n:'CortexPF'});
+  }
+  if(!liste.length) return;
+  // Afficher la première station après 400ms
+  // (laisser le temps à la carte de s'afficher d'abord si il y en a une)
+  var idx=0;
+  function afficherStation(){
+    if(idx>=liste.length) return;
+    var nom=liste[idx].n;
+    var hasNext=(idx<liste.length-1);
+    idx++;
+    setTimeout(function(){
+      ouvrirStationPopup(nom, hasNext, afficherStation);
+    }, 600);
+  }
+  afficherStation();
+}
+
+function fermerStation(){
+  POPUP_ST=null;
+  var popup=document.getElementById('st-popup');
+  if(popup){ popup.style.display='none'; popup.innerHTML=''; }
+}
+
+// ═══ FONCTIONS NEUROBIOLOGIQUES ══════════
+function getPont(j){
+  return (j.totalDA||0) - (j.totalCo||0);
+}
+
+function niveauPont(pont){
+  if(pont > -40) return {lbl:'Pont FERME', col:'#1e8449', bg:'#eafaf1'};
+  if(pont > -70) return {lbl:'Pont ENTROUVERT', col:'#d68910', bg:'#fef9e7'};
+  return {lbl:'Pont FORCE', col:'#c0392b', bg:'#fdedec'};
+}
+
+function ouvrirStationPopup(nom, hasNext, cb){
+  var j=joueurs[jA];
+  var pont=getPont(j);
+  var niv=niveauPont(pont);
+  var popup=document.getElementById('st-popup');
+  if(!popup) return;
+  var html='';
+  var footer=hasNext?'<button class="st-btn st-btn-bleu" onclick="fermerStation();('+cb.toString()+')()">Station suivante →</button>':'';
+
+  if(nom==='Hypothalamus'){
+    var k=jA+'_hyp'; hypPassages[k]=(hypPassages[k]||0)+1;
+    html='<div class="st-popup-titre"><div class="st-popup-dot" style="background:#27ae60"></div><strong class="st-popup-nom">Hypothalamus — Point de situation</strong><button class="st-popup-close" onclick="fermerStation()">x</button></div>'+
+    '<div class="st-popup-desc">Carrefour neuroendocrinien. Faim, soif, sommeil, libido. Ton corps parle ici.</div>'+
+    '<div class="st-mecanique" style="background:'+niv.bg+';border-left:3px solid '+niv.col+'"><div class="st-mecanique-titre">PONT DA</div><div class="st-mecanique-val" style="color:'+niv.col+'">'+niv.lbl+' ('+(pont>0?'+':'')+pont+')</div><div class="st-mecanique-sub">DA='+j.totalDA+' Co='+j.totalCo+'</div></div>';
+  } else if(nom==='Hypothalamus2'){
+    var k=jA+'_hyp'; hypPassages[k]=(hypPassages[k]||0)+1;
+    var jetons=j.jetons||0;
+    html='<div class="st-popup-titre"><div class="st-popup-dot" style="background:#27ae60"></div><strong class="st-popup-nom">Hypothalamus — Régulation</strong><button class="st-popup-close" onclick="fermerStation()">x</button></div>'+
+    '<div class="st-popup-desc">2ème passage. Dépense des jetons pour réduire ton Co. 1 jeton = −10 pts Co.</div>'+
+    '<div class="st-mecanique" style="background:'+niv.bg+';border-left:3px solid '+niv.col+'"><div class="st-mecanique-titre">PONT DA — Jetons : '+jetons+'</div><div class="st-mecanique-val" style="color:'+niv.col+'">'+(pont>0?'+':'')+pont+'</div></div>'+
+    '<div class="st-jeton-ctrl"><button onclick="depHyp(-1)">-</button><span id="dep-hyp-nb">0</span><button onclick="depHyp(1)">+</button><span style="font-size:11px;color:#888;font-family:Arial"> jeton(s) = -<span id="dep-hyp-pts">0</span> Co</span></div>'+
+    '<button class="st-btn st-btn-vert" onclick="validerHyp()">Valider</button>';
+    window._depHyp=0;
+  } else if(nom==='NA'){
+    var carte='';
+    if(pont>-30) carte='<div class="st-mecanique" style="background:#eafaf1;border-left:3px solid #1e8449"><div class="st-mecanique-titre">CARTE NORMALE</div><div class="st-mecanique-val" style="color:#1e8449">Pont fluide</div><div class="st-mecanique-sub">Circuit dopaminergique en équilibre. Cortex PF accessible.</div></div>';
+    else if(pont>-50) carte='<div class="st-mecanique" style="background:#fef9e7;border-left:3px solid #d68910"><div class="st-mecanique-titre">CARTE VIGILANCE</div><div class="st-mecanique-val" style="color:#d68910">Pont sous tension</div><div class="st-mecanique-sub">Le circuit s’entrouvre. Mobilise une ressource DA naturelle.</div></div>';
+    else carte='<div class="st-mecanique" style="background:#fdedec;border-left:3px solid #c0392b"><div class="st-mecanique-titre">CARTE ALERTE</div><div class="st-mecanique-val" style="color:#c0392b">Pont forcé</div><div class="st-mecanique-sub">Circuit limbique dominant. Mobilise tes ressources.</div></div>';
+    html='<div class="st-popup-titre"><div class="st-popup-dot" style="background:#f39c12"></div><strong class="st-popup-nom">Noyau Accumbens — Pont DA</strong><button class="st-popup-close" onclick="fermerStation()">x</button></div>'+
+    '<div class="st-mecanique" style="background:'+niv.bg+';border-left:3px solid '+niv.col+'"><div class="st-mecanique-titre">PONT DA ACTUEL</div><div class="st-mecanique-val" style="color:'+niv.col+'">'+niv.lbl+' ('+(pont>0?'+':'')+pont+')</div></div>'+carte;
+  } else if(nom==='Hippocampe'){
+    var jetons=0; var msg='Pont DA en régulation. Pas de jeton accordé.';
+    if(pont<=-70){ jetons=Math.floor((-pont-70)/10); j.jetons=(j.jetons||0)+jetons; msg='+'+jetons+' jeton(s) de réparation accordé(s).'; }
+    html='<div class="st-popup-titre"><div class="st-popup-dot" style="background:#8e44ad"></div><strong class="st-popup-nom">Hippocampe — Réparation</strong><button class="st-popup-close" onclick="fermerStation()">x</button></div>'+
+    '<div class="st-mecanique" style="background:'+niv.bg+';border-left:3px solid '+niv.col+'"><div class="st-mecanique-titre">PONT DA</div><div class="st-mecanique-val" style="color:'+niv.col+'">'+(pont>0?'+':'')+pont+'</div><div class="st-mecanique-sub">DA='+j.totalDA+' Co='+j.totalCo+'</div></div>'+
+    (jetons>0?'<div class="st-mecanique" style="background:#fef9e7;border-left:3px solid #d68910"><div class="st-mecanique-titre">JETONS DE RÉPARATION</div><div class="st-mecanique-val" style="color:#d68910">+'+jetons+' jeton(s) — Total : '+(j.jetons)+'</div></div>':
+    '<div class="st-mecanique" style="background:#f5f0e8;border-left:3px solid #888"><div class="st-mecanique-sub">'+msg+'</div></div>');
+    rendreScores();
+  } else if(nom==='Amygdale'){
+    var jetons=j.jetons||0;
+    if(pont>-200){
+      html='<div class="st-popup-titre"><div class="st-popup-dot" style="background:#e74c3c"></div><strong class="st-popup-nom">Amygdale — Douane</strong><button class="st-popup-close" onclick="fermerStation()">x</button></div>'+
+      '<div class="st-mecanique" style="background:#eafaf1;border-left:3px solid #1e8449"><div class="st-mecanique-titre">PASSAGE LIBRE</div><div class="st-mecanique-val" style="color:#1e8449">✓ Pont DA acceptable</div><div class="st-mecanique-sub">Seuil −200. Ton Pont : '+(pont>0?'+':'')+pont+'</div></div>';
+    } else {
+      var cout=Math.ceil((-pont-200)/10);
+      if(jetons>=cout){
+        html='<div class="st-popup-titre"><div class="st-popup-dot" style="background:#e74c3c"></div><strong class="st-popup-nom">Amygdale — Douane</strong><button class="st-popup-close" onclick="fermerStation()">x</button></div>'+
+        '<div class="st-mecanique" style="background:#fef9e7;border-left:3px solid #d68910"><div class="st-mecanique-titre">PAIEMENT REQUIS — '+cout+' jeton(s)</div><div class="st-mecanique-val" style="color:#d68910">Jetons disponibles : '+jetons+'</div></div>'+
+        '<button class="st-btn st-btn-or" onclick="payerAmygdale('+cout+')">Payer '+cout+' jeton(s)</button>';
+      } else {
+        html='<div class="st-popup-titre"><div class="st-popup-dot" style="background:#e74c3c"></div><strong class="st-popup-nom">Amygdale — Douane</strong><button class="st-popup-close" onclick="fermerStation()">x</button></div>'+
+        '<div class="st-mecanique" style="background:#fdedec;border-left:3px solid #c0392b"><div class="st-mecanique-titre">BLOQUÉ — Jetons insuffisants</div><div class="st-mecanique-val" style="color:#c0392b">Besoin : '+cout+' — Dispo : '+jetons+'</div><div class="st-mecanique-sub">Ton cerveau a besoin de 2 tours de récupération.</div></div>'+
+        '<button class="st-btn st-btn-rouge" onclick="recupererAmygdale()">2 tours de récupération</button>';
+      }
+    }
+  } else if(nom==='CortexPF'){
+    var ratio=j.totalCo>0?(j.totalDA/j.totalCo).toFixed(2):'--';
+    var profil=j.totalDA>j.totalCo*1.5?'Dominante dopaminergique':j.totalCo>j.totalDA*1.5?'Dominante cortisolique':'Profil équilibré';
+    html='<div class="st-popup-titre"><div class="st-popup-dot" style="background:#1a1a2e"></div><strong class="st-popup-nom">Cortex PF — Analyse</strong><button class="st-popup-close" onclick="fermerStation()">x</button></div>'+
+    '<div class="st-mecanique" style="background:#d6eaf8;border-left:3px solid #2471a3"><div class="st-mecanique-titre">DENSITÉ DA</div><div class="st-mecanique-val" style="color:#2471a3">'+j.totalDA+' pts</div></div>'+
+    '<div class="st-mecanique" style="background:#fadbd8;border-left:3px solid #c0392b"><div class="st-mecanique-titre">DENSITÉ Co</div><div class="st-mecanique-val" style="color:#c0392b">'+j.totalCo+' pts</div></div>'+
+    '<div class="st-mecanique" style="background:'+niv.bg+';border-left:3px solid '+niv.col+'"><div class="st-mecanique-titre">PONT DA FINAL</div><div class="st-mecanique-val" style="color:'+niv.col+'">'+(pont>0?'+':'')+pont+' — Ratio : '+ratio+'</div></div>'+
+    '<div class="st-mecanique" style="background:#f5f0e8;border-left:3px solid #1a1a2e"><div class="st-mecanique-titre">PROFIL</div><div class="st-mecanique-sub">'+profil+'</div></div>'+
+    '<div class="st-mecanique" style="background:#f5f0e8;border-left:3px solid #8e44ad"><div class="st-mecanique-titre">QUESTION ANIMATEUR</div><div class="st-mecanique-sub" style="font-style:italic">Qu’est-ce que ce parcours t’a appris sur ton cerveau ?</div></div>';
+  }
+
+  popup.innerHTML=html+footer;
+  popup.style.display='block';
+  POPUP_ST=nom;
+}
+
+function ptsPont(co){ return co<40?20:co<=70?10:-20; }
+
+function majPontDA(co){
+  var el=document.getElementById('pontda');
+  if(co<40){ el.style.background='#eafaf1';el.style.color='#1e8449';el.textContent='Co<40 · Pont FERMÉ — accès direct Cortex PF'; }
+  else if(co<=70){ el.style.background='#fef9e7';el.style.color='#d68910';el.textContent='Co 40–70 · Pont ENTROUVERT — carte DA obligatoire'; }
+  else{ el.style.background='#fdedec';el.style.color='#c0392b';el.textContent='Co>70 · Pont FORCÉ — Bascule automatique !'; }
+}
+
+function buildCarte(c){
+  var z=ZS[c.fam]||{bg:'#888',col:'#fff',n:'—'};
+  var ec=c.da-c.co, pc=SC[String(c.pts)]||'#888', pn=SN[String(c.pts)]||'';
+  var ex='';
+  if(c.e) ex='<div class="effet-box">⚡ '+c.e+'</div>';
+  if(c.p) ex='<div class="parole-box">💬 '+c.p+'</div>';
+  return '<span class="zone-badge" style="background:'+z.bg+';color:'+z.col+'">'+z.n+(c.sub?' ■':'')+'</span>'+
+    '<div class="card-title">'+c.t+'</div>'+
+    '<div class="card-sit">'+c.s+'</div>'+
+    '<div class="card-brain">'+c.c+'</div>'+
+    '<div class="pills"><span class="pill da">DA '+(c.da>0?'+':'')+c.da+'</span><span class="pill co">Co '+(c.co>0?'+':'')+c.co+'</span></div>'+
+    '<div style="font-size:10px;color:#aaa;margin-bottom:4px">Écart DA−Co = '+(ec>0?'+':'')+ec+'</div>'+
+    '<span class="score-p" style="background:'+pc+'22;color:'+pc+'">'+pn+' '+(c.pts>0?'+':'')+c.pts+' pts</span>'+ex;
+}
+
+function buildEnnui(c){
+  return '<span class="zone-badge" style="background:#bdc3c7;color:#555">L\'ENNUI · #'+c.n+'</span>'+
+    '<div class="card-title">'+c.t+'</div>'+
+    '<div class="card-sit">'+c.s+'</div>'+
+    '<div class="ennui-box">'+
+    '<div class="ennui-choix"><strong>1 :</strong> '+c.o1+'</div>'+
+    '<div class="ennui-choix"><strong>2 :</strong> '+c.o2+'</div>'+
+    '<button class="ennui-btn" onclick="choisirEnnui(1)">→ Choix 1</button>'+
+    '<button class="ennui-btn" onclick="choisirEnnui(2)">→ Choix 2</button>'+
+    '</div>';
+}
+
+function afficherEnnui(c){ document.getElementById('card-content').innerHTML=buildEnnui(c); }
+
+function choisirEnnui(choix){
+  if(!carteEnnui) return;
+  var ok=(choix===carteEnnui.bon);
+  var msg=ok?
+    '<div style="margin-top:8px;padding:8px;background:#eafaf1;border-radius:6px;color:#1e8449;font-size:11px"><strong>✓ Bonne réponse !</strong> Gain : '+carteEnnui.gain+'</div>':
+    '<div style="margin-top:8px;padding:8px;background:#fdedec;border-radius:6px;color:#c0392b;font-size:11px"><strong>✗ Mauvaise réponse.</strong> Tu recules d\'une case.</div>';
+  if(ok) joueurs[jA].score+=10;
+  else joueurs[jA].pos=Math.max(0,joueurs[jA].pos-1);
+  var el=document.getElementById('card-content');
+  el.innerHTML+=msg;
+  var oc=document.getElementById('overlay-carte-content');
+  if(oc) oc.innerHTML+=msg;
+  var btns=document.querySelectorAll('.ennui-btn');
+  for(var i=0;i<btns.length;i++) btns[i].disabled=true;
+  carteEnnui=null;
+  fermerCarte();
+  rendreScores(); rendrePlateau();
+}
+
+function tourSuivant(){
+  // Gérer les tours de récupération à l'Amygdale
+  if(joueurs[jA].toursRecup && joueurs[jA].toursRecup>0){
+    joueurs[jA].toursRecup--;
+    document.getElementById('card-content').innerHTML=
+      '<div style="text-align:center;padding:12px;background:#fdedec;border-radius:8px;color:#c0392b;font-family:Arial,sans-serif;font-size:12px">'+
+      '<div style="font-size:20px;margin-bottom:6px">⏳</div>'+
+      '<strong>Récupération à l\'Amygdale</strong><br>'+
+      (joueurs[jA].toursRecup>0?'Encore '+joueurs[jA].toursRecup+' tour(s)...':'Récupération terminée ! Tu peux continuer.')+
+      '</div>';
+    document.getElementById('btn-die').disabled=true;
+    document.getElementById('btn-draw').disabled=true;
+    document.getElementById('btn-next').disabled=false;
+    rendreScores();
+    return;
+  }
+  jA=(jA+1)%N;
+  if(jA===0) tour++;
+  document.getElementById('turn').textContent='Tour '+tour+' · '+joueurs[jA].nom;
+  document.getElementById('die-big').textContent='—';
+  document.getElementById('case-lbl').textContent='Lance le dé';
+  document.getElementById('card-content').innerHTML='<div style="color:#aaa;text-align:center;padding:10px;font-size:12px">Lance le dé puis pioche</div>';
+  document.getElementById('pontda').style.cssText='padding:6px;border-radius:5px;font-size:11px;font-weight:bold;text-align:center;background:#f0e6d3;color:#888;margin-top:4px';
+  document.getElementById('pontda').textContent='— en attente —';
+  document.getElementById('btn-die').disabled=false;
+  document.getElementById('btn-draw').disabled=true;
+  document.getElementById('btn-next').disabled=true;
+  dest=-1; carteEnnui=null;
+  rendrePlateau(); rendreScores();
+}
+
+function resetJeu(){ initJeu(N); }
+
+function ouvrirCarte(html){
+  document.getElementById('overlay-carte-content').innerHTML=html;
+  document.getElementById('overlay-carte').className='on';
+}
+function fermerCarte(){ document.getElementById('overlay-carte').className=''; }
+
+function rendreScores(){
+  var st=function(pos){var c=0;for(var i=0;i<SEGS.length;i++){c+=SEGS[i].seq.length;if(pos<c)return SEGS[i].a;}return'Cortex PF';};
+  var h='';
+  for(var i=0;i<N;i++){
+    var j=joueurs[i];
+    h+='<div class="prow'+(i===jA?' cur':'')+'">'+
+      '<div class="pdot" style="background:'+j.col+'"></div>'+
+      '<div class="pname">'+j.nom+'</div>'+
+      '<div class="ppos">'+st(j.pos)+'</div>'+
+      '<div class="pscore" style="color:'+(j.score>=0?'#1e8449':'#c0392b')+'">'+(j.score>0?'+':'')+j.score+'</div>'+
+      '</div>';
+  }
+  document.getElementById('scores').innerHTML=h;
+}
+
+function ouvrirAnalyse(){
+  var maxDA=1, maxCo=1;
+  joueurs.forEach(function(j){ if(j.totalDA>maxDA)maxDA=j.totalDA; if(j.totalCo>maxCo)maxCo=j.totalCo; });
+  var h='';
+  joueurs.forEach(function(j,i){
+    var ratio=j.totalCo>0?(j.totalDA/j.totalCo).toFixed(2):'—';
+    var pc=j.ptsPont>=0?'#1e8449':'#c0392b';
+    var msg='';
+    if(j.totalDA>j.totalCo*1.5) msg='Profil à dominante dopaminergique. Circuit de récompense fortement activé. Bonne capacité de régulation, élan motivationnel soutenu.';
+    else if(j.totalCo>j.totalDA*1.5) msg='Profil à dominante cortisolique. Le stress a davantage sollicité le cerveau que la récompense. Des ressources de régulation sont à mobiliser.';
+    else msg='Profil équilibré entre dopamine et cortisol. Navigation fluide entre activation et régulation neurochimique.';
+    if(j.ptsPont>30) msg+=' Pont DA traversé en régulation active : accès préfrontal maintenu.';
+    else if(j.ptsPont<0) msg+=' Pont DA avec basculements forcés : circuit limbique dominant à plusieurs reprises.';
+    else msg+=' Pont DA en régulation fragile.';
+    var pda=Math.round(j.totalDA/maxDA*100), pco=Math.round(j.totalCo/maxCo*100);
+    h+='<div class="ja" style="border-left-color:'+j.col+'">'+
+      '<div class="ja-head"><div class="pdot" style="background:'+j.col+'"></div><strong style="font-family:Georgia,serif">'+j.nom+'</strong></div>'+
+      '<div class="ja-grid">'+
+      '<div class="ja-m"><div class="ja-v" style="color:#2471a3">'+j.totalDA+'</div><div class="ja-l">Total DA</div></div>'+
+      '<div class="ja-m"><div class="ja-v" style="color:#c0392b">'+j.totalCo+'</div><div class="ja-l">Total Co</div></div>'+
+      '<div class="ja-m"><div class="ja-v" style="color:'+pc+'">'+j.ptsPont+'</div><div class="ja-l">Pts Pont</div></div>'+
+      '<div class="ja-m"><div class="ja-v" style="color:#1a1a2e">'+j.score+'</div><div class="ja-l">Score</div></div>'+
+      '</div>'+
+      '<div class="ja-bar"><div class="ja-bar-lbl"><span>Densité DA</span><span>'+j.totalDA+'</span></div><div class="ja-track"><div class="ja-fill" style="width:'+pda+'%;background:#2471a3"></div></div></div>'+
+      '<div class="ja-bar"><div class="ja-bar-lbl"><span>Densité Co</span><span>'+j.totalCo+'</span></div><div class="ja-track"><div class="ja-fill" style="width:'+pco+'%;background:#e74c3c"></div></div></div>'+
+      '<div class="ja-syn" style="background:'+(j.totalDA>j.totalCo?'#eaf4fb':'#fdf2f8')+';border-left-color:'+j.col+'">'+msg+'</div>'+
+      '</div>';
+  });
+  document.getElementById('analyse-contenu').innerHTML=h;
+  document.getElementById('overlay-analyse').className='on';
+}
+function fermerAnalyse(){ document.getElementById('overlay-analyse').className=''; }
+
+// ═══ PLATEAU ═══════════════════════════════
+var POPUP_ST=null;
+// Compteur de passages Hypothalamus
+var hypPassages={};
+
+var ST_DESC={
+  ATV:"Aire Tegmentale Ventrale. Source de la dopamine. Point de depart du circuit. Naissance de la motivation et de l'anticipation du plaisir.",
+  Hypothalamus:"Carrefour neuroendocrinien. Regule la faim, la soif, le sommeil, la libido et la reponse au stress via l'axe HPA. Traverse deux fois dans le parcours.",
+  NA:"Noyau Accumbens. Coeur du circuit de la recompense. Ici se joue le Pont DA : acces libre, conditionne ou bloque vers le Cortex PF.",
+  Hippocampe:"Siege de la memoire et de l'apprentissage. Encode les souvenirs lies aux recompenses et aux experiences stressantes.",
+  Amygdale:"Sentinelle emotionnelle. Detecte les menaces et declenche la peur. Quand le cortisol est eleve, elle bloque l'acces au Cortex PF.",
+  "Cortex PF":"Siege de la regulation consciente. Destination finale. Quand il reprend le controle sur le circuit limbique, la regulation devient possible."
+};
+
+function fermerInfo(){
+  var el=document.getElementById('st-info');
+  if(el){ el.style.display='none'; el.dataset.nom=''; }
+}
+
+function toggleStation(nom){
+  var el=document.getElementById('st-info');
+  if(!el) return;
+  if(el.style.display==='block' && el.dataset.nom===nom){
+    fermerInfo(); return;
+  }
+  var st=STATIONS[nom];
+  var col=st?st.col:'#888';
+  var desc=ST_DESC[nom]||'';
+  el.innerHTML=
+    '<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">'+
+    '<div style="width:12px;height:12px;border-radius:50%;background:'+col+'"></div>'+
+    '<strong style="font-size:12px;color:#1a1a2e;font-family:Georgia,serif">'+nom+'</strong>'+
+    '<button onclick="fermerInfo()" style="margin-left:auto;background:none;border:none;font-size:16px;cursor:pointer;color:#888">x</button>'+
+    '</div>'+
+    '<div style="font-size:11px;color:#444;line-height:1.6;font-family:Arial,sans-serif">'+desc+'</div>';
+  el.dataset.nom=nom;
+  el.style.display='block';
+}
+
+function getPos(de,a,n){
+  var s=STATIONS[de],e=STATIONS[a],pts=[];
+  for(var i=0;i<n;i++){var t=(i+1)/(n+1);pts.push({x:s.x+(e.x-s.x)*t,y:s.y+(e.y-s.y)*t});}
+  return pts;
+}
+
+function rendrePlateau(){
+  var c=document.getElementById('circuit');
+  if(!c||!joueurs.length) return;
+  var atv=STATIONS['ATV'],hyp=STATIONS['Hypothalamus'],na=STATIONS['NA'];
+  var hip=STATIONS['Hippocampe'],amy=STATIONS['Amygdale'],cor=STATIONS['Cortex PF'];
+
+  var svg='<svg style="position:absolute;top:0;left:0;width:820px;height:640px" viewBox="0 0 820 640" xmlns="http://www.w3.org/2000/svg">';
+  // Fond
+  svg+='<rect width="820" height="640" fill="#fdfcf8" rx="14"/>';
+  // Cerveau silhouette
+  svg+='<ellipse cx="380" cy="310" rx="290" ry="230" fill="rgba(26,26,46,0.04)"/>';
+  svg+='<path d="M190 150 C230 115 290 105 340 130 C385 152 400 188 440 172 C475 158 508 122 545 138" fill="none" stroke="rgba(26,26,46,0.06)" stroke-width="2.5"/>';
+  svg+='<path d="M165 230 C205 205 265 200 315 218 C358 233 375 268 415 252 C452 237 492 200 535 215" fill="none" stroke="rgba(26,26,46,0.06)" stroke-width="2.5"/>';
+  svg+='<path d="M158 310 C198 288 258 284 308 302 C350 318 368 352 408 338 C445 325 488 288 530 303" fill="none" stroke="rgba(26,26,46,0.06)" stroke-width="2.5"/>';
+  // Bras
+  var bras=[[atv,hyp],[hyp,na],[na,hip],[hip,hyp],[hyp,amy],[amy,cor]];
+  bras.forEach(function(b){
+    svg+='<line x1="'+b[0].x+'" y1="'+b[0].y+'" x2="'+b[1].x+'" y2="'+b[1].y+'" stroke="rgba(205,195,180,0.95)" stroke-width="44" stroke-linecap="round"/>';
+  });
+  // Triangle Pont DA
+  svg+='<polygon points="'+na.x+','+na.y+' '+hip.x+','+hip.y+' '+cor.x+','+cor.y+'" fill="rgba(142,68,173,0.06)" stroke="rgba(142,68,173,0.5)" stroke-width="1.8" stroke-dasharray="7,5"/>';
+  svg+='<text x="'+(Math.round((na.x+hip.x+cor.x)/3))+'" y="'+(Math.round((na.y+hip.y+cor.y)/3))+'" fill="#8e44ad" font-size="11" text-anchor="middle" font-family="Arial" font-weight="bold">Pont DA</text>';
+  svg+='</svg>';
+
+  // Cases
+  var divs='';
+  var idx=0;
+  SEGS.forEach(function(seg){
+    var pts=getPos(seg.de,seg.a,seg.seq.length);
+    seg.seq.forEach(function(col,i){
+      var p=pts[i];
+      var bg=CCOL[col]||'#bdc3c7';
+      var isDest=(idx===dest);
+      var pici=[];
+      for(var pi=0;pi<joueurs.length;pi++){if(joueurs[pi].pos===idx)pici.push(pi);}
+      var bord=isDest?'3px solid #1a1a2e':'2px solid rgba(255,255,255,0.5)';
+      var sc=isDest?'scale(1.25)':'scale(1)';
+      var sh=isDest?'0 4px 14px rgba(0,0,0,0.35)':'0 2px 6px rgba(0,0,0,0.15)';
+      divs+='<div style="position:absolute;left:'+(Math.round(p.x-17))+'px;top:'+(Math.round(p.y-17))+'px;width:34px;height:34px;border-radius:8px;background:'+bg+';border:'+bord+';display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:'+(isDest?8:5)+';transform:'+sc+';box-shadow:'+sh+'">';
+      divs+='<div style="font-size:7px;color:rgba(255,255,255,0.85);font-weight:bold">'+(idx+1)+'</div>';
+      if(pici.length){
+        divs+='<div style="display:flex;gap:2px;justify-content:center;margin-top:1px">';
+        pici.forEach(function(pi){
+          var pc=joueurs[pi].col;
+          divs+='<div style="display:flex;flex-direction:column;align-items:center">';
+          divs+='<div style="width:7px;height:10px;background:'+pc+';border-radius:2px 2px 0 0;border:1px solid rgba(255,255,255,0.8)"></div>';
+          divs+='<div style="width:2px;height:4px;background:'+pc+'"></div>';
+          divs+='<div style="width:0;height:0;border-left:3px solid transparent;border-right:3px solid transparent;border-top:4px solid '+pc+'"></div>';
+          divs+='</div>';
+        });
+        divs+='</div>';
+      }
+      divs+='</div>';
+      idx++;
+    });
+  });
+
+  // Stations
+  Object.keys(STATIONS).forEach(function(nom){
+    var st=STATIONS[nom];
+    var active=(POPUP_ST===nom);
+    var bord2=active?'4px solid #1a1a2e':'3px solid rgba(255,255,255,0.75)';
+    divs+='<div onclick="toggleStation(\''+nom+'\')" style="position:absolute;left:'+(st.x-34)+'px;top:'+(st.y-34)+'px;width:68px;height:68px;border-radius:50%;background:'+st.col+';border:'+bord2+';display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:12;cursor:pointer;box-shadow:0 3px 12px rgba(0,0,0,0.22)">';
+    divs+='<div style="font-size:9px;font-weight:bold;color:#fff;text-align:center;line-height:1.2;padding:2px 4px">'+st.label+'</div>';
+    divs+='<div style="font-size:10px;color:rgba(255,255,255,0.7)">ℹ</div>';
+    divs+='</div>';
+  });
+
+  // Popup station
+  if(POPUP_ST && STATIONS[POPUP_ST]){
+    var st=STATIONS[POPUP_ST];
+    divs+='<div style="position:absolute;top:10px;left:10px;width:260px;background:#fff;border-radius:10px;padding:14px;box-shadow:0 4px 20px rgba(0,0,0,0.2);z-index:50;border:1px solid #ddd">';
+    divs+='<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">';
+    divs+='<div style="width:14px;height:14px;border-radius:50%;background:'+st.col+'"></div>';
+    divs+='<strong style="font-size:13px;color:#1a1a2e;font-family:Georgia,serif">'+POPUP_ST+'</strong>';
+    divs+='<button onclick="toggleStation(\''+POPUP_ST+'\')" style="margin-left:auto;background:none;border:none;font-size:18px;cursor:pointer;color:#888">✕</button>';
+    divs+='</div>';
+    divs+='<div style="font-size:11px;color:#444;line-height:1.6">'+st.desc+'</div>';
+    divs+='</div>';
+  }
+
+  c.innerHTML='<div style="position:absolute;top:0;left:0;width:820px;height:640px;border-radius:14px;overflow:hidden;border:2px solid #d4c9b8">'+svg+divs+'</div>';
+}
+
+
+// ═══ ROUE CASINEURONALE ════════════════════
+var RCASES = [
+  {n:'Sourire',       q:'GAIN STABLE',    da:20,  co:0,   c:'#27ae60', e:'Sourire active le circuit de récompense naturelle. Libération d\'ocytocine et de dopamine stable. Ton cerveau se sent en sécurité.'},
+  {n:'\u00c9couter',       q:'GAIN STABLE',    da:20,  co:10,  c:'#27ae60', e:'Ecouter vraiment mobilise le cortex préfrontal et renforce les liens sociaux. Dopamine de connexion authentique.'},
+  {n:'Surprendre',    q:'GAIN STABLE',    da:30,  co:10,  c:'#27ae60', e:'Créer de la surprise positive déclenche une décharge de dopamine. Le cerveau aime la nouveauté bienveillante.'},
+  {n:'Bouger',        q:'GAIN STABLE',    da:20,  co:0,   c:'#27ae60', e:'Le mouvement libère des endorphines et régule le cortisol. Le corps est le premier régulateur du cerveau.'},
+  {n:'Cr\u00e9er',         q:'GAIN STABLE',    da:30,  co:10,  c:'#27ae60', e:'Créer active les aires motrices et sensorielles. Plaisir intrinsèque, dopamine durable sans dépendance.'},
+  {n:'Transmettre',   q:'GAIN STABLE',    da:20,  co:-10, c:'#27ae60', e:'Transmettre un savoir combine dopamine sociale et sentiment d\'utilité. Renforce l\'estime de soi durablement.'},
+  {n:'Se discipliner',q:'GAIN STABLE',    da:10,  co:-10, c:'#27ae60', e:'La discipline active le cortex préfrontal. Chaque victoire sur l\'impulsion renforce le circuit de régulation.'},
+  {n:'Se nourrir',    q:'GAIN STABLE',    da:10,  co:0,   c:'#27ae60', e:'Se nourrir consciemment régule la glycémie et stabilise la dopamine. La satiété vraie est neurobiologique.'},
+  {n:'Surprise',      q:'GAIN STABLE',    da:20,  co:-20, c:'#27ae60', e:'Une surprise agréable réinitialise le système de récompense. Le cerveau sort de l\'habituation.'},
+  {n:'Parier',        q:'FLASH / RISQUE', da:60,  co:30,  c:'#e74c3c', e:'Le pari déclenche une dopamine massive d\'incertitude. Très addictif : le cerveau réclame le prochain gain possible.'},
+  {n:'Dominer',       q:'FLASH / RISQUE', da:60,  co:30,  c:'#e74c3c', e:'Le besoin de domination active le circuit de récompense lié au statut. Puissant mais épuisant sur le long terme.'},
+  {n:'Scroller',      q:'FLASH / RISQUE', da:40,  co:20,  c:'#e74c3c', e:'Le scroll infini exploite la récompense aléatoire intermittente. Mécanisme identique aux jeux d\'argent.'},
+  {n:'Acheter',       q:'FLASH / RISQUE', da:40,  co:20,  c:'#e74c3c', e:'L\'achat impulsif libère une dopamine d\'anticipation. Le plaisir est dans l\'attente, pas dans l\'objet.'},
+  {n:'\u00c9tourdir',      q:'FLASH / RISQUE', da:40,  co:40,  c:'#e74c3c', e:'S\'étourdir (séries, bruit, agitation) sature le système sensoriel. Court-circuit temporaire du stress... qui revient amplifié.'},
+  {n:'Grignoter',     q:'FLASH / RISQUE', da:20,  co:20,  c:'#e74c3c', e:'Le grignotage nocturne répond à une dérégulation du système de récompense par la fatigue. Perte de contrôle frontal.'},
+  {n:'Zapper',        q:'FLASH / RISQUE', da:40,  co:40,  c:'#e74c3c', e:'Zapper en permanence fragmente l\'attention. Surcharge synaptique qui empêche la concentration profonde.'},
+  {n:'V\u00e9rifier',      q:'FLASH / RISQUE', da:20,  co:20,  c:'#e74c3c', e:'Vérifier compulsivement (likes, messages) conditionne le cerveau à attendre une récompense aléatoire.'},
+  {n:"S'exciter",     q:'FLASH / RISQUE', da:20,  co:40,  c:'#e74c3c', e:'L\'excitation chronique maintient le cortisol élevé. Le cerveau reste en mode alerte permanent et s\'épuise.'},
+  {n:"S'immiscer",    q:'VIGILANCE',      da:-10, co:40,  c:'#8e44ad', e:'S\'immiscer dans la vie des autres signale une difficulté à réguler ses propres besoins. Le cortisol monte.'},
+  {n:'Jugement Subi', q:'VIGILANCE',      da:-20, co:50,  c:'#8e44ad', e:'Être jugé active l\'amygdale comme une menace sociale réelle. Le cerveau ne distingue pas danger physique et social.'},
+  {n:'Urgence',       q:'VIGILANCE',      da:0,   co:40,  c:'#8e44ad', e:'L\'état d\'urgence permanent désensibilise le cortex préfrontal. Le cerveau finit par ne plus distinguer urgent et important.'},
+  {n:'Conflit',       q:'VIGILANCE',      da:-10, co:50,  c:'#8e44ad', e:'Le conflit non résolu maintient l\'amygdale en alerte. L\'énergie cognitive est absorbée par la vigilance défensive.'},
+  {n:'Incertitude',   q:'VIGILANCE',      da:0,   co:30,  c:'#8e44ad', e:'L\'incertitude est une des sources de stress les plus puissantes. Le cerveau préfère une mauvaise certitude à l\'inconnu.'},
+  {n:'Enchan\u00e9',      q:'VIGILANCE',      da:20,  co:40,  c:'#8e44ad', e:'Se sentir enchaîné à une situation active un stress de perte de contrôle. Le cortex préfrontal s\'inhibe progressivement.'},
+  {n:'Comparer',      q:'VIGILANCE',      da:-20, co:60,  c:'#8e44ad', e:'La comparaison sociale active les mêmes circuits que la douleur physique. Dopamine chute, cortisol monte.'},
+  {n:'Se perdre',     q:'VIGILANCE',      da:0,   co:20,  c:'#8e44ad', e:'Se perdre dans ses pensées (rumination) maintient le cerveau en mode résolution de problème sans issue.'},
+  {n:'Subir',         q:'VIGILANCE',      da:-10, co:80,  c:'#8e44ad', e:'Subir sans pouvoir agir est la forme de stress la plus toxique. L\'impuissance apprise détruit le circuit de motivation.'},
+  {n:'Apprivoiser',   q:'CONSTRUCTION',   da:20,  co:0,   c:'#2471a3', e:'Apprivoiser une peur ou une difficulté progressivement renforce le cortex préfrontal et réduit la réponse amygdalienne.'},
+  {n:'Apprendre',     q:'CONSTRUCTION',   da:20,  co:10,  c:'#2471a3', e:'Apprendre active la plasticité neuronale. Chaque compétence acquise crée de nouvelles connexions synaptiques durables.'},
+  {n:'Aider',         q:'CONSTRUCTION',   da:30,  co:0,   c:'#2471a3', e:'Aider libère de l\'ocytocine et de la sérotonine. Le sentiment d\'utilité est un antidépresseur naturel puissant.'},
+  {n:'R\u00e9aliser',      q:'CONSTRUCTION',   da:10,  co:0,   c:'#2471a3', e:'Réaliser quelque chose de concret ferme une boucle dopaminergique. Le cerveau adore les tâches accomplies.'},
+  {n:'Ranger',        q:'CONSTRUCTION',   da:10,  co:-10, c:'#2471a3', e:'Ranger son environnement réduit la charge cognitive. Un espace ordonné libère de l\'énergie mentale.'},
+  {n:'Pauser',        q:'CONSTRUCTION',   da:20,  co:-20, c:'#2471a3', e:'Faire une pause volontaire est un acte de régulation active. Le cerveau se recharge et consolide la mémoire.'},
+  {n:'R\u00e9soudre',      q:'CONSTRUCTION',   da:20,  co:0,   c:'#2471a3', e:'Résoudre un problème déclenche un Eurêka dopaminergique. La satisfaction intellectuelle est une récompense durable.'},
+  {n:'Transmettre',   q:'CONSTRUCTION',   da:30,  co:-10, c:'#2471a3', e:'Transmettre ce qu\'on sait renforce le sentiment d\'appartenance et de valeur sociale. Dopamine et ocytocine combinées.'},
+  {n:'Partager',      q:'CONSTRUCTION',   da:20,  co:0,   c:'#2471a3', e:'Partager active les neurones miroirs et renforce la cohésion sociale. Le cerveau est fondamentalement un organe social.'},
+];
+
+var RQCOLS = {
+  'GAIN STABLE':    {bg:'#d5f5e3',txt:'#1e8449'},
+  'FLASH / RISQUE': {bg:'#fadbd8',txt:'#c0392b'},
+  'VIGILANCE':      {bg:'#e8daef',txt:'#6c3483'},
+  'CONSTRUCTION':   {bg:'#d6eaf8',txt:'#1a5276'},
+};
+
+var rCV=null, rCX=null, rAngle=0, rSpinning=false;
+var rCaseIdx=-1, rCaseActuelle=null;
+var rJoueurIdx=0, rCasesJoueurs=[];
+
+function rDessiner(angle){
+  if(!rCX) return;
+  var W=440, CX=W/2, CY=W/2;
+  var RE=200, RM=135, RI=78, RC=38;
+  var N=36, step=Math.PI*2/N;
+  rCX.clearRect(0,0,W,W);
+  rCX.fillStyle='#f5f0e8';
+  rCX.beginPath(); rCX.arc(CX,CY,RE+8,0,Math.PI*2); rCX.fill();
+  for(var i=0;i<N;i++){
+    var c=RCASES[i];
+    var a1=angle+i*step-Math.PI/2;
+    var a2=a1+step;
+    var aM=a1+step/2;
+    var qc=RQCOLS[c.q];
+    var sel=(i===rCaseIdx);
+    rCX.beginPath();
+    rCX.moveTo(CX+RM*Math.cos(a1),CY+RM*Math.sin(a1));
+    rCX.arc(CX,CY,RE,a1,a2);
+    rCX.arc(CX,CY,RM,a2,a1,true);
+    rCX.closePath();
+    rCX.fillStyle=sel?'#fff5cc':qc.bg; rCX.fill();
+    rCX.strokeStyle='rgba(255,255,255,0.5)'; rCX.lineWidth=0.8; rCX.stroke();
+    rCX.save();
+    rCX.translate(CX+((RM+RE)/2)*Math.cos(aM),CY+((RM+RE)/2)*Math.sin(aM));
+    rCX.rotate(aM+Math.PI/2);
+    rCX.font='bold 10px Arial'; rCX.fillStyle=qc.txt; rCX.textAlign='center';
+    rCX.fillText((c.co>0?'+':'')+c.co,0,3);
+    rCX.restore();
+    rCX.beginPath();
+    rCX.moveTo(CX+RI*Math.cos(a1),CY+RI*Math.sin(a1));
+    rCX.arc(CX,CY,RM,a1,a2);
+    rCX.arc(CX,CY,RI,a2,a1,true);
+    rCX.closePath();
+    rCX.fillStyle=sel?c.c+'44':'rgba(255,255,255,0.75)'; rCX.fill();
+    rCX.strokeStyle='rgba(200,190,175,0.4)'; rCX.lineWidth=0.6; rCX.stroke();
+    rCX.save();
+    rCX.translate(CX+((RI+RM)/2)*Math.cos(aM),CY+((RI+RM)/2)*Math.sin(aM));
+    rCX.rotate(aM+Math.PI/2);
+    // Nom court (4 chars max) + valeur DA
+    var sn=c.n.substring(0,5);
+    rCX.font='bold 7px Arial'; rCX.fillStyle='#1a1a2e'; rCX.textAlign='center';
+    rCX.fillText(sn,0,-3);
+    rCX.font='bold 8px Arial'; rCX.fillStyle='#2471a3';
+    rCX.fillText((c.da>0?'+':'')+c.da,0,7);
+    rCX.restore();
+  }
+  [0,9,18,27].forEach(function(q){
+    var a=angle+q*step-Math.PI/2;
+    rCX.beginPath();
+    rCX.moveTo(CX+RI*Math.cos(a),CY+RI*Math.sin(a));
+    rCX.lineTo(CX+RE*Math.cos(a),CY+RE*Math.sin(a));
+    rCX.strokeStyle='rgba(26,26,46,0.35)'; rCX.lineWidth=2; rCX.stroke();
+  });
+  [{l:'GAIN STABLE',s:0,c:'#1e8449'},{l:'FLASH/RISQUE',s:9,c:'#c0392b'},{l:'VIGILANCE',s:18,c:'#6c3483'},{l:'CONSTRUCTION',s:27,c:'#1a5276'}].forEach(function(q){
+    var aC=angle+(q.s+4.5)*step-Math.PI/2;
+    var rL=RI-16;
+    rCX.save();
+    rCX.translate(CX+rL*Math.cos(aC),CY+rL*Math.sin(aC));
+    rCX.rotate(aC+Math.PI/2);
+    rCX.font='bold 7px Arial'; rCX.fillStyle=q.c; rCX.textAlign='center';
+    rCX.fillText(q.l,0,0);
+    rCX.restore();
+  });
+  rCX.beginPath(); rCX.arc(CX,CY,RC,0,Math.PI*2);
+  rCX.fillStyle='#1a1a2e'; rCX.fill();
+  rCX.strokeStyle='rgba(255,255,255,0.15)'; rCX.lineWidth=2; rCX.stroke();
+  rCX.font='bold 7px Georgia'; rCX.fillStyle='#f5f0e8';
+  rCX.textAlign='center'; rCX.textBaseline='middle';
+  rCX.fillText('Mon cerveau',CX,CY-6);
+  rCX.font='6px Arial'; rCX.fillStyle='rgba(255,255,255,0.55)';
+  rCX.fillText('Ici & Maintenant',CX,CY+5);
+  rCX.beginPath();
+  rCX.moveTo(CX,CY-RE-4);
+  rCX.lineTo(CX-7,CY-RE+9);
+  rCX.lineTo(CX+7,CY-RE+9);
+  rCX.closePath();
+  rCX.fillStyle='#e74c3c'; rCX.fill();
+}
+
+function roueSpin(){
+  if(rSpinning) return;
+  rSpinning=true; rCaseIdx=-1; rCaseActuelle=null;
+  document.getElementById('rbtn-ok').disabled=true;
+  document.getElementById('rbtn-spin').disabled=true;
+  document.getElementById('roue-cnom').style.color='rgba(255,255,255,0.4)';
+  document.getElementById('roue-cnom').textContent='...';
+  document.getElementById('roue-cquad').textContent='';
+  document.getElementById('roue-cvals').innerHTML='';
+  var f2=document.getElementById('roue-fiche'); if(f2) f2.style.display='none';
+  var N=36, step=Math.PI*2/N;
+  var tours=5+Math.random()*5;
+  var cible=rAngle+Math.PI*2*tours+Math.random()*Math.PI*2;
+  var startA=rAngle, diff=cible-startA;
+  var start=null, dur=3500+Math.random()*1500;
+  function frame(ts){
+    if(!start) start=ts;
+    var prog=Math.min((ts-start)/dur,1);
+    var ease=1-Math.pow(1-prog,3);
+    rAngle=startA+diff*ease;
+    rDessiner(rAngle);
+    if(prog<1){ requestAnimationFrame(frame); return; }
+    rAngle=cible; rSpinning=false;
+    var norm=((rAngle%(Math.PI*2))+(Math.PI*2))%(Math.PI*2);
+    var ptr=(Math.PI*2-norm)%(Math.PI*2);
+    rCaseIdx=Math.floor(ptr/step)%N;
+    rCaseActuelle=RCASES[rCaseIdx];
+    rDessiner(rAngle);
+    var qc=RQCOLS[rCaseActuelle.q];
+    document.getElementById('roue-cnom').textContent=rCaseActuelle.n;
+    document.getElementById('roue-cnom').style.color='#f5f0e8';
+    document.getElementById('roue-cquad').innerHTML=
+      '<span style="background:'+qc.bg+';color:'+qc.txt+';padding:2px 10px;border-radius:20px;font-size:11px;font-family:Arial;font-weight:bold">'+rCaseActuelle.q+'</span>';
+    document.getElementById('roue-cvals').innerHTML=
+      '<span style="background:#d6eaf8;color:#1a5276;padding:3px 12px;border-radius:20px;font-size:13px;font-weight:bold;font-family:Arial">DA '+(rCaseActuelle.da>0?'+':'')+rCaseActuelle.da+'</span>'+
+      '<span style="background:#fadbd8;color:#c0392b;padding:3px 12px;border-radius:20px;font-size:13px;font-weight:bold;font-family:Arial">Co '+(rCaseActuelle.co>0?'+':'')+rCaseActuelle.co+'</span>';
+    // Fiche pédagogique complète (nom + DA/Co + explication)
+    var ficheEl=document.getElementById('roue-fiche');
+    if(ficheEl){
+      var qc2=RQCOLS[rCaseActuelle.q]||{bg:'rgba(255,255,255,0.1)',txt:'#aaa'};
+      ficheEl.style.display='block';
+      ficheEl.innerHTML=
+        '<div style="font-size:9px;text-transform:uppercase;letter-spacing:.1em;color:'+qc2.txt+';margin-bottom:6px;font-family:Arial;font-weight:bold">'+rCaseActuelle.q+'</div>'+
+        '<div style="font-size:20px;font-weight:bold;color:#f5f0e8;font-family:Georgia,serif;margin-bottom:8px">'+rCaseActuelle.n+'</div>'+
+        '<div style="display:flex;gap:10px;margin-bottom:10px">'+
+        '<span style="background:#d6eaf8;color:#1a5276;padding:3px 12px;border-radius:20px;font-size:13px;font-weight:bold;font-family:Arial">DA '+(rCaseActuelle.da>0?'+':'')+rCaseActuelle.da+'</span>'+
+        '<span style="background:#fadbd8;color:#c0392b;padding:3px 12px;border-radius:20px;font-size:13px;font-weight:bold;font-family:Arial">Co '+(rCaseActuelle.co>0?'+':'')+rCaseActuelle.co+'</span>'+
+        '</div>'+
+        (rCaseActuelle.e?'<div style="font-size:12px;color:rgba(255,255,255,0.8);line-height:1.7;font-family:Arial">'+rCaseActuelle.e+'</div>':'');
+    }
+    document.getElementById('rbtn-ok').disabled=false;
+    document.getElementById('rbtn-spin').disabled=false;
+  }
+  requestAnimationFrame(frame);
+}
+
+function roueValider(){
+  if(!rCaseActuelle) return;
+  var j=joueurs[rJoueurIdx];
+  j.totalDA+=(rCaseActuelle.da||0);
+  j.totalCo+=(rCaseActuelle.co||0);
+  rCasesJoueurs[rJoueurIdx]=rCaseActuelle;
+  rJoueurIdx++;
+  if(rJoueurIdx<N){
+    rCaseActuelle=null; rCaseIdx=-1;
+    document.getElementById('roue-jnom').textContent=joueurs[rJoueurIdx].nom+' — Lance ta roue !';
+    document.getElementById('rbtn-ok').disabled=true;
+    document.getElementById('rbtn-spin').disabled=false;
+    document.getElementById('roue-cnom').style.color='rgba(255,255,255,0.4)';
+    document.getElementById('roue-cnom').textContent='Lance la roue pour decouvrir ton etat de depart';
+    document.getElementById('roue-cquad').textContent='';
+    document.getElementById('roue-cvals').innerHTML='';
+    var f=document.getElementById('roue-fiche'); if(f) f.style.display='none';
+    rDessiner(0); rAngle=0;
+  } else {
+    document.getElementById('roue-overlay').classList.remove('on');
+    rendreScores();
+    rendrePlateau();
+  }
+}
+
+function ouvrirRoue(){
+  rJoueurIdx=0; rCasesJoueurs=[];
+  rCaseActuelle=null; rCaseIdx=-1; rAngle=0;
+  rCV=document.getElementById('roue-canvas2');
+  rCX=rCV.getContext('2d');
+  document.getElementById('roue-jnom').textContent=joueurs[0].nom+' — Lance ta roue !';
+  document.getElementById('rbtn-ok').disabled=true;
+  document.getElementById('rbtn-spin').disabled=false;
+  document.getElementById('roue-cnom').style.color='rgba(255,255,255,0.4)';
+  document.getElementById('roue-cnom').textContent='Lance la roue pour decouvrir ton etat de depart';
+  document.getElementById('roue-cquad').textContent='';
+  document.getElementById('roue-cvals').innerHTML='';
+  document.getElementById('roue-overlay').classList.add('on');
+  rDessiner(0);
+}
+
+// ═══ ACCUEIL ═══════════════════════════════
+var NB=0;
+
+function demarrerDepuisPres(){
+  document.getElementById('pres').style.display='none';
+  ouvrirAccueil();
+}
+
+function ouvrirAccueil(){
+  // Créer l'écran d'accueil dynamiquement
+  var ac=document.createElement('div');
+  ac.id='ac';
+  ac.style.cssText='position:fixed;top:0;left:0;width:100%;height:100%;background:#1a1a2e;display:flex;align-items:center;justify-content:center;z-index:9999';
+  ac.innerHTML='<div style="background:#f5f0e8;border-radius:16px;padding:32px;text-align:center;width:420px;max-height:90vh;overflow-y:auto;box-shadow:0 8px 32px rgba(0,0,0,0.5)">'+
+    '<div style="font-size:36px;margin-bottom:8px">🧠</div>'+
+    '<h2 style="font-family:Georgia,serif;font-size:22px;color:#1a1a2e;margin-bottom:4px">DOPE À MINES</h2>'+
+    '<p style="font-size:12px;color:#888;margin-bottom:20px">Adultes · Visio · AliaSkill Formation</p>'+
+    '<p style="font-size:13px;color:#444;margin-bottom:12px;font-weight:bold">Nombre de joueurs :</p>'+
+    '<div id="ac-btns" style="display:flex;gap:8px;justify-content:center;margin-bottom:20px">'+
+    '<button id="acb2" style="width:48px;height:48px;border-radius:50%;border:2px solid #ccc;background:#fff;font-size:18px;font-weight:bold;cursor:pointer">2</button>'+
+    '<button id="acb3" style="width:48px;height:48px;border-radius:50%;border:2px solid #ccc;background:#fff;font-size:18px;font-weight:bold;cursor:pointer">3</button>'+
+    '<button id="acb4" style="width:48px;height:48px;border-radius:50%;border:2px solid #ccc;background:#fff;font-size:18px;font-weight:bold;cursor:pointer">4</button>'+
+    '<button id="acb5" style="width:48px;height:48px;border-radius:50%;border:2px solid #ccc;background:#fff;font-size:18px;font-weight:bold;cursor:pointer">5</button>'+
+    '<button id="acb6" style="width:48px;height:48px;border-radius:50%;border:2px solid #ccc;background:#fff;font-size:18px;font-weight:bold;cursor:pointer">6</button>'+
+    '</div>'+
+    '<div id="ac-noms" style="display:none;margin-bottom:16px;text-align:left"></div>'+
+    '<div id="ac-lbl" style="font-size:12px;color:#c0392b;margin-bottom:12px;min-height:18px"></div>'+
+    '<button id="ac-start" style="padding:12px 32px;background:#c0392b;color:#fff;border:none;border-radius:8px;font-size:15px;font-weight:bold;cursor:pointer;font-family:Georgia,serif">Lancer la partie</button>'+
+    '</div>';
+  document.body.appendChild(ac);
+
+  [2,3,4,5,6].forEach(function(n){
+    document.getElementById('acb'+n).addEventListener('click',function(){
+      NB=n;
+      [2,3,4,5,6].forEach(function(m){
+        var b=document.getElementById('acb'+m);
+        b.style.background=m===n?'#1a1a2e':'#fff';
+        b.style.color=m===n?'#fff':'#1a1a2e';
+        b.style.borderColor=m===n?'#1a1a2e':'#ccc';
+      });
+      document.getElementById('ac-lbl').textContent='';
+      // Afficher les champs de noms
+      var nomsDiv=document.getElementById('ac-noms');
+      var h='<p style="font-size:12px;font-weight:bold;color:#444;margin-bottom:10px">Prénoms des joueurs :</p>';
+      for(var i=0;i<n;i++){
+        h+='<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">';
+        h+='<div style="width:14px;height:14px;border-radius:50%;background:'+PC_ALL[i]+';flex-shrink:0"></div>';
+        h+='<input id="nom'+i+'" type="text" placeholder="Joueur '+(i+1)+'" value="" style="flex:1;padding:6px 10px;border-radius:6px;border:1px solid #ddd;font-size:13px;font-family:Arial,sans-serif;background:#fff">';
+        h+='</div>';
+      }
+      nomsDiv.innerHTML=h;
+      nomsDiv.style.display='block';
+    });
+  });
+
+  document.getElementById('ac-start').addEventListener('click',function(){
+    if(!NB){ document.getElementById('ac-lbl').textContent='⚠ Choisis un nombre de joueurs !'; return; }
+    // Récupérer les noms saisis
+    var noms=[];
+    for(var i=0;i<NB;i++){
+      var input=document.getElementById('nom'+i);
+      var val=input?input.value.trim():'';
+      noms.push(val||('Joueur '+(i+1)));
+    }
+    document.body.removeChild(ac);
+    document.getElementById('bar').style.visibility='visible';
+    document.getElementById('wrap').style.visibility='visible';
+    initJeu(NB, noms);
+    ouvrirRoue();
+  });
+}
+</script>
+</body>
+</html>
